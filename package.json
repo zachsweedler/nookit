@@ -1,5 +1,5 @@
 {
-  "name": "brickswap",
+  "name": "nookit",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,10 +9,34 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/is-prop-valid": "^1.2.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@hookform/error-message": "^2.0.1",
+    "@hookform/resolvers": "^3.2.0",
+    "@mapbox/search-js-react": "^1.0.0-beta.17",
+    "@mui/joy": "^5.0.0-beta.2",
+    "@mui/material": "^5.14.5",
+    "@reduxjs/toolkit": "^1.9.5",
+    "@supabase/auth-helpers-nextjs": "^0.7.4",
+    "@supabase/supabase-js": "^2.32.0",
+    "dotenv": "^16.3.1",
+    "encoding": "^0.1.13",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.19",
     "next": "13.4.19",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-fast-marquee": "^1.6.0",
+    "react-hook-form": "^7.45.4",
+    "react-images-uploading": "^3.1.7",
+    "react-map-gl": "^7.1.4",
+    "react-redux": "^8.1.2",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.4.2",
+    "styled-components": "^6.0.7",
+    "swiper": "^10.2.0",
+    "uuid": "^9.0.0",
+    "yup": "^1.2.0"
   }
 }

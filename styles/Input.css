@@ -1,0 +1,17 @@
+.css-1pnmrwp-MuiTypography-root {
+    font-size: 1.3rem !important;
+    font-family: __Poppins_1562c7 !important;
+}
+
+.MuiInputAdornment-root {
+    position: absolute;
+    right: 12px;
+}
+
+.MuiFormControl-root {
+    width: 100%;
+}
+
+.css-gdh49b-MuiAutocomplete-listbox .MuiAutocomplete-option {
+    font-size: 1.6rem !important;
+}
