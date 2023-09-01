@@ -37,7 +37,7 @@ function Step2({ currentStep, handleNext, handleBack }) {
       <StepWrapper>
         <div style={{ display: "flex", flexDirection: "column", rowGap: "20px" }}>
           <Para weight="regular" size="textxs" color="primary.brand.b950">
-            Step {currentStep}/7
+            Step {currentStep}/6
           </Para>
           <Para weight="regular" size="textmd" color="black">
             We refer to a “nook” as a section within a store that’s allocated for brands to pop up in.
@@ -75,4 +75,4 @@ function Step2({ currentStep, handleNext, handleBack }) {
   );
 }
 
-export default React.memo(Step2);
+export default Step2;

@@ -97,7 +97,7 @@ export default function Footer({ color }) {
                         >
                            Legal
                         </Para>
-                        <Link href="/">
+                        <Link href="/terms">
                            <Para
                               $isLink="true"
                               size="textmd"
@@ -107,7 +107,7 @@ export default function Footer({ color }) {
                               Terms of Service
                            </Para>
                         </Link>
-                        <Link href="/">
+                        <Link href="/privacy">
                            <Para
                               $isLink="true"
                               size="textmd"

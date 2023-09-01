@@ -14,7 +14,7 @@ async function WaitlistF() {
 
   const supabase = createServerComponentClient({ cookies })
   const {data: {session}} = await supabase.auth.getSession();
-  const {data: submitted} = await supabase.from('applications').select('submitted_form').eq('user_id', session.user.id)
+  const {data: submitted} = await supabase.from('waitlist').select('submitted_form').eq('user_id', session.user.id)
   
   if (submitted) {
     redirect('/waitlist/dash')

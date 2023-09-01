@@ -59,7 +59,7 @@ const theme = {
       displayxs: "2.0rem", // <H6 />
       textxl: "2.0rem", // <Para xl />
       textlg: "1.6rem", // <Para lg />
-      textmd: "1.4rem", // <Para md />
+      textmd: "1.6rem", // <Para md />
       textsm: "1.2rem",  // <Para sm />
       textxs: "1.1rem", // <Para xs />
     }

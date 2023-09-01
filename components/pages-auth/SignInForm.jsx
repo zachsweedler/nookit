@@ -5,7 +5,7 @@ import { Button } from "@/styles/Buttons";
 import { Input } from "@/styles/Input";
 import { H6, Para } from "@/styles/Typography";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { styled } from "styled-components";
 import { useForm } from "react-hook-form";
@@ -53,16 +53,16 @@ export default function SignInForm() {
         }
     };
 
-    const handleGoogleSignIn = async () => {
-        const { data, error } = await supabase.auth.signInWithOAuth({
-            provider: "google",
-        });
-        if (error) {
-            console.log("sign in error", error);
-        } else {
-            console.log("successful sign in", data);
-        }
-    };
+    // const handleGoogleSignIn = async () => {
+    //     const { data, error } = await supabase.auth.signInWithOAuth({
+    //         provider: "google",
+    //     });
+    //     if (error) {
+    //         console.log("sign in error", error);
+    //     } else {
+    //         console.log("successful sign in", data);
+    //     }
+    // };
 
     return (
         <Container size="xs" style={{display: "flex", alignItems: "center"}}>
@@ -98,12 +98,12 @@ export default function SignInForm() {
                             {error.message}
                         </Para>
                     )}
-                    <OrContainer>
+                    {/* <OrContainer>
                         <hr style={{width: "100%", height: "1px", backgroundColor: "#dddddd", borderWidth: "0"}} />
                         OR
                         <hr style={{width: "100%", height: "1px", backgroundColor: "#dddddd", borderWidth: "0"}} />
-                    </OrContainer>
-                    <Button
+                    </OrContainer> */}
+                    {/* <Button
                         onClick={handleGoogleSignIn}
                         $googlecolor='true'
                         style={{ position: "relative" }}
@@ -116,7 +116,7 @@ export default function SignInForm() {
                             style={{ position: "absolute", left: "12px" }}
                         />
                         Continue with Google
-                    </Button>
+                    </Button> */}
                 </FormWrapper>
             )}
         </Container>

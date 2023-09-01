@@ -36,7 +36,7 @@ function Step5({ currentStep, handleNext, handleBack}) {
       <StepWrapper>
         <div style={{display: "flex", flexDirection: "column", rowGap: "20px"}}>
           <Para weight="regular" size="textxs" color="primary.brand.b950">
-            Step {currentStep}/7
+            Step {currentStep}/6
           </Para>
           <Para weight="regular" size="textxl" color="black">
             How did you hear about us?
@@ -71,4 +71,4 @@ function Step5({ currentStep, handleNext, handleBack}) {
   );
 }
 
-export default React.memo(Step5);
+export default Step5;

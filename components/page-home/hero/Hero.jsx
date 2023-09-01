@@ -29,15 +29,20 @@ export default function Hero() {
                   </FlexWrap>
                </HeaderWrapper>
                <DescriptionWrapper>
-                  <Para size="textmd" weight="regular" color="primary.grey.g900">
+                  <Para
+                     size="textmd"
+                     weight="regular"
+                     color="primary.grey.g900"
+                  >
                      Nookit is a website where brands can book a
-                     &quot;nook&quot; within another brand&apos;s storefront. This allows brands to
-                     pop-in in enviroments that align with their image,
-                     offering a collaborative brand experiences for in-store customers.
+                     &quot;nook&quot; within another brand&apos;s storefront.
+                     This allows brands to pop-in in environments that align
+                     with their image, offering collaborative brand experiences
+                     for in-store customers
                   </Para>
                </DescriptionWrapper>
                <Link href="/waitlist/dash">
-                  <Button style={{ width: "fit-content" }} $blackcolor='true'>
+                  <Button style={{ width: "fit-content" }} $blackcolor="true">
                      Join Waitlist
                   </Button>
                </Link>
@@ -86,6 +91,3 @@ const DescriptionWrapper = styled.div`
    width: 100%;
    max-width: 720px;
 `;
-
-
-
