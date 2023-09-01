@@ -12,6 +12,7 @@ import { useUserId } from "@/hooks/useUserId";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useStorageUpload } from "@/hooks/useStorageUpload";
 import { styled } from "styled-components";
+import supabaseLoader from "@/supabase-image-loader";
 
 function NookImageUploader({ fieldName, isNookPhotos }) {
    const [images, setImages] = useState([]);
@@ -134,6 +135,7 @@ function NookImageUploader({ fieldName, isNookPhotos }) {
                            return (
                               <ImageWrapper key={index}>
                                  <Image
+                                    loader={supabaseLoader}
                                     alt="nook_image"
                                     src={`user-images/${image}`}
                                     fill={true}
