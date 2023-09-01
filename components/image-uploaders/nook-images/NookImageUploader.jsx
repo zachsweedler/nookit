@@ -131,14 +131,17 @@ function NookImageUploader({ fieldName, isNookPhotos }) {
                      </Para>
                   ) : (
                      <ImageGrid>
-                        {existingImages.map((image, index) => (
-                           <ImageItem
-                              key={index}
-                              image={`user-images/${image}`}
-                              onRemove={() => onImageRemove(index)}
-                              loading={loading}
-                           />
-                        ))}
+                        {existingImages.map((image, index) => {
+                           const imageUrl = `user-images/${image}`;
+                           return (
+                              <ImageItem
+                                 key={index}
+                                 image={imageUrl}
+                                 onRemove={() => onImageRemove(index)}
+                                 loading={loading}
+                              />
+                           );
+                        })}
                      </ImageGrid>
                   )}
 
