@@ -16,7 +16,7 @@ async function WaitlistF() {
   const {data: {session}} = await supabase.auth.getSession();
   const {data: submitted} = await supabase.from('waitlist').select('submitted_form').eq('user_id', session.user.id)
   
-  if (submitted) {
+  if (submitted[0]?.submitted_form) {
     redirect('/waitlist/dash')
   }
 
