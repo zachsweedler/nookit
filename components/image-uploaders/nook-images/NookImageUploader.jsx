@@ -132,7 +132,8 @@ function NookImageUploader({ fieldName, isNookPhotos }) {
                   ) : (
                      <ImageGrid>
                         {existingImages.map((image, index) => {
-                           const imageUrl = `user-images/${image}`;
+                           const imageUrl = String(`user-images/${image}`);
+                           console.log("Image URL:", imageUrl);
                            return (
                               <ImageItem
                                  key={index}
@@ -163,7 +164,7 @@ const ImageItem = ({ image, onRemove, loading }) => {
       <ImageWrapper>
          <Image
             alt="nook_image"
-            src={image}
+            src={image.toString()}
             fill={true}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             style={{ objectFit: "cover", opacity: loading ? "50%" : "100%" }}
