@@ -6,7 +6,6 @@ import DeleteButton from "./DeleteButton";
 import { Para } from "@/styles/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { setFormValues } from "@/slices/uploadNookSlice";
-import { Button } from "@/styles/Buttons";
 import { useFormContext } from "react-hook-form";
 import { useNookUUID } from "@/hooks/useNookId";
 import { useUserId } from "@/hooks/useUserId";
@@ -132,20 +131,27 @@ function NookImageUploader({ fieldName, isNookPhotos }) {
                   ) : (
                      <ImageGrid>
                         {existingImages.map((image, index) => {
-                           const imageUrl = String(`user-images/${image}`);
-                           console.log("Image URL:", imageUrl);
                            return (
-                              <ImageItem
-                                 key={index}
-                                 image={imageUrl}
-                                 onRemove={() => onImageRemove(index)}
-                                 loading={loading}
-                              />
+                              <ImageWrapper key={index}>
+                                 <Image
+                                    alt="nook_image"
+                                    src={`user-images/${image}`}
+                                    fill={true}
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                    style={{
+                                       objectFit: "cover",
+                                       opacity: loading ? "50%" : "100%",
+                                    }}
+                                 />
+                                 <DeleteButton
+                                    onClick={onImageRemove}
+                                    disabled={loading}
+                                 />
+                              </ImageWrapper>
                            );
                         })}
                      </ImageGrid>
                   )}
-
                   {errors[fieldName] && (
                      <Para size="textxs" weight="regular" color="error">
                         {errors[fieldName].message}
@@ -158,21 +164,6 @@ function NookImageUploader({ fieldName, isNookPhotos }) {
       </>
    );
 }
-
-const ImageItem = ({ image, onRemove, loading }) => {
-   return (
-      <ImageWrapper>
-         <Image
-            alt="nook_image"
-            src={image.toString()}
-            fill={true}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            style={{ objectFit: "cover", opacity: loading ? "50%" : "100%" }}
-         />
-         <DeleteButton onClick={onRemove} disabled={loading} />
-      </ImageWrapper>
-   );
-};
 
 const ErrorListUploader = ({ uploaderErrors }) => (
    <div>
