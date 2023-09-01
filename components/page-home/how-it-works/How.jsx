@@ -9,13 +9,13 @@ export default function How() {
       {
          title: "Find a Nook",
          description:
-            "Explore member’s spaces. Filter by available dates, host’s brand name, city, size, and more!",
+            "Explore host’s spaces. Filter by available dates, host’s brand name, city, size, and more!",
          src: "/assets/marketing/home/how-it-works/how-it-works-1.svg",
       },
       {
          title: "Request to Book",
          description:
-            "Bookings can be a fixed rate by the host retailer, or a percentage of sales paid to them. ",
+            "Request your dates for popping in. Bookings are a percentage of sales paid to the host. ",
          src: "/assets/marketing/home/how-it-works/how-it-works-2.svg",
       },
    ];

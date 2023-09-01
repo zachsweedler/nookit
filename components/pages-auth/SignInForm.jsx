@@ -36,6 +36,9 @@ export default function SignInForm() {
         setSuccess(null);
         setLoading(true);
         setError(null);
+        await supabase.auth.signIn({email}, {
+            redirectTo: window.location.origin
+            });
         const { error } = await supabase.auth.signInWithOtp({
             email: formData.email,
             options: {
@@ -141,11 +144,11 @@ const FormSection = styled.div`
     width: 100%;
 `;
 
-const OrContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    column-gap: 5px;
-    width: 100%;
-    align-items: center;
-`;
+// const OrContainer = styled.div`
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+//     column-gap: 5px;
+//     width: 100%;
+//     align-items: center;
+// `;
