@@ -16,97 +16,93 @@ import Container from "@/styles/Containers";
 import { InputErrorWrap } from "../upload-nook/steps/Styled";
 
 export default function SignInForm() {
-    const [loading, setLoading] = useState(null);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
-    const supabase = createClientComponentClient();
-    const validationSchema = yup.object().shape({
-        email: yup.string().required("This is a required field."),
-    });
+   const [loading, setLoading] = useState(null);
+   const [error, setError] = useState(null);
+   const [success, setSuccess] = useState(null);
+   const supabase = createClientComponentClient();
+   const validationSchema = yup.object().shape({
+      email: yup.string().required("This is a required field."),
+   });
 
-    const {
-        register,
-        formState: { errors },
-        handleSubmit,
-    } = useForm({
-        resolver: yupResolver(validationSchema),
-    });
+   const {
+      register,
+      formState: { errors },
+      handleSubmit,
+   } = useForm({
+      resolver: yupResolver(validationSchema),
+   });
 
-    const onSubmit = async (formData) => {
-        setSuccess(null);
-        setLoading(true);
-        setError(null);
-        await supabase.auth.signIn({email}, {
-            redirectTo: window.location.origin
-            });
-        const { error } = await supabase.auth.signInWithOtp({
-            email: formData.email,
-            options: {
-                emailRedirectTo: 'http://localhost:3000/waitlist/form'
-            }
-        });
-        if (error) {
-            console.log(error);
-            setError(error);
-            setLoading(false);
-            setSuccess(false);
-        } else {
-            setLoading(false);
-            setSuccess(true);
-        }
-    };
+   const onSubmit = async (formData) => {
+      setSuccess(null);
+      setLoading(true);
+      setError(null);
+      const { error } = await supabase.auth.signInWithOtp({
+         email: formData.email,
+      });
+      if (error) {
+         console.log(error);
+         setError(error);
+         setLoading(false);
+         setSuccess(false);
+      } else {
+         setLoading(false);
+         setSuccess(true);
+      }
+   };
 
-    // const handleGoogleSignIn = async () => {
-    //     const { data, error } = await supabase.auth.signInWithOAuth({
-    //         provider: "google",
-    //     });
-    //     if (error) {
-    //         console.log("sign in error", error);
-    //     } else {
-    //         console.log("successful sign in", data);
-    //     }
-    // };
+   // const handleGoogleSignIn = async () => {
+   //     const { data, error } = await supabase.auth.signInWithOAuth({
+   //         provider: "google",
+   //     });
+   //     if (error) {
+   //         console.log("sign in error", error);
+   //     } else {
+   //         console.log("successful sign in", data);
+   //     }
+   // };
 
-    return (
-        <Container size="xs" style={{display: "flex", alignItems: "center"}}>
-            {success ? (
-                <ConfirmationPopup onClick={handleSubmit(onSubmit)} />
-            ) : (
-                <FormWrapper onSubmit={handleSubmit(onSubmit)}>
-                    <FormSection style={{rowGap: "9px"}}>
-                        <Para size="textsm" weight="medium" color="primary.grey.g700">Login or Sign Up</Para>
-                        <H6 weight="medium">Welcome to Nookit</H6>
-                    </FormSection>
-                    <FormSection>
-                        <InputErrorWrap>
-                        <Input
-                            id="filled-basic"
-                            variant="filled"
-                            label="Email"
-                            name="email"
-                            {...register("email")}
-                        />
-                        {errors.email && (
-                            <Para size="textxs" weight="regular" color="error">
-                                {errors.email.message}
-                            </Para>
-                        )}
-                        <Button $brandcolor='true' type="submit">
-                            {loading ? "Loading..." : "Log In / Sign Up"}
-                        </Button>
-                        </InputErrorWrap>
-                    </FormSection>
-                    {error && (
+   return (
+      <Container size="xs" style={{ display: "flex", alignItems: "center" }}>
+         {success ? (
+            <ConfirmationPopup onClick={handleSubmit(onSubmit)} />
+         ) : (
+            <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+               <FormSection style={{ rowGap: "9px" }}>
+                  <Para size="textsm" weight="medium" color="primary.grey.g700">
+                     Login or Sign Up
+                  </Para>
+                  <H6 weight="medium">Welcome to Nookit</H6>
+               </FormSection>
+               <FormSection>
+                  <InputErrorWrap>
+                     <Input
+                        id="filled-basic"
+                        variant="filled"
+                        label="Email"
+                        name="email"
+                        {...register("email")}
+                     />
+                     {errors.email && (
                         <Para size="textxs" weight="regular" color="error">
-                            {error.message}
+                           {errors.email.message}
                         </Para>
-                    )}
-                    {/* <OrContainer>
+                     )}
+                     <Button $brandcolor="true" type="submit">
+                        {loading ? "Loading..." : "Log In / Sign Up"}
+                     </Button>
+                  </InputErrorWrap>
+               </FormSection>
+               {error && (
+                  <Para size="textxs" weight="regular" color="error">
+                     {error.message}
+                  </Para>
+               )}
+               {/* <OrContainer>
                         <hr style={{width: "100%", height: "1px", backgroundColor: "#dddddd", borderWidth: "0"}} />
                         OR
                         <hr style={{width: "100%", height: "1px", backgroundColor: "#dddddd", borderWidth: "0"}} />
                     </OrContainer> */}
-                    {/* <Button
+               {/* <Button
                         onClick={handleGoogleSignIn}
                         $googlecolor='true'
                         style={{ position: "relative" }}
@@ -120,28 +116,28 @@ export default function SignInForm() {
                         />
                         Continue with Google
                     </Button> */}
-                </FormWrapper>
-            )}
-        </Container>
-    );
+            </FormWrapper>
+         )}
+      </Container>
+   );
 }
 
 const FormWrapper = styled.form`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: start;
-    justify-content: center;
-    row-gap: 40px;
-    padding-left: 30px;
-    padding-right: 30px;
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+   align-items: start;
+   justify-content: center;
+   row-gap: 40px;
+   padding-left: 30px;
+   padding-right: 30px;
 `;
 
 const FormSection = styled.div`
-    display: flex;
-    flex-direction: column;
-    row-gap: 20px;
-    width: 100%;
+   display: flex;
+   flex-direction: column;
+   row-gap: 20px;
+   width: 100%;
 `;
 
 // const OrContainer = styled.div`
