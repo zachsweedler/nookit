@@ -1,8 +1,9 @@
 "use client";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import waitlistFormReducer from "./slices/waitlistFormSlice";
-import uploadNookReducer from "./slices/uploadNookSlice"
 import companyLogoReducer from "./slices/companyLogoSlice"
+import nookFormReducer from "./slices/nookFormSlice";
+import viewNookReducer from "./slices/viewNookSlice";
+import bookingRequestReducer from "./slices/bookingRequestSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
@@ -14,9 +15,10 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-   waitlistForm: waitlistFormReducer,
-   uploadNook: uploadNookReducer,
-   companyLogo: companyLogoReducer
+   nookForm: nookFormReducer,
+   companyLogo: companyLogoReducer,
+   viewNook: viewNookReducer,
+   bookingRequest: bookingRequestReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -27,4 +29,3 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
-

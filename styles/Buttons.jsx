@@ -1,33 +1,37 @@
 'use client'
 import styled from "styled-components";
 
-const getBackgroundColor = ({ theme, $brandcolor, $blackcolor, $whitecolor, $googlecolor }) => {
+const getBackgroundColor = ({ theme, $brandcolor, $blackcolor, $whitecolor, $googlecolor, $brandoutline }) => {
   if ($brandcolor) return theme.color.primary.brand.b600;
   if ($blackcolor) return theme.color.black;
   if ($whitecolor) return theme.color.white;
   if ($googlecolor) return theme.color.white;
+  if ($brandoutline) return "transparent";
   return theme.color.primary.brand.b600;  // Default value
 };
 
-const getBackgroundColorHover = ({ theme, $brandcolor, $blackcolor, $whitecolor, $googlecolor }) => {
+const getBackgroundColorHover = ({ theme, $brandcolor, $blackcolor, $whitecolor, $googlecolor, $brandoutline }) => {
   if ($brandcolor) return theme.color.primary.brand.b700;
   if ($blackcolor) return theme.color.primary.grey.g900;
   if ($whitecolor) return theme.color.primary.grey.g25;
   if ($googlecolor) return theme.color.primary.grey.g25;
+  if ($brandoutline) return theme.color.primary.brand.b25;
   return theme.color.primary.brand.b600;  // Default value
 };
 
-const getTextColor = ({ theme, $brandcolor, $blackcolor, $whitecolor, $googlecolor }) => {
+const getTextColor = ({ theme, $brandcolor, $blackcolor, $whitecolor, $googlecolor, $brandoutline }) => {
   if ($brandcolor) return theme.color.white;
   if ($blackcolor) return theme.color.white;
   if ($whitecolor) return theme.color.primary.brand.b600;
   if ($googlecolor) return "#3C4043";
+  if ($brandoutline) return theme.color.primary.brand.b600;
   return theme.color.white;  // Default value
 };
 
-const getBorderColor = ({ $googlecolor }) => {
+const getBorderColor = ({ theme, $googlecolor, $brandoutline  }) => {
   if ($googlecolor) return "#DADCE0";
-  return "none";  // Default value
+  if ($brandoutline) return theme.color.primary.brand.b600;
+  return "transparent";  // Default value
 };
 
 export const Button = styled.button`
@@ -44,7 +48,7 @@ export const Button = styled.button`
   padding-right: 15px;
   display: flex;
   align-items: center;
-  text-decoration: none !important;
+  text-decoration: transparent !important;
   justify-content: center;
   &:hover {
     background-color: ${getBackgroundColorHover};

@@ -9,8 +9,8 @@ export default function LegalPage ({title, content}) {
         <Wrapper>
             <Container size="md">
                 <Content>
-                    <H5 weight="semibold">{title}</H5>
-                    <Para size="textmd" weight="regular">{content}</Para>
+                    <H5 $weight="semibold">{title}</H5>
+                    <Para size="textmd" $weight="regular">{content}</Para>
                 </Content>
             </Container>
         </Wrapper>

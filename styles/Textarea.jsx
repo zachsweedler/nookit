@@ -1,25 +1,54 @@
 "use client";
-import Textarea from "@mui/joy/Textarea";
+import { styled } from "styled-components";
+import { Para } from "./Typography";
 
-export default function TextArea({ placeholder, field }) {
-  return (
-    <>
-      <Textarea
-        disabled={false}
-        minRows={1}
-        placeholder={placeholder}
-        size="md"
-        variant="plain"
-        sx={{
-          padding: "12px !important",
-          backgroundColor: '#F8F6F5 !important',
-          '&:hover': {
-            backgroundColor: "#efebea !important",
-          },
-          "--Textarea-focusedHighlight" : "transparent"
-        }}
-        {...field}
-      />
-    </>
-  );
+export default function Textarea({
+   fieldName,
+   placeholder,
+   register,
+   errors,
+   label,
+   ref,
+   onChange,
+}) {
+   return (
+      <Wrap>
+         <Label htmlFor={fieldName}>{label}</Label>
+         <StyledTextarea
+            ref={ref}
+            name={fieldName}
+            placeholder={placeholder}
+            {...register(fieldName, {
+               onChange: onChange,
+            })}
+         />
+         {errors[fieldName] && (
+            <Para size="textxs" $weight="regular" color="error">
+               {errors[fieldName].message}
+            </Para>
+         )}
+      </Wrap>
+   );
 }
+
+const Label = styled.label`
+   font-weight: 500;
+   font-size: 1.4rem !important;
+   color: black;
+`;
+
+const StyledTextarea = styled.textarea`
+   border-radius: 5px;
+   padding: 15px;
+   &::placeholder {
+      color: #a09996;
+   }
+`;
+
+const Wrap = styled.div`
+   display: flex;
+   flex-direction: column;
+   row-gap: 12px;
+   width: 100%;
+   align-items: start;
+`;

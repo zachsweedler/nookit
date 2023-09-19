@@ -7,12 +7,6 @@ export const spaceAmenities = {
     "Storage Racks",
     "Loading Docks",
   ],
-  "Technology": [
-    "Wifi",
-    "Surround Sound Speakers",
-    "Projectors & Screens",
-    "PoS Systems",
-  ],
   "Comfort & Environment": [
     "A/C",
     "Heat",
@@ -26,6 +20,12 @@ export const spaceAmenities = {
     "Elevator",
     "Meeting Room",
     "TVs",
+  ],
+  "Technology": [
+    "Wifi",
+    "Surround Sound Speakers",
+    "Projectors & Screens",
+    "PoS Systems",
   ],
   "Accessibility": ["Parking", "Handicap Friendly", "Street Level"],
   "Security": ["CCTV Surveillance", "Alarm System", "Keycard Access"],

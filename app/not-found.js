@@ -1,8 +1,12 @@
+'use client'
+import Container from "@/styles/Containers";
+import { H1, Para } from "@/styles/Typography";
+
 export default function NotFound() {
   return (
-    <div width="100vw" direction="column" height="100vh" justify="center" align="center">
-       <h1 style={{fontSize: "200px"}}>404</h1>
-       <p>The page you&apos;re looking for does not exist</p>
-    </div>
+    <Container size="lg" style={{marginTop: "120px", textAlign: "center", display: "flex", flexDirection: "column", rowGap: "18px"}}>
+       <H1>Oops 🫤</H1>
+       <Para size="textmd" $weight="regular">The page you&apos;re looking for doesn&apos;t exist or has been removed.</Para>
+    </Container>
   );
 }

@@ -4,134 +4,169 @@ import Image from "next/image";
 import { ImageDropZone, ImageGrid, ImageWrapper } from "./Styles";
 import DeleteButton from "./DeleteButton";
 import { Para } from "@/styles/Typography";
-import { useDispatch, useSelector } from "react-redux";
-import { setFormValues } from "@/slices/uploadNookSlice";
 import { useFormContext } from "react-hook-form";
-import { useNookUUID } from "@/hooks/useNookId";
-import { useUserId } from "@/hooks/useUserId";
+import { useNookUUID } from "@/hooks/client-side/useNookId";
+import { useUserId } from "@/hooks/client-side/useUserId";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useStorageUpload } from "@/hooks/useStorageUpload";
 import { styled } from "styled-components";
 import supabaseLoader from "@/supabase-image-loader";
 
-function NookImageUploader({ fieldName, isNookPhotos }) {
-   const [images, setImages] = useState([]);
-   const [uploaderErrors, setUploaderErrors] = useState();
-   const [isLoading, setIsLoading] = useState();
-   const dispatch = useDispatch();
-   const reduxFormState = useSelector((state) => state.uploadNook.formValues);
-   const existingImages = useSelector(
-      (state) => state.uploadNook.formValues[fieldName]
-   );
+function NookImageUploader({ fieldName, isNookPhotos, title }) {
    const maxNumber = 6;
    const acceptedTypes = ["jpg", "jpeg", "png", "tif", "gif", "bmp", "webp"];
-   const userId = useUserId();
    const nookId = useNookUUID();
    const supabase = createClientComponentClient();
-   const { handleImageUpload, loading } = useStorageUpload(
-      userId,
-      nookId,
-      isNookPhotos
-   );
+   const userId = useUserId(supabase);
+   const [imagesArray, setImagesArray] = useState([]);
 
    const {
       formState: { errors },
       setValue,
+      getValues,
    } = useFormContext();
 
-   const handleImageChange = async (imageList) => {
-      setIsLoading(true);
-      console.log("existing images", existingImages);
-      try {
-         const removedImages = existingImages.filter((prevImagePath) => {
-            const prevImageName = prevImagePath.split("/").pop();
-            const isImagePresent = imageList.some(
-               (currImage) => currImage.file.name === prevImageName
+   useEffect(() => {
+      const getImagesFromStorage = async () => {
+         const { data: images, error: imagesError } = await supabase.storage
+            .from("user-images")
+            .list(
+               `${userId}/nooks/${nookId}/${isNookPhotos ? "nook" : "space"}`
             );
-            // // Debugging logs:
-            // console.log("Checking:", prevImageName);
-            // console.log("Is present in imageList?", isImagePresent);
-            return !isImagePresent;
-         });
-         console.log("Images to remove:", removedImages);
-         for (const imagePath of removedImages) {
-            const imageName = imagePath.split("/").pop();
-            const { error } = await supabase.storage
-               .from("user-images")
-               .remove(
+         if (imagesError) {
+            console.log("error listing images", imagesError);
+         } else {
+            const loadedImages = images.map((image) => image.name);
+            const paths = loadedImages.map(
+               (image) =>
                   `${userId}/nooks/${nookId}/${
                      isNookPhotos ? "nook" : "space"
-                  }/${imageName}`
-               );
-            if (error) {
-               console.error("Error deleting file:", error);
-            }
+                  }/${image}`
+            );
+            setValue(fieldName, paths);
+            setImagesArray(paths);
          }
+      };
+      getImagesFromStorage();
 
-         setImages(imageList);
-         const imageFiles = imageList.map((image) => image.file);
-         const paths = await Promise.all(
-            imageFiles.map((file) => handleImageUpload(file))
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [isNookPhotos, getValues, setValue, fieldName, nookId, userId]);
+
+   const updateNookTable = async (newArrayOfPaths) => {
+      const { data, error } = await supabase
+         .from("nooks")
+         .update({ [fieldName]: newArrayOfPaths })
+         .eq("id", nookId);
+      if (error) {
+         console.log(error);
+      } 
+   };
+
+   const handleImageUpload = async (file) => {
+      const { data, error } = await supabase.storage
+         .from("user-images")
+         .upload(
+            `${userId}/nooks/${nookId}/${isNookPhotos ? "nook" : "space"}/${
+               file.name
+            }`,
+            file,
+            { upsert: true }
          );
-         await dispatch(
-            setFormValues({ ...reduxFormState, [fieldName]: paths })
-         );
-         await setValue(fieldName, paths);
-         setIsLoading(false);
-      } catch (err) {
-         setUploaderErrors([...uploaderErrors, err]);
-         setIsLoading(false);
-         console.error("Error uploading images:", err);
+      if (error) {
+         console.log(error);
+      } else {
+         return `${userId}/nooks/${nookId}/${isNookPhotos ? "nook" : "space"}/${
+            file.name
+         }`;
       }
    };
 
+   const handleImageChange = async (imageList) => {
+      const imageFiles = imageList.map((image) => image.file);
+      const uploadedImagePaths = await Promise.all(
+         imageFiles.map((file) => handleImageUpload(file))
+      );
+
+      const updatedImages = [...imagesArray, ...uploadedImagePaths];
+      setImagesArray(updatedImages);
+      setValue(fieldName, updatedImages);
+
+      // Filter valid uploaded images
+      const validUploadedImages = uploadedImagePaths.filter(
+         (path) => path !== null
+      );
+
+      // Check if there are valid images to update
+      if (validUploadedImages.length > 0) {
+         updateNookTable(validUploadedImages);
+      }
+   };
+
+   const handleImageDelete = async (imagePath) => {
+      const { error } = await supabase.storage
+         .from("user-images")
+         .remove([imagePath]);
+      if (error) {
+         console.log("Error deleting image:", error);
+         return;
+      }
+      const filteredImages = imagesArray.filter((image) => image !== imagePath);
+      setImagesArray(filteredImages);
+      setValue(fieldName, filteredImages);
+      updateNookTable(filteredImages);
+      console.log(getValues());
+   };
+
    return (
-      <>
+      <Wrapper>
+         <Para size="textmd" $weight="medium">
+            {title}
+         </Para>
          <ImageUploading
-            value={images}
             onChange={handleImageChange}
             maxNumber={maxNumber}
             acceptType={acceptedTypes}
             maxFileSize={30000000}
             multiple
          >
-            {({ onImageUpload, onImageRemove, isDragging, dragProps }) => (
+            {({
+               onImageUpload,
+               isDragging,
+               dragProps,
+               errors: uploaderErrors,
+            }) => (
                <Wrapper>
-                  <ImageDropZone onClick={onImageUpload} {...dragProps}>
-                     {isDragging ? (
-                        <Para
-                           weight="regular"
-                           size="textsm"
-                           color="primary.brand.b950"
-                        >
-                           Now Drop!
-                        </Para>
-                     ) : (
-                        <div style={{ display: "inline-flex", gap: "3px" }}>
+                  {imagesArray?.length === 0 ? (
+                     <ImageDropZone onClick={onImageUpload} {...dragProps}>
+                        {isDragging ? (
                            <Para
-                              weight="regular"
+                              $weight="regular"
                               size="textsm"
                               color="primary.brand.b950"
                            >
-                              Choose a file
+                              Now Drop!
                            </Para>
-                           <Para
-                              weight="regular"
-                              size="textsm"
-                              color="primary.brand.b950"
-                           >
-                              or drag it here
-                           </Para>
-                        </div>
-                     )}
-                  </ImageDropZone>
-                  {isLoading ? (
-                     <Para size="textmd" weight="regular">
-                        Uploading...
-                     </Para>
+                        ) : (
+                           <div style={{ display: "inline-flex", gap: "3px" }}>
+                              <Para
+                                 $weight="regular"
+                                 size="textsm"
+                                 color="primary.brand.b950"
+                              >
+                                 Choose a file
+                              </Para>
+                              <Para
+                                 $weight="regular"
+                                 size="textsm"
+                                 color="primary.brand.b950"
+                              >
+                                 or drag it here
+                              </Para>
+                           </div>
+                        )}
+                     </ImageDropZone>
                   ) : (
                      <ImageGrid>
-                        {existingImages.map((image, index) => {
+                        {imagesArray?.map((image, index) => {
                            return (
                               <ImageWrapper key={index}>
                                  <Image
@@ -140,22 +175,42 @@ function NookImageUploader({ fieldName, isNookPhotos }) {
                                     src={`user-images/${image}`}
                                     fill={true}
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    style={{
-                                       objectFit: "cover",
-                                       opacity: loading ? "50%" : "100%",
-                                    }}
+                                    style={{ objectFit: "cover" }}
                                  />
                                  <DeleteButton
-                                    onClick={onImageRemove}
-                                    disabled={loading}
+                                    onClick={() => handleImageDelete(image)}
                                  />
                               </ImageWrapper>
                            );
                         })}
+                        {imagesArray.length > 0 && (
+                           <ImageDropZone
+                              onClick={onImageUpload}
+                              {...dragProps}
+                           >
+                              {isDragging ? (
+                                 <Para
+                                    $weight="regular"
+                                    size="textsm"
+                                    color="primary.brand.b950"
+                                 >
+                                    Now Drop!
+                                 </Para>
+                              ) : (
+                                 <Para
+                                    $weight="regular"
+                                    size="textsm"
+                                    color="primary.brand.b950"
+                                 >
+                                    Add +
+                                 </Para>
+                              )}
+                           </ImageDropZone>
+                        )}
                      </ImageGrid>
                   )}
                   {errors[fieldName] && (
-                     <Para size="textxs" weight="regular" color="error">
+                     <Para size="textxs" $weight="regular" color="error">
                         {errors[fieldName].message}
                      </Para>
                   )}
@@ -163,17 +218,27 @@ function NookImageUploader({ fieldName, isNookPhotos }) {
                </Wrapper>
             )}
          </ImageUploading>
-      </>
+      </Wrapper>
    );
 }
 
 const ErrorListUploader = ({ uploaderErrors }) => (
    <div>
-      {uploaderErrors?.map((error, index) => (
-         <Para key={index} weight="regular" size="textsm" color="error">
-            {error.message}
+      {uploaderErrors?.maxFileSize && (
+         <Para $weight="regular" size="textsm" color="error">
+            The file size exceeds the maximum limit.
          </Para>
-      ))}
+      )}
+      {uploaderErrors?.acceptType && (
+         <Para $weight="regular" size="textsm" color="error">
+            Your selected file type is not allowed.
+         </Para>
+      )}
+      {uploaderErrors?.maxNumber && (
+         <Para $weight="regular" size="textsm" color="error">
+            Number of selected images exceed maxNumber.
+         </Para>
+      )}
    </div>
 );
 

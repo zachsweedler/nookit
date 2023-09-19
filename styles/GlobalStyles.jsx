@@ -54,7 +54,7 @@ export const GlobalStyles = createGlobalStyle`
       color: inherit;
       text-decoration: none;
       &:hover {
-        text-decoration: underline;
+        text-decoration: none;
         color: inherit;
         cursor: pointer !important;
       }
@@ -87,6 +87,9 @@ export const GlobalStyles = createGlobalStyle`
        border: none;
        outline: none;
        font-size: ${({theme}) => theme.fontSize.textmd} !important;
+       height: 50px;
+       background-color: #F8F6F5;
+       width: 100%;
     }
 
     input:-webkit-autofill,
@@ -129,16 +132,15 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     textarea {
-        width: 100% !important;
-        min-height: 100px;
-        margin: 0px;
-        overflow: hidden;
-        outline: none;
-        resize: vertical;
-        border: none;
-        line-height: 1.5;
-        padding: 15px;
-        font-size: ${({theme}) => theme.fontSize.textmd} !important;
+       font-family: inherit;
+       border: none;
+       outline: none;
+       font-size: ${({theme}) => theme.fontSize.textmd} !important;
+       min-height: 150px;
+       background-color: #F8F6F5;
+       width: 100%;
+       resize: vertical;
+       padding: 0px;
     }
 
     textarea:hover {

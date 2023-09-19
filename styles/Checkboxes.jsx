@@ -11,6 +11,7 @@ export const Checkbox = styled.input.attrs({
   width: 30px;
   outline: none;
   border-radius: 5px;
+  flex-shrink: 0;
   border: ${({ theme }) =>
     `1px solid ${theme.color.primary.grey.g50} !important`};
   -moz-appearance: none;
@@ -35,6 +36,7 @@ export const Checkbox = styled.input.attrs({
 
 export const TextCheckboxWrapper = styled.div`
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
   padding: 0px 15px;

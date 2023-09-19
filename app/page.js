@@ -1,16 +1,14 @@
-'use client'
-import CallAction from "@/components/page-home/call-to-action/CallAction";
-import Footer from "@/components/page-home/footer/Footer";
-import Hero from "@/components/page-home/hero/Hero";
-import How from "@/components/page-home/how-it-works/How";
-import Pricing from "@/components/page-home/pricing/Pricing";
+import CallAction from "@/components/home-page/call-to-action/CallAction";
+import Footer from "@/components/home-page/footer/Footer";
+import Hero from "@/components/home-page/hero/Hero";
+import How from "@/components/home-page/how-it-works/How";
 
-export default function Home() {
+export default async function Home() {
+
   return (
     <main>
       <Hero/>
       <How/>
-      <Pricing/>
       <CallAction/>
       <Footer/>
     </main>

@@ -16,6 +16,3 @@ const companyLogoSlice = createSlice({
 export const { updateLogo } = companyLogoSlice.actions;
 
 export default companyLogoSlice.reducer;
-
-
-

@@ -1,46 +1,87 @@
 'use client'
-import { TextField } from "@mui/material";
-import { styled as muistyled } from "@mui/system";
-import './Input.css'
+import { styled } from "styled-components";
+import { Para } from "./Typography";
 
-export const Input = muistyled(TextField)({
-    "& .MuiInputBase-root": {
-      borderRadius: "5px",
-      backgroundColor: "#F8F6F5",
-      height: "55px",
-      width: "100%",
-      '&:hover': {
-         backgroundColor: "#efebea",
-      }
-    },
-    "& .MuiInputBase-root:hover:before": {
-      borderBottom: 'none !important'
-    },
-    "& .MuiFormLabel-root": {
+export default function Input({
+   fieldName,
+   placeholder,
+   register,
+   errors,
+   label,
+   ref,
+   onChange,
+   disabled,
+   hidden,
+   adornmentRight,
+   adornmentLeft
+}) {
+   return (
+      <Wrap>
+         <Label htmlFor={fieldName}>{label}</Label>
+         <StyledInputWrapper>
+            <StyledInput
+               adornmentLeft={adornmentLeft}
+               hidden={hidden}
+               disabled={disabled}
+               ref={ref}
+               name={fieldName}
+               placeholder={placeholder}
+               {...register(fieldName, {
+                  onChange: onChange,
+               })}
+            />
+            {adornmentRight && <AdornmentRight>{adornmentRight}</AdornmentRight>}
+            {adornmentLeft && <AdornmentLeft>{adornmentLeft}</AdornmentLeft>}
+         </StyledInputWrapper>
+         {errors[fieldName] && (
+            <Para size="textxs" $weight="regular" color="error">
+               {errors[fieldName].message}
+            </Para>
+         )}
+      </Wrap>
+   );
+}
 
-      color:"#A09996 !important"
-    },
-    "& .MuiInputBase-root:after": {
-      borderBottom: '2px solid #C1482F'
-    },
-    "& .MuiInputBase-root:before": {
-      borderBottom: "none" 
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#C1482F",
-      borderWidth: "1px",
-      "&:hover": {
-        border: "none"
-      }
-    },
-    "& .Mui-disabled": {
-      borderRadius: "5px",
-      backgroundColor: "#e6e2e1",
-      color: "transparent",
-      opacity: "90%",
-      cursor: "default",
-      border: "none"
-    },
-});
+const Label = styled.label`
+   font-weight: 500;
+   font-size: 1.4rem !important;
+   color: ${({theme}) => theme.color.black};
+`;
 
+const StyledInputWrapper = styled.div`
+   position: relative;
+   width: 100%;
+`;
 
+const StyledInput = styled.input`
+   border-radius: 5px;
+   padding:  ${({adornmentLeft}) => adornmentLeft ? "0px 30px" : "0px 15px"};
+   &::placeholder {
+      color: ${({theme}) => theme.color.primary.brand.b950};
+   }
+   &:hover {
+      cursor: ${({disabled}) => disabled ? 'not-allowed' : 'pointer'};
+   }
+`;
+
+const AdornmentRight = styled.div`
+   position: absolute;
+   top: 50%;
+   right: 15px;
+   transform: translateY(-50%);
+`;
+
+const AdornmentLeft = styled.div`
+   position: absolute;
+   top: 50%;
+   left: 15px;
+   transform: translateY(-50%);
+`;
+
+const Wrap = styled.div`
+   display: flex;
+   flex-direction: column;
+   row-gap: 12px;
+   width: 100%;
+   align-items: start;
+`;

@@ -20,7 +20,7 @@ const getColorFromTheme = (theme, colorKey) => {
     font-size: ${({ theme, size }) => theme.fontSize[size]};
     letter-spacing: ${({ theme, size }) => theme.letterSpacing[size]};
     line-height: ${({ theme, size }) => theme.lineHeight[size]};
-    font-weight: ${({ theme, size, weight }) => theme.fontWeight[size][weight]};
+    font-weight: ${({ theme, size, $weight }) => theme.fontWeight[size][$weight]};
     color: ${({ theme, color }) => getColorFromTheme(theme, color) || theme.color.black};
     @media screen and (max-width: ${({theme})=> theme.breakPoint.tablet}) {
       font-size: ${({ theme, size }) => theme.fontSize.tablet[size]};
@@ -33,7 +33,7 @@ const getColorFromTheme = (theme, colorKey) => {
     font-size: ${({ theme, size }) => theme.fontSize[size]};
     letter-spacing: ${({ theme, size }) => theme.letterSpacing[size]};
     line-height: ${({ theme, size }) => theme.lineHeight[size]};
-    font-weight: ${({ theme, size, weight }) => theme.fontWeight[size][weight]};
+    font-weight: ${({ theme, size, $weight }) => theme.fontWeight[size][$weight]};
     color: ${({ theme, color }) => getColorFromTheme(theme, color) || theme.color.black};
     &:hover {
       text-decoration:  ${({ $isLink }) => $isLink ? "underline" : "none"};

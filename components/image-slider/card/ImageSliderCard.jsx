@@ -1,12 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
-import { ImageSliderButton } from "./ImageSliderCardButton";
-import './Styles.css'
-import "swiper/css";
+import { ImageSliderCardButtons } from "./ImageSliderCardButtons";
 import { styled } from "styled-components";
 import supabaseLoader from "@/supabase-image-loader";
+import './Styles.css'
+import 'swiper/react';
+import 'swiper/css';
 
 function ImageSliderCard({ images, onClick }) {
     
@@ -30,7 +31,6 @@ function ImageSliderCard({ images, onClick }) {
           images?.map((image) => (
             <SwiperSlide
               key={image}
-              
             >
               <Image
                 loader={supabaseLoader}
@@ -56,8 +56,7 @@ function ImageSliderCard({ images, onClick }) {
         )}
         {showButtons && (
           <>
-            <ImageSliderButton direction="next" />
-            <ImageSliderButton direction="prev" />
+            <ImageSliderCardButtons/>
           </>
         )}
       </Swiper>

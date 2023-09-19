@@ -117,7 +117,7 @@ export function CompanyLogoUploader() {
                </EditButton>
             </Wrapper>
             {error && (
-               <Para color="red" size="textxs" weight="regular">
+               <Para color="red" size="textxs" $weight="regular">
                   {error}
                </Para>
             )}

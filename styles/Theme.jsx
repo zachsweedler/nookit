@@ -21,6 +21,7 @@ const theme = {
         b700: "#B73D24",
         b800: "#AC3922",
         b900: "#852B19",
+        b925: "#EFEBEA",
         b950: "#998A87"
       },
       grey: {
@@ -43,7 +44,7 @@ const theme = {
     displayxl: "8rem", // <H2 />
     displaylg: "6rem", // <H3 />
     displaymd: "5rem", // <H4 />
-    displaysm: "4rem", // <H5 />
+    displaysm: "3rem", // <H5 />
     displayxs: "2.5rem", // <H6 />
     textxl: "2.3rem", // <Para xl />
     textlg: "1.8rem", // <Para lg />
@@ -59,18 +60,18 @@ const theme = {
       displayxs: "2.0rem", // <H6 />
       textxl: "2.0rem", // <Para xl />
       textlg: "1.6rem", // <Para lg />
-      textmd: "1.6rem", // <Para md />
+      textmd: "1.4rem", // <Para md />
       textsm: "1.2rem",  // <Para sm />
       textxs: "1.1rem", // <Para xs />
     }
   },
   letterSpacing: {
-    display2xl: "0rem", // <H1 />
-    displayxl: "0rem", // <H2 />
-    displaylg: "0rem", // <H3 />
-    displaymd: "0rem", // <H4 />
-    displaysm: "0rem", // <H5 />
-    displayxs: "0rem", // <H6 />
+    display2xl: "-0.25rem", // <H1 />
+    displayxl: "-0.25rem", // <H2 />
+    displaylg: "-0.25rem", // <H3 />
+    displaymd: "-0.14rem", // <H4 />
+    displaysm: "-0.02rem", // <H5 />
+    displayxs: "-0.02rem", // <H6 />
     textxl: "0.01rem", // <Para xl />
     textlg: "0.01rem", // <Para lg />
     textmd: "0.01rem", // <Para md />
