@@ -3,7 +3,6 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation";
 import AuthForm from "@/components/auth-page/AuthForm";
-
 export const dynamic = "force-dynamic";
 
 export const metadata = {

@@ -3,6 +3,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 import { cookies } from 'next/headers'
 import { useUserSession } from "@/hooks/server-side/useUserSession";
+export const dynamic = 'force-dynamic'
 
 export default async function ViewBooking () {
 
