@@ -42,7 +42,7 @@ export default function PaymentsForm() {
          ? { customer_id: customerId, email: email, user_id: userId }
          : { email: email, user_id: userId };
       const response = await fetch(
-         "http://localhost:3000/api/create-customer-portal-session",
+         `${window.location.origin}/api/create-customer-portal-session`,
          {
             method: "POST",
             headers: {
@@ -78,7 +78,7 @@ export default function PaymentsForm() {
       if (customerId) {
          const getPaymentMethods = async () => {
             const response = await fetch(
-               "http://localhost:3000/api/list-customer-payment-methods",
+               `${window.location.origin}/api/list-customer-payment-methods`,
                {
                   method: "GET",
                   headers: {

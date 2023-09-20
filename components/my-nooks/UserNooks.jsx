@@ -75,7 +75,7 @@ export default function UserNooks() {
       if (connectAccountId) {
          const getMissingInfo = async () => {
             const response = await fetch(
-               "http://localhost:3000/api/get-connect-account",
+               `${window.location.origin}/api/get-connect-account`,
                {
                   method: "GET",
                   headers: {
@@ -100,7 +100,7 @@ export default function UserNooks() {
    async function createStripeAccount() {
       console.log("company data", companyData);
       const res = await fetch(
-         "http://localhost:3000/api/create-express-account",
+         `${window.location.origin}/api/create-express-account`,
          {
             method: "POST",
             headers: {
@@ -129,7 +129,7 @@ export default function UserNooks() {
             console.log("error inserting account ID", error);
          } else {
             const res = await fetch(
-               "http://localhost:3000/api/create-account-link",
+               `${window.location.origin}/api/create-account-link`,
                {
                   method: "GET",
                   headers: {
@@ -151,7 +151,7 @@ export default function UserNooks() {
    async function expressLogin() {
       if (missingInfo) {
          const res = await fetch(
-            "http://localhost:3000/api/create-account-link",
+            `${window.location.origin}/api/create-account-link`,
             {
                method: "GET",
                headers: {
@@ -168,7 +168,7 @@ export default function UserNooks() {
          }
       } else {
          const res = await fetch(
-            "http://localhost:3000/api/create-express-login-link",
+            `${window.location.origin}/api/create-express-login-link`,
             {
                method: "POST",
                headers: {

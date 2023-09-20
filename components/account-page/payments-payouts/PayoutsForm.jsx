@@ -55,7 +55,7 @@ export default function PayoutsForm() {
    async function createStripeAccount() {
       console.log("company data", companyData);
       const res = await fetch(
-         "http://localhost:3000/api/create-express-account",
+         `${window.location.origin}/api/create-express-account`,
          {
             method: "POST",
             headers: {
@@ -84,7 +84,7 @@ export default function PayoutsForm() {
             console.log("error inserting account ID", error);
          } else {
             const res = await fetch(
-               "http://localhost:3000/api/create-account-link",
+               `${window.location.origin}/api/create-account-link`,
                {
                   method: "GET",
                   headers: {
@@ -106,7 +106,7 @@ export default function PayoutsForm() {
    async function expressLogin() {
       if (missingInfo) {
          const res = await fetch(
-            "http://localhost:3000/api/create-account-link",
+            `${window.location.origin}/api/create-account-link`,
             {
                method: "GET",
                headers: {
@@ -123,7 +123,7 @@ export default function PayoutsForm() {
          }
       } else {
          const res = await fetch(
-            "http://localhost:3000/api/create-express-login-link",
+            `${window.location.origin}/api/create-express-login-link`,
             {
                method: "POST",
                headers: {
@@ -147,7 +147,7 @@ export default function PayoutsForm() {
       if (connectAccountId) {
          const getBankAccounts = async () => {
             const response = await fetch(
-               "http://localhost:3000/api/list-connect-account-banks",
+               `${window.location.origin}/api/list-connect-account-banks`,
                {
                   method: "GET",
                   headers: {
@@ -166,7 +166,7 @@ export default function PayoutsForm() {
 
          const getCards = async () => {
             const response = await fetch(
-               "http://localhost:3000/api/list-connect-account-cards",
+               `${window.location.origin}/api/list-connect-account-cards`,
                {
                   method: "GET",
                   headers: {
@@ -185,7 +185,7 @@ export default function PayoutsForm() {
 
          const getMissingInfo = async () => {
             const response = await fetch(
-               "http://localhost:3000/api/get-connect-account",
+               `${window.location.origin}/api/get-connect-account`,
                {
                   method: "GET",
                   headers: {

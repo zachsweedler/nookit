@@ -76,7 +76,7 @@ export default function RequestBookingCard({}) {
          if (existingCustomer && customerId) {
             const checkPaymentMethods = async () => {
                const response = await fetch(
-                  "http://localhost:3000/api/list-customer-payment-methods",
+                  `${window.location.origin}/api/list-customer-payment-methods`,
                   {
                      method: "GET",
                      headers: {
