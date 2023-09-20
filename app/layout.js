@@ -5,6 +5,7 @@ import { ThemeWrapper } from "@/styles/Theme";
 import { antdTheme } from "@/styles/antd/theme";
 import { poppins } from "@/styles/fonts";
 import { ConfigProvider } from "antd";
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata = {
    title: "Nookit | Showcase Your Brand Within a Store",
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
                   <ReduxProvider>
                      <NavPublic />
                      {children}
+                     <Analytics/>
                   </ReduxProvider>
                </body>
                </ConfigProvider>
