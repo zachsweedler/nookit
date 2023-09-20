@@ -9,8 +9,8 @@ export async function GET() {
         console.log('connect id', connect_account_id)
         const accountLink = await stripe.accountLinks.create({
             account: connect_account_id,
-            refresh_url: 'http://localhost:3000/account/payments-payouts/continue-express-onboarding',
-            return_url: 'http://localhost:3000/account/payments-payouts',
+            refresh_url: 'https://nookit.app/account/payments-payouts/continue-express-onboarding',
+            return_url: 'https://nookit.app/account/payments-payouts',
             type: 'account_onboarding',
         });
         console.log('account link created', accountLink);

@@ -12,7 +12,7 @@ export async function POST(req) {
       // Create a Stripe Checkout Session
       const session = await stripe.billingPortal.sessions.create({
          customer: customerId,
-         return_url: "http://localhost:3000/account/payments-payouts",
+         return_url: "https://nookit.app/account/payments-payouts",
       });
 
       const sessionUrl = session.url;

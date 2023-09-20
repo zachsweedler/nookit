@@ -214,9 +214,9 @@ export default function PayoutsForm() {
       <>
          {hasAccount &&
             (missingInfo ? null : (
-               <MethodsWrapper>
+               <>
                   {banks.length > 0 && (
-                     <>
+                     <MethodsWrapper>
                         <Para size="textlg" $weight="medium">
                            Banks
                         </Para>
@@ -230,10 +230,10 @@ export default function PayoutsForm() {
                               </Para>
                            </Card>
                         ))}
-                     </>
+                     </MethodsWrapper>
                   )}
                   {cards.length > 0 && (
-                     <>
+                     <MethodsWrapper>
                         <Para size="textlg" $weight="medium">
                            Debit Cards
                         </Para>
@@ -257,9 +257,9 @@ export default function PayoutsForm() {
                               </Para>
                            </Card>
                         ))}
-                     </>
+                     </MethodsWrapper>
                   )}
-               </MethodsWrapper>
+               </>
             ))}
          <Para
             size="textmd"
