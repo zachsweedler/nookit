@@ -7,6 +7,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { v4 as uuid } from "uuid";
+import Loading from "@/components/loading/Loading";
+import { Card, CardInfo, MethodsWrapper } from "./Styles";
 
 export default function PayoutsForm() {
    const [hasAccount, setHasAccount] = useState();
@@ -15,45 +17,132 @@ export default function PayoutsForm() {
    const [banks, setBanks] = useState([]);
    const [cards, setCards] = useState([]);
    const [missingInfo, setMissingInfo] = useState(false);
+   const [loading, setLoading] = useState(true);
+   const [dataLoading, setDataLoading] = useState(true);
    const supabase = createClientComponentClient();
    const companyId = useCompanyId(supabase);
 
    useEffect(() => {
-      if (companyId) {
-         const getConnectAccountId = async () => {
-            const { data, error } = await supabase
-               .from("stripe_connect")
-               .select("connect_account_id")
-               .eq("company_id", companyId);
-            if (error) {
-               console.log("error getting connect account Id", error);
-            } else {
-               if (data && data.length > 0) {
-                  setHasAccount(true);
-                  setConnectAccountId(data[0].connect_account_id);
+      setLoading(true);
+      const fetchData = async () => {
+         try {
+            if (companyId) {
+               const { data, error } = await supabase
+                  .from("stripe_connect")
+                  .select("id, connect_account_id")
+                  .eq("company_id", companyId);
+               if (error) {
+                  console.error("Error getting connect account Id", error);
                } else {
-                  setHasAccount(false);
+                  if (data && data.length > 0) {
+                     console.log(
+                        "Connect account ID:",
+                        data[0].connect_account_id
+                     );
+                     setHasAccount(true);
+                     setConnectAccountId(data[0].connect_account_id);
+                     setLoading(false);
+                  } else {
+                     setHasAccount(false);
+                     setLoading(false);
+                  }
                }
             }
-         };
-         const getCompanyData = async () => {
-            const { data, error } = await supabase
-               .from("company_profiles")
-               .select("email, industry, website")
-               .eq("id", companyId);
-            if (error) {
-               console.log("error getting company data", error);
-            } else {
-               setCompanyData(data[0]);
+         } catch (error) {
+            console.error("Error fetching data", error);
+         }
+      };
+      fetchData();
+   }, [companyId, supabase]);
+
+   useEffect(() => {
+      if (connectAccountId) {
+         // Fetch bank accounts
+         const fetchBankAccounts = async () => {
+            try {
+               const response = await fetch(
+                  `${window.location.origin}/api/list-connect-account-banks`,
+                  {
+                     method: "GET",
+                     headers: {
+                        "Content-Type": "application/json",
+                        "X-Connect-Account-Id": connectAccountId,
+                     },
+                  }
+               );
+               const res = await response.json();
+               if (!res.success) {
+                  console.error("Error fetching bank accounts", res.message);
+               } else {
+                  setBanks(res.data);
+               }
+            } catch (error) {
+               console.error("Error fetching bank accounts", error);
             }
          };
-         getConnectAccountId();
-         getCompanyData();
+
+         // Fetch cards
+         const fetchCards = async () => {
+            try {
+               const response = await fetch(
+                  `${window.location.origin}/api/list-connect-account-cards`,
+                  {
+                     method: "GET",
+                     headers: {
+                        "Content-Type": "application/json",
+                        "X-Connect-Account-Id": connectAccountId,
+                     },
+                  }
+               );
+               const res = await response.json();
+               if (!res.success) {
+                  console.error("Error fetching cards", res.message);
+               } else {
+                  setCards(res.data);
+               }
+            } catch (error) {
+               console.error("Error fetching cards", error);
+            }
+         };
+
+         // Fetch missing info
+         const fetchMissingInfo = async () => {
+            try {
+               const response = await fetch(
+                  `${window.location.origin}/api/get-connect-account`,
+                  {
+                     method: "GET",
+                     headers: {
+                        "Content-Type": "application/json",
+                        "X-Connect-Account-Id": connectAccountId,
+                     },
+                  }
+               );
+               const res = await response.json();
+               res?.missingData.length > 0
+                  ? setMissingInfo(true)
+                  : setMissingInfo(false);
+            } catch (error) {
+               console.error("Error fetching missing info", error);
+            }
+         };
+
+         // Fetch bank accounts, cards, and missing info one by one
+         const fetchData = async () => {
+            setDataLoading(true);
+            await fetchBankAccounts();
+            await fetchCards();
+            await fetchMissingInfo();
+            setDataLoading(false);
+         };
+
+         fetchData();
+      } else {
+         setDataLoading(false);
       }
-   }, [supabase, companyId]);
+   }, [connectAccountId]);
 
    async function createStripeAccount() {
-      console.log("company data", companyData);
       const res = await fetch(
          `${window.location.origin}/api/create-express-account`,
          {
@@ -143,149 +232,112 @@ export default function PayoutsForm() {
       }
    }
 
-   useEffect(() => {
-      if (connectAccountId) {
-         const getBankAccounts = async () => {
-            const response = await fetch(
-               `${window.location.origin}/api/list-connect-account-banks`,
-               {
-                  method: "GET",
-                  headers: {
-                     "Content-Type": "application/json",
-                     "X-Connect-Account-Id": connectAccountId,
-                  },
-               }
-            );
-            const res = await response.json();
-            if (!res.success) {
-               console.log("error getting banks", res.message);
-            } else {
-               setBanks(res.data);
-            }
-         };
-
-         const getCards = async () => {
-            const response = await fetch(
-               `${window.location.origin}/api/list-connect-account-cards`,
-               {
-                  method: "GET",
-                  headers: {
-                     "Content-Type": "application/json",
-                     "X-Connect-Account-Id": connectAccountId,
-                  },
-               }
-            );
-            const res = await response.json();
-            if (!res.success) {
-               console.log("error getting cards", res.message);
-            } else {
-               setCards(res.data);
-            }
-         };
-
-         const getMissingInfo = async () => {
-            const response = await fetch(
-               `${window.location.origin}/api/get-connect-account`,
-               {
-                  method: "GET",
-                  headers: {
-                     "Content-Type": "application/json",
-                     "X-Connect-Account-Id": connectAccountId,
-                  },
-               }
-            );
-            const res = await response.json();
-            if (!res.success) {
-               console.log("error getting missing info", res.message);
-            } else {
-               res.missingData.length > 0
-                  ? setMissingInfo(true)
-                  : setMissingInfo(false);
-            }
-         };
-
-         getBankAccounts();
-         getCards();
-         getMissingInfo();
-      }
-   }, [connectAccountId]);
-
    return (
       <>
-         {hasAccount &&
-            (missingInfo ? null : (
-               <>
-                  {banks.length > 0 && (
-                     <MethodsWrapper>
-                        <Para size="textlg" $weight="medium">
-                           Banks
+         {!loading && !dataLoading ? (
+            <>
+               {hasAccount ? (
+                  missingInfo ? (
+                     <Card>
+                        <CardInfo>
+                           <Para size="textmd" weight="regular">
+                              Missing info. Please finish payout onboarding.
+                           </Para>
+                        </CardInfo>
+                        <Button
+                           $brandoutline={true}
+                           style={{ width: "auto" }}
+                           onClick={expressLogin}
+                        >
+                           Finish
+                        </Button>
+                     </Card>
+                  ) : (
+                     <>
+                        {banks.length > 0 && (
+                           <MethodsWrapper>
+                              <Para size="textlg" $weight="medium">
+                                 Banks
+                              </Para>
+                              {banks?.map((account) => (
+                                 <Card key={account.id}>
+                                    <CardInfo>
+                                       <Para size="textmd" $weight="medium">
+                                          {account.bank_name}
+                                       </Para>
+                                       <Para size="textmd" $weight="medium">
+                                          {account.last4}
+                                       </Para>
+                                    </CardInfo>
+                                    <Button
+                                       $brandoutline={true}
+                                       style={{ width: "auto" }}
+                                       onClick={expressLogin}
+                                    >
+                                       Manage
+                                    </Button>
+                                 </Card>
+                              ))}
+                           </MethodsWrapper>
+                        )}
+                        {cards.length > 0 && (
+                           <MethodsWrapper>
+                              <Para size="textlg" $weight="medium">
+                                 Debit Cards
+                              </Para>
+                              {cards?.map((card) => (
+                                 <Card key={card.id}>
+                                    <CardInfo>
+                                       <Image
+                                          alt=""
+                                          src={`/payment-cards/${card.brand.toLowerCase()}.svg`}
+                                          width={50}
+                                          height={30}
+                                       />
+                                       <Para size="textmd" $weight="medium">
+                                          {card.brand}
+                                       </Para>
+                                       <Para
+                                          size="textsm"
+                                          $weight="regular"
+                                          color="primary.grey.g600"
+                                       >
+                                          •••• •••• •••• {card.last4}
+                                       </Para>
+                                    </CardInfo>
+                                    <Button
+                                       $brandoutline={true}
+                                       style={{ width: "auto" }}
+                                       onClick={expressLogin}
+                                    >
+                                       Manage
+                                    </Button>
+                                 </Card>
+                              ))}
+                           </MethodsWrapper>
+                        )}
+                     </>
+                  )
+               ) : (
+                  <Card>
+                     <CardInfo>
+                        <Para size="textmd" weight="regular">
+                           No payout method added
                         </Para>
-                        {banks?.map((account) => (
-                           <Card key={account.id}>
-                              <Para size="textmd" $weight="medium">
-                                 {account.bank_name}
-                              </Para>
-                              <Para size="textmd" $weight="medium">
-                                 {account.last4}
-                              </Para>
-                           </Card>
-                        ))}
-                     </MethodsWrapper>
-                  )}
-                  {cards.length > 0 && (
-                     <MethodsWrapper>
-                        <Para size="textlg" $weight="medium">
-                           Debit Cards
-                        </Para>
-                        {cards?.map((card) => (
-                           <Card key={card.id}>
-                              <Image
-                                 alt=""
-                                 src={`/payment-cards/${card.brand}.svg`}
-                                 width={50}
-                                 height={30}
-                              />
-                              <Para size="textmd" $weight="medium">
-                                 {card.brand}
-                              </Para>
-                              <Para
-                                 size="textsm"
-                                 $weight="regular"
-                                 color="primary.grey.g600"
-                              >
-                                 •••• •••• •••• {card.last4}
-                              </Para>
-                           </Card>
-                        ))}
-                     </MethodsWrapper>
-                  )}
-               </>
-            ))}
-         <Para
-            size="textmd"
-            $weight="medium"
-            $isLink={true}
-            color="primary.brand.b600"
-            onClick={hasAccount ? expressLogin : createStripeAccount}
-         >
-            {hasAccount ? "Manage Payout Methods" : "Add Payout Method +"}
-         </Para>
+                     </CardInfo>
+                     <Button
+                        $brandoutline={true}
+                        style={{ width: "auto" }}
+                        onClick={createStripeAccount}
+                     >
+                        Add Payout
+                     </Button>
+                  </Card>
+               )}
+            </>
+         ) : (
+            <Loading />
+         )}
       </>
    );
 }
-
-const MethodsWrapper = styled.div`
-   display: flex;
-   flex-direction: column;
-   row-gap: 18px;
-`;
-
-const Card = styled.div`
-   padding: 15px 18px;
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-   column-gap: 15px;
-   border-radius: 5px;
-   border: 1px solid ${({ theme }) => theme.color.primary.grey.g50};
-`;

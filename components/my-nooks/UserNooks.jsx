@@ -4,15 +4,13 @@ import NookCard from "./NookCard";
 import { styled } from "styled-components";
 import PageHeader from "../page-header/PageHeader";
 import Container from "@/styles/Containers";
-import { Para } from "@/styles/Typography";
 import { useDispatch } from "react-redux";
 import { restartForm, setFormValues } from "@/slices/nookFormSlice";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useCompanyId } from "@/hooks/client-side/useCompanyId";
-import { Button } from "@/styles/Buttons";
-import Link from "next/link";
 import EmptyState from "../empty-state/EmptyState";
 import { v4 as uuid } from "uuid";
+import Loading from "../loading/Loading";
 
 export default function UserNooks() {
    const dispatch = useDispatch();
@@ -23,6 +21,8 @@ export default function UserNooks() {
    const [hasConnectAccount, setHasConnectAccount] = useState();
    const [connectAccountId, setConnectAccountId] = useState();
    const [companyData, setCompanyData] = useState();
+   const [loading, setLoading] = useState(true);
+   const [missingLoading, setMissingLoading] = useState(true);
 
    useEffect(() => {
       if (companyId) {
@@ -65,9 +65,16 @@ export default function UserNooks() {
                setCompanyData(data[0]);
             }
          };
-         fetchUserNooks();
-         fetchConnectAccountId();
-         getCompanyData();
+
+         const fetchData = async () => {
+            setLoading(true);
+            await fetchUserNooks();
+            await fetchConnectAccountId();
+            await getCompanyData();
+            setLoading(false);
+         };
+
+         fetchData();
       }
    }, [supabase, companyId]);
 
@@ -88,12 +95,16 @@ export default function UserNooks() {
             if (!res.success) {
                console.log("error getting missing info", res.message);
             } else {
-               res.missingData.length > 0
-                  ? setMissingInfo(true)
-                  : setMissingInfo(false);
+               setMissingInfo(res.missingData.length > 0);
             }
          };
-         getMissingInfo();
+         const fetchData = async () => {
+            setMissingLoading(true);
+            await getMissingInfo();
+            setMissingLoading(false);
+         };
+
+         fetchData();
       }
    }, [connectAccountId]);
 
@@ -191,57 +202,69 @@ export default function UserNooks() {
    return (
       <Container size="xl" style={{ marginTop: "120px" }}>
          <Wrapper>
-            <PageHeader
-               title={nooks && nooks.length > 0 ? "My Nooks" : null}
-               button={
-                  nooks?.length === 0 || missingInfo || !hasConnectAccount
-                     ? false
-                     : "Add Nook"
-               }
-               buttonLink="/my-nooks/upload"
-               onClick={() => dispatch(restartForm())}
-            />
-            {!hasConnectAccount ? (
-               <EmptyState
-                  title="No Payout Method Added"
-                  description="To list a nook, you must first configure your payout details, ensuring you have either a bank account or card set up to receive funds. Please click the button below to get started."
-                  imgSrc="/add-payout-method.png"
-                  button="Add Payout Method +"
-                  onButtonClick={createStripeAccount}
-               />
-            ) : missingInfo ? (
+            {!missingLoading && !loading ? (
                <>
-                  <EmptyState
-                     title="Finish Payout Setup"
-                     description="To successfully list a nook, all required information for payouts must be provided. At the moment, your account is missing some information required for this process. To proceed and manage your payout information, please click the button below:"
-                     imgSrc="/add-payout-method.png"
-                     button="Add Missing Information"
-                     onButtonClick={expressLogin}
-                  />
-               </>
-            ) : nooks && nooks.length > 0 ? (
-               <Grid>
-                  {nooks?.map((nook, index) => (
-                     <NookCard
-                        key={index}
-                        id={nook.id}
-                        images={nook.location_images}
-                        name={nook.location_name}
-                        city={nook.location_city}
-                        state={nook.location_state_code}
-                        hostId={nook.host_id}
-                        hostCompany={companyData?.name || null}
-                        onClick={() => dispatch(setFormValues(nook))}
+                  {nooks?.length > 0 && !missingInfo && hasConnectAccount ? (
+                     <>
+                        <PageHeader
+                           title="My Nooks"
+                           button="Add Nook"
+                           buttonLink="/my-nooks/upload"
+                           onClick={() => dispatch(restartForm())}
+                        />
+                        <Grid>
+                           {nooks?.map((nook, index) => (
+                              <NookCard
+                                 key={index}
+                                 id={nook.id}
+                                 images={nook.location_images}
+                                 name={nook.location_name}
+                                 city={nook.location_city}
+                                 state={nook.location_state_code}
+                                 hostId={nook.host_id}
+                                 hostCompany={companyData?.name || null}
+                                 onClick={() => dispatch(setFormValues(nook))}
+                              />
+                           ))}
+                        </Grid>
+                     </>
+                  ) : !hasConnectAccount ? (
+                     <EmptyState
+                        title="No Payout Method Added"
+                        description="To list a nook, you must first configure your payout details, ensuring you have either a bank account or card set up to receive funds. Please click the button below to get started."
+                        imgSrc="/add-payout-method.png"
+                        button="Add Payout Method"
+                        onButtonClick={createStripeAccount}
                      />
-                  ))}
-               </Grid>
+                  ) : missingInfo ? (
+                     <EmptyState
+                        title="Finish Payout Setup"
+                        description="To successfully list a nook, all required information for payouts must be provided. At the moment, your account is missing some information required for this process. To proceed and manage your payout information, please click the button below:"
+                        imgSrc="/add-payout-method.png"
+                        button="Finish Payout Setup"
+                        onButtonClick={expressLogin}
+                     />
+                  ) : (
+                     <EmptyState
+                        title="No Nooks Added"
+                        description="With your payout information setup, you're ready to list your first nook! Click the below button to get started."
+                        button="List Your Nook"
+                        buttonHref="/my-nooks/upload"
+                     />
+                  )}
+               </>
             ) : (
-               <EmptyState
-                  title="No Nooks Added"
-                  description="With your payout information setup, you're ready to list your first nook! Click the below button to get started."
-                  button="List Your Nook +"
-                  buttonHref="/my-nooks/upload"
-               />
+               <div
+                  style={{
+                     width: "100%",
+                     height: "calc(100vh - 300px)",
+                     display: "flex",
+                     justifyContent: "center",
+                     alignItems: "center",
+                  }}
+               >
+                  <Loading />
+               </div>
             )}
          </Wrapper>
       </Container>

@@ -1,10 +1,13 @@
 "use client";
+import Loading from "@/components/loading/Loading";
 import { useUser } from "@/hooks/client-side/useUser";
 import { Para } from "@/styles/Typography";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Card, CardInfo, MethodsWrapper } from "./Styles";
+import { Button } from "@/styles/Buttons";
 
 export default function PaymentsForm() {
    const supabase = createClientComponentClient();
@@ -14,9 +17,12 @@ export default function PaymentsForm() {
    const [existingCustomer, setExistingCustomer] = useState();
    const [customerId, setCustomerId] = useState();
    const [paymentMethods, setPaymentMethods] = useState([]);
+   const [customerCheckLoading, setCustomerCheckLoading] = useState(true);
+   const [paymentMethodLoading, setPaymentMethodLoading] = useState(true);
 
    useEffect(() => {
       if (user) {
+         setCustomerCheckLoading(true);
          const checkCustomerExists = async () => {
             const { data, error } = await supabase
                .from("stripe_customers")
@@ -34,8 +40,35 @@ export default function PaymentsForm() {
             }
          };
          checkCustomerExists();
+         setCustomerCheckLoading(false);
       }
    }, [supabase, email, userId, user]);
+
+   useEffect(() => {
+      if (customerId) {
+         setPaymentMethodLoading(true);
+         const getPaymentMethods = async () => {
+            const response = await fetch(
+               `${window.location.origin}/api/list-customer-payment-methods`,
+               {
+                  method: "GET",
+                  headers: {
+                     "Content-Type": "application/json",
+                     "X-Customer-Id": customerId,
+                  },
+               }
+            );
+            const res = await response.json();
+            if (!res.success) {
+               console.log("error getting payment methods", res.message);
+            } else {
+               setPaymentMethods(res.data);
+            }
+         };
+         getPaymentMethods();
+         setPaymentMethodLoading(false);
+      }
+   }, [customerId]);
 
    const createCustomerPortalSession = async () => {
       const requestBody = existingCustomer
@@ -74,88 +107,52 @@ export default function PaymentsForm() {
       }
    };
 
-   useEffect(() => {
-      if (customerId) {
-         const getPaymentMethods = async () => {
-            const response = await fetch(
-               `${window.location.origin}/api/list-customer-payment-methods`,
-               {
-                  method: "GET",
-                  headers: {
-                     "Content-Type": "application/json",
-                     "X-Customer-Id": customerId,
-                  },
-               }
-            );
-            const res = await response.json();
-            if (!res.success) {
-               console.log("error getting payment methods", res.message);
-            } else {
-               setPaymentMethods(res.data);
-            }
-         };
-         getPaymentMethods();
-      }
-   }, [customerId]);
-
    return (
       <>
-         {paymentMethods?.length > 0 && (
-            <MethodsWrapper>
-               <Para size="textlg" $weight="medium">
-                  Methods
-               </Para>
-               {paymentMethods?.map((method) => (
-                  <Card key={method.id}>
-                     <Image
-                        alt=""
-                        src={`/payment-cards/${method.card.brand}.svg`}
-                        width={50}
-                        height={30}
-                     />
+         {customerCheckLoading && paymentMethodLoading ? (
+            <Loading />
+         ) : (
+            paymentMethods?.length > 0 ? (
+               <MethodsWrapper>
+                  <Para size="textlg" $weight="medium">
+                     Methods
+                  </Para>
+                  {paymentMethods?.map((method) => (
+                     <Card key={method.id}>
+                        <CardInfo>
+                           <Image
+                              alt=""
+                              src={`/payment-cards/${method.card.brand.toLowerCase()}.svg`}
+                              width={50}
+                              height={30}
+                           />
 
-                     <Para size="textmd" $weight="medium">
-                        {method.card.brand.charAt(0).toUpperCase() +
-                           method.card.brand.slice(1)}
-                     </Para>
-                     <Para
-                        size="textsm"
-                        $weight="regular"
-                        color="primary.grey.g600"
-                     >
-                        •••• •••• •••• {method.card.last4}
-                     </Para>
-                  </Card>
-               ))}
-            </MethodsWrapper>
+                           <Para size="textmd" $weight="medium">
+                              {method.card.brand.charAt(0).toUpperCase() +
+                                 method.card.brand.slice(1)}
+                           </Para>
+                           <Para
+                              size="textsm"
+                              $weight="regular"
+                              color="primary.grey.g600"
+                           >
+                              •••• •••• •••• {method.card.last4}
+                           </Para>
+                        </CardInfo>
+                        <Button $brandoutline={true} onClick={createCustomerPortalSession} style={{width: "auto"}}>Manage</Button>
+                     </Card>
+                  ))}
+               </MethodsWrapper>
+            ) : (
+               <Card>
+                  <CardInfo>
+                     <Para size="textmd" weight="regular">No payment methods added</Para>
+                  </CardInfo>
+                  <Button $brandoutline={true} onClick={createCustomerPortalSession} style={{width: "auto"}}>Add Card</Button>
+               </Card>
+            )
          )}
-         <Para
-            size="textmd"
-            $weight="medium"
-            $isLink={true}
-            color="primary.brand.b600"
-            onClick={createCustomerPortalSession}
-         >
-            {existingCustomer
-               ? "Manage Payment Methods"
-               : "Add Payment Method +"}
-         </Para>
       </>
    );
 }
 
-const MethodsWrapper = styled.div`
-   display: flex;
-   flex-direction: column;
-   row-gap: 18px;
-`;
-
-const Card = styled.div`
-   padding: 15px 18px;
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-   column-gap: 15px;
-   border-radius: 5px;
-   border: 1px solid ${({ theme }) => theme.color.primary.grey.g50};
-`;

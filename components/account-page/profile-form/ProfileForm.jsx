@@ -16,6 +16,7 @@ import Image from "next/image";
 import PageHeader from "../../page-header/PageHeader";
 import Select from "@/styles/Select";
 import { industries } from "@/utils/industries";
+import Loading from "@/components/loading/Loading";
 
 export default function ProfileForm() {
    const supabase = createClientComponentClient();
@@ -131,9 +132,7 @@ export default function ProfileForm() {
          </Para>
          <Section>
             {!formValues ? (
-               <Para size="textmd" $weight="regular">
-                  Loading...
-               </Para>
+               <Loading/>
             ) : (
                <Form onSubmit={handleSubmit(onSubmit)}>
                   <TwoColFields>

@@ -8,6 +8,8 @@ import { styled } from "styled-components";
 import { Para } from "@/styles/Typography";
 import { useDispatch } from "react-redux";
 import { setViewNook } from "@/slices/viewNookSlice";
+import Loading from "../loading/Loading";
+import EmptyState from "../empty-state/EmptyState";
 
 export default function FetchNooks() {
    const [nooks, setNooks] = useState([]);
@@ -36,10 +38,10 @@ export default function FetchNooks() {
    return (
       <Container size="xl" style={{ marginTop: "120px" }}>
          {loading ? (
-            <Para size="textmd" $weight="regular">
-               Loading...
-            </Para>
-         ) : (
+            <CenterWrapper>
+               <Loading />
+            </CenterWrapper>
+         ) : nooks && nooks.length > 0 ? (
             <Grid>
                {nooks.map((nook, index) => (
                   <NookCard
@@ -55,6 +57,15 @@ export default function FetchNooks() {
                   />
                ))}
             </Grid>
+         ) : (
+            <CenterWrapper>
+               <EmptyState
+                  title="No Nooks Found"
+                  description="Looks like there are no nooks! Interested in hosting one at your store? Click the link below:"
+                  button="Host a Nook"
+                  buttonHref="/my-nooks"
+               />
+            </CenterWrapper>
          )}
       </Container>
    );
@@ -70,4 +81,12 @@ const Grid = styled.div`
       grid-template-columns: 1fr;
       grid-row-gap: 40px;
    }
+`;
+
+const CenterWrapper = styled.div`
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   height: calc(100vh - 300px);
 `;
