@@ -36,6 +36,7 @@ export default function UserNooks() {
                console.error("error fetching nooks", error);
             } else {
                setNooks(data);
+               console.log('nook data', data)
             }
          };
          const fetchConnectAccountId = async () => {
@@ -63,9 +64,9 @@ export default function UserNooks() {
                console.log("error getting company data", error);
             } else {
                setCompanyData(data[0]);
+               console.log('company data', data)
             }
          };
-
          const fetchData = async () => {
             setLoading(true);
             await fetchUserNooks();
@@ -103,8 +104,9 @@ export default function UserNooks() {
             await getMissingInfo();
             setMissingLoading(false);
          };
-
          fetchData();
+      } else {
+         setMissingLoading(false);
       }
    }, [connectAccountId]);
 
@@ -198,7 +200,7 @@ export default function UserNooks() {
          }
       }
    }
-
+   
    return (
       <Container size="xl" style={{ marginTop: "120px" }}>
          <Wrapper>
