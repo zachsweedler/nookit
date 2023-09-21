@@ -47,6 +47,15 @@ export default function PayoutsForm() {
                      setLoading(false);
                   }
                }
+               const { data: companyData, error: companyDataError} = await supabase
+                  .from('company_profiles')
+                  .select('email, website')
+                  .eq('id', companyId)
+               if (companyDataError) {
+                  console.log('error getting company data', companyDataError)
+               } else {
+                  setCompanyData(companyData[0])
+               }
             }
          } catch (error) {
             console.error("Error fetching data", error);
@@ -56,6 +65,7 @@ export default function PayoutsForm() {
    }, [companyId, supabase]);
 
    useEffect(() => {
+      console.log('company data', companyData)
       if (connectAccountId) {
          // Fetch bank accounts
          const fetchBankAccounts = async () => {
@@ -140,7 +150,7 @@ export default function PayoutsForm() {
       } else {
          setDataLoading(false);
       }
-   }, [connectAccountId]);
+   }, [connectAccountId, companyData]);
 
    async function createStripeAccount() {
       const res = await fetch(

@@ -103,10 +103,6 @@ export default function ProfileForm() {
       }
    };
 
-   useEffect(()=>{
-      console.log(formValues)
-   },[formValues])
-
    return (
       <Container
          size="md"
