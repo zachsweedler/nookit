@@ -58,7 +58,7 @@ client.defineJob({
               },
               currency: "usd",
               amount: booking.booking_price_total_before_taxes, // $100 + $30 guest fee = $130
-              application_fee_amount: booking.processing_fee, // $130 - $30 host fee = $100 to platform before fees
+              application_fee_amount: booking.processing_fee, // $130 - $30 host fee = $100 to platform before fees || right now, host fee mirrors what the guest pays as a processing fee.
               customer: booking.guest_customer_id,
               transfer_data: {
                 destination: booking.host_connect_account_id,

@@ -18,6 +18,7 @@ import * as yup from "yup";
 import AuthForm from "@/components/auth-page/AuthForm";
 import EmptyState from "@/components/empty-state/EmptyState";
 import { useCompanyId } from "@/hooks/client-side/useCompanyId";
+import { formatCurrency } from "@/utils/currencyFormatter";
 
 export default function RequestBookingCard({}) {
    const [dayCount, setDayCount] = useState();
@@ -131,6 +132,7 @@ export default function RequestBookingCard({}) {
    },[nook.user_id, supabase, userId])
 
 
+   let endDateSelect
    // date selection handler
    const dateFormat = "MM/DD/YYYY";
    const handleDateSelect = (dates) => {
@@ -138,24 +140,26 @@ export default function RequestBookingCard({}) {
          dates[1]?.$D - dates[0]?.$D === 0
             ? 1
             : dates[1]?.$D - dates[0]?.$D + 1;
-      const price = nook.daily_rate * days;
-      const startDate = `${dates[0]?.$M + 1}/${dates[0]?.$D}/${dates[0]?.$y}`;
-      const endDate = `${dates[1]?.$M + 1}/${dates[1]?.$D}/${dates[1]?.$y}`;
-      setValue("dates", `${startDate} - ${endDate}`, { shouldValidate: true });
+      const price = nook.daily_rate * days
+      const startDateSelect = `${dates[0]?.$M + 1}/${dates[0]?.$D}/${dates[0]?.$y}`;
+      if (dates[1]) {
+         endDateSelect = `${dates[1]?.$M + 1}/${dates[1]?.$D}/${dates[1]?.$y}`;
+      }
+      setValue("dates", `${startDateSelect} - ${endDateSelect}`, { shouldValidate: true });
       setDayCount(days);
       setBookingPriceTotal(price);
       let newProcessingTotal;
       if (days >= 30) {
-         newProcessingTotal = 15 * days;
+         newProcessingTotal = price * 0.20
       } else if (days >= 7) {
-         newProcessingTotal = 25 * days;
+         newProcessingTotal = price * 0.15
       } else {
-         newProcessingTotal = 30 * days;
+         newProcessingTotal = price * 0.12
       }
       setProcessingTotal(newProcessingTotal);
       setTotalBeforeTaxes(newProcessingTotal + price);
-      setStartDate(startDate);
-      setEndDate(endDate);
+      setStartDate(startDateSelect);
+      setEndDate(endDateSelect);
    };
 
    // this is what calculates which dates to disable for the antd date range picker.
@@ -313,10 +317,10 @@ export default function RequestBookingCard({}) {
                <Calculation>
                   <LineItem>
                      <Para size="textmd" $weight="regular">
-                        ${nook.daily_rate} x {dayCount} days
+                        {formatCurrency(nook.daily_rate)} x {dayCount} days
                      </Para>
                      <Para size="textmd" $weight="regular">
-                        ${bookingPriceTotal}
+                        {formatCurrency(bookingPriceTotal)}
                      </Para>
                   </LineItem>
                   <LineItem>
@@ -324,7 +328,7 @@ export default function RequestBookingCard({}) {
                         Processing
                      </Para>
                      <Para size="textmd" $weight="regular">
-                        ${processingTotal}
+                        {formatCurrency(processingTotal)}
                      </Para>
                   </LineItem>
                   <Divider style={{ width: "100%" }} />
@@ -333,7 +337,7 @@ export default function RequestBookingCard({}) {
                         Total before taxes
                      </Para>
                      <Para size="textmd" $weight="medium">
-                        ${totalBeforeTaxes}
+                        {formatCurrency(totalBeforeTaxes)}
                      </Para>
                   </LineItem>
                </Calculation>
