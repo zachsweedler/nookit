@@ -74,7 +74,6 @@ export default function UserNooks() {
             await getCompanyData();
             setLoading(false);
          };
-
          fetchData();
       }
    }, [supabase, companyId]);
@@ -110,6 +109,8 @@ export default function UserNooks() {
       }
    }, [connectAccountId]);
 
+
+   
    async function createStripeAccount() {
       console.log("company data", companyData);
       const res = await fetch(
@@ -200,7 +201,7 @@ export default function UserNooks() {
          }
       }
    }
-   
+
    return (
       <Container size="xl" style={{ marginTop: "120px" }}>
          <Wrapper>

@@ -65,7 +65,6 @@ export default function PayoutsForm() {
    }, [companyId, supabase]);
 
    useEffect(() => {
-      console.log('company data', companyData)
       if (connectAccountId) {
          // Fetch bank accounts
          const fetchBankAccounts = async () => {
