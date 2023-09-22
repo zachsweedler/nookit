@@ -34,7 +34,7 @@ export default function PayoutsForm() {
                if (error) {
                   console.error("Error getting connect account Id", error);
                } else {
-                  if (data && data.length > 0) {
+                  if (data[0]?.connect_account_id) {
                      console.log(
                         "Connect account ID:",
                         data[0].connect_account_id
@@ -56,6 +56,7 @@ export default function PayoutsForm() {
                } else {
                   setCompanyData(companyData[0])
                }
+
             }
          } catch (error) {
             console.error("Error fetching data", error);

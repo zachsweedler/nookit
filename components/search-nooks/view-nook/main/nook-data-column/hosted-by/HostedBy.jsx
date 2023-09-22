@@ -17,7 +17,7 @@ export default function HostedBy () {
                         <Image
                            alt=""
                            loader={supabaseLoader}
-                           src={`/user-images/${nook?.company_profiles?.logo}`}
+                           src={nook?.company_profiles?.logo ? `/user-images/${nook.company_profiles.logo}` : "/assets/fallback_images/fallback_company_logo.svg"}
                            fill={true}
                            style={{ objectFit: "cover" }}
                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

@@ -46,35 +46,55 @@ client.defineJob({
         }
       );
 
-  
       // For each completed booking, create a payment intent and update the booking with the payment_intent_id
       for (const booking of bookings) {
+
+        const paymentMethod = await io.stripe.runTask(
+          "get-payment-method",
+          async (stripeClient) => {
+            const customer = await stripeClient.customers.retrieve(booking.guest_customer_id);
+            if (customer.error) {
+              await io.logger.error("Failed to create payment intent:", customer.error);
+              throw error;
+            }
+            await io.logger.info('payment method via data', customer)
+            return customer.invoice_settings.default_payment_method;
+          }
+        );
+      
+        const amount = Math.round(booking.booking_price_total_before_taxes * 100);
+        const applicationFee = Math.round(booking.processing_fee * 100);
+
         const paymentIntent = await io.stripe.runTask(
           "create-payment-intent",
           async (stripeClient) => {
-            const { data, error } = await stripeClient.paymentIntents.create({
+            const createPaymentIntent = await stripeClient.paymentIntents.create({
               automatic_payment_methods: {
                 enabled: true,
               },
               currency: "usd",
-              amount: booking.booking_price_total_before_taxes, // $100 + $30 guest fee = $130
-              application_fee_amount: booking.processing_fee, // $130 - $30 host fee = $100 to platform before fees || right now, host fee mirrors what the guest pays as a processing fee.
+              amount: amount, // have to provide the amount in cents. $100 + $30 guest fee = $130
+              application_fee_amount: applicationFee * 2, // have to provide the amount in cents. 
               customer: booking.guest_customer_id,
+              payment_method: paymentMethod,
+              confirm: true,
+              off_session: true,
               transfer_data: {
                 destination: booking.host_connect_account_id,
               },
             });
-            if (error) {
-              await io.logger.error("Failed to create payment intent:", { error });
+            if (createPaymentIntent.error) {
+              await io.logger.error("Failed to create payment intent:", createPaymentIntent.error);
               throw error;
             }
-            return data;
+            return createPaymentIntent;
           }
         );
   
         const updateBookingTable = await io.supabase.runTask(
           "update-booking-with-payment-intent",
           async (supabaseClient) => {
+            console.log('payment intent', paymentIntent)
             const { data, error } = await supabaseClient
               .from("bookings")
               .update({ 
@@ -85,7 +105,7 @@ client.defineJob({
             if (error) {
               throw error;
             } 
-            return  data;
+            return data;
           }
         );
 

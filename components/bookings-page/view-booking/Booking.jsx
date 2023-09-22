@@ -156,7 +156,7 @@ export default function Booking() {
                               ? "You accepted this booking request."
                               : status === "Declined"
                               ? "You declined this booking request."
-                              : status === "Complete"
+                              : status === "Completed"
                               ? "This booking has been completed."
                               : status === "Canceled"
                               ? "This booking has been canceled."

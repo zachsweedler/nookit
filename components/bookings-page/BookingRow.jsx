@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { setBookingRequest } from "@/slices/bookingRequestSlice";
 import { GridCell } from "./HostBookings";
+import { formatCurrency } from "@/utils/currencyFormatter";
 
 export default function BookingRow({ ...props }) {
    const request = { ...props };
@@ -49,13 +50,23 @@ export default function BookingRow({ ...props }) {
                   <Image
                      loader={supabaseLoader}
                      alt="host-company-logo"
-                     src={`user-images/${props.guestUserId === props.authUserId ? props.hostLogo : props.guestLogo}`}
+                     src={
+                        props.guestUserId === props.authUserId
+                          ? props.hostLogo
+                            ? `user-images/${props.hostLogo}`
+                            : "/assets/fallback_images/fallback_company_logo.svg"
+                          : props.guestLogo
+                            ? `user-images/${props.guestLogo}`
+                            : "/assets/fallback_images/fallback_company_logo.svg"
+                      }
                      width={30}
                      height={30}
                      style={{ borderRadius: "100%", objectFit: "cover" }}
                   />
                   <StyledPara size="textmd" $weight="regular">
-                     {props.guestUserId === props.authUserId ? props.hostName : props.guestName}
+                     {props.guestUserId === props.authUserId
+                        ? props.hostName
+                        : props.guestName}
                   </StyledPara>
                </Host>
             </GridCell>
@@ -72,8 +83,8 @@ export default function BookingRow({ ...props }) {
             <GridCell>
                <StyledPara size="textmd" $weight="regular">
                   {props.guestUserId === props.authUserId
-                     ? `$${props.bookingPriceTotalBeforeTax}`
-                     : `$${props.hostPayout}`}
+                     ? `${formatCurrency(props.bookingPriceTotalBeforeTax)}`
+                     : `${formatCurrency(props.hostPayout)}`}
                </StyledPara>
             </GridCell>
          </GridRow>

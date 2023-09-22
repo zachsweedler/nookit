@@ -5,6 +5,7 @@ import { styled } from "styled-components";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import supabaseLoader from "@/supabase-image-loader";
+import { formatCurrency } from "@/utils/currencyFormatter";
 
 export default function RequestSummary({ draftData }) {
    const searchParams = useSearchParams();
@@ -71,11 +72,11 @@ export default function RequestSummary({ draftData }) {
             <Calculation>
                <LineItem>
                   <Para size="textmd" $weight="regular">
-                     ${draftData?.nooks.daily_rate} x {draftData?.days_count}{" "}
+                     {formatCurrency(draftData?.nooks.daily_rate)} x {draftData?.days_count}{" "}
                      days
                   </Para>
                   <Para size="textmd" $weight="regular">
-                     ${draftData?.booking_price}
+                     {formatCurrency(draftData?.booking_price)}
                   </Para>
                </LineItem>
                <LineItem>
@@ -83,7 +84,7 @@ export default function RequestSummary({ draftData }) {
                      Processing
                   </Para>
                   <Para size="textmd" $weight="regular">
-                     ${draftData?.processing_fee}
+                     {formatCurrency(draftData?.processing_fee)}
                   </Para>
                </LineItem>
             </Calculation>
@@ -94,7 +95,7 @@ export default function RequestSummary({ draftData }) {
                      Total before taxes
                   </Para>
                   <Para size="textmd" $weight="medium">
-                     ${draftData?.booking_price_total_before_taxes}
+                     {formatCurrency(draftData?.booking_price_total_before_taxes)}
                   </Para>
                </LineItem>
             </Calculation>

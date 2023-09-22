@@ -10,6 +10,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import Snackbar from "@/styles/mui/Snackbar";
+import { formatCurrency } from "@/utils/currencyFormatter";
 
 
 export default function Summary({ userId }) {
@@ -175,7 +176,7 @@ export default function Summary({ userId }) {
             <Calculation>
                <LineItem>
                   <Para size="textmd" $weight="regular">
-                     ${data?.dailyRate} x {data?.daysCount} days
+                     {formatCurrency(data?.dailyRate)} x {data?.daysCount} days
                   </Para>
                   <Para size="textmd" $weight="regular">
                      ${data?.bookingPrice}
@@ -187,8 +188,8 @@ export default function Summary({ userId }) {
                   </Para>
                   <Para size="textmd" $weight="regular">
                      {userId === data.hostUserId
-                        ? `-$${data?.processingFee}`
-                        : `$${data?.processingFee}`}
+                        ? `-${formatCurrency(data?.processingFee)}`
+                        : `${formatCurrency(data?.processingFee)}`}
                   </Para>
                </LineItem>
                <Divider style={{ width: "100%" }} />
@@ -202,8 +203,8 @@ export default function Summary({ userId }) {
                   </Para>
                   <Para size="textmd" $weight="medium">
                      {userId === data.hostUserId
-                        ? `$${data?.hostPayout}`
-                        : `$${data?.bookingPriceTotalBeforeTax}`}
+                        ? `${formatCurrency(data?.hostPayout)}`
+                        : `${formatCurrency(data?.bookingPriceTotalBeforeTax)}`}
                   </Para>
                </LineItem>
             </Calculation>
