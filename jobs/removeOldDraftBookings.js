@@ -18,9 +18,8 @@ client.defineJob({
    trigger: intervalTrigger({ seconds: 3600 }), // Run every hour
    run: async (payload, io, ctx) => {
 
-      const currentDate = new Date();
+      const currentDate = payload.ts;
       currentDate.setDate(currentDate.getDate() - 30);
-
       const thirtyDaysAgo = currentDate.toISOString();
 
       // Fetch active bookings where end_date is 30 days old

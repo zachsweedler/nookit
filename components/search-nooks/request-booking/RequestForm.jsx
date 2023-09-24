@@ -128,7 +128,7 @@ export default function RequestForm() {
             )
             .eq("id", searchParams.get("id"));
          if (error) {
-            console.log(error);
+            console.log('error getting draft booking request', error);
          } else {
             setDraftData(data[0]);
          }

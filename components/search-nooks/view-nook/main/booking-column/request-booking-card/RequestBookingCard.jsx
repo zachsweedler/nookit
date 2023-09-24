@@ -122,7 +122,7 @@ export default function RequestBookingCard({}) {
          const fetchGuestCoustomerId = async () => {
             const { data, error } = await supabase.from('stripe_customers').select('customer_id').eq('user_id', userId)
             if (error) {
-               console.log('error', error)
+               console.log(`error getting guest's customer ID`, error)
             } else {
                setGuestCustomerId(data[0]?.customer_id);
             }
@@ -216,7 +216,7 @@ export default function RequestBookingCard({}) {
             })
             .select();
          if (error) {
-            console.log("request error", error);
+            console.log("Error inserting draft request", error);
          } else {
             router.push(
                `/s/${params.slug}/request-booking?id=${data[0].id}&locationImage=${nook.location_images[0]}`
@@ -275,8 +275,8 @@ export default function RequestBookingCard({}) {
          <Wrapper>
             <Price>
                <H6 $weight="semibold">${nook?.daily_rate}</H6>
-               <Para size="textmd" $weight="semibold">
-                  / day
+               <Para size="textmd" $weight="medium">
+                  day
                </Para>
             </Price>
             <Divider />
@@ -376,7 +376,7 @@ const Price = styled.div`
    flex-direction: row;
    column-gap: 5px;
    width: 100%;
-   align-items: center;
+   align-items: end;
    justify-content: center;
 `;
 

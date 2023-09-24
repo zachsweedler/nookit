@@ -1,68 +1,81 @@
 "use client";
-import Container from "@/styles/Containers";
-import Summary from "./Summary";
 import { styled } from "styled-components";
 import { Para } from "@/styles/Typography";
 import { Divider } from "@/styles/mui/Divider";
-import { useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import supabaseLoader from "@/supabase-image-loader";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useUserId } from "@/hooks/client-side/useUserId";
+import Summary from "./Summary";
+import Loading from "@/components/loading/Loading";
 
 export default function Booking() {
-   const data = useSelector((state) => state.bookingRequest.data);
    const supabase = createClientComponentClient();
    const userId = useUserId(supabase);
-   const router = useRouter();
-   const [guestData, setGuestData] = useState();
+   const params = useParams();
+   const [booking, setBooking] = useState();
+   const [loading, setLoading] = useState(true);
 
    useEffect(() => {
-      const handleData = async () => {
-         const resolvedData = await data;
-         if (!resolvedData) {
-            console.log("pushed because no data yet");
-            router.push("/bookings");
-            return;
-         }
-         const fetchGuestData = async () => {
-            const { data: guestData, error } = await supabase
-               .from("company_profiles")
-               .select("name, logo, email")
-               .eq("user_id", resolvedData?.guestUserId);
+      if (userId) {
+         const fetchBooking = async () => {
+            const { data, error } = await supabase
+               .from("bookings")
+               .select(
+                  `
+                  status, 
+                  start_date,
+                  host_user_id, 
+                  guest_user_id,
+                  guest_plan, 
+                  guest_questions,
+                  bookings_guest_company_id_fkey(name, logo, email),
+                  bookings_host_company_id_fkey(name, logo)
+               `
+               )
+               .eq("id", params.slug);
             if (error) {
-               console.log("error fetching guest data", error);
+               setLoading(false);
+               console.log("error fetching bookings", error);
             } else {
-               setGuestData(guestData[0]);
+               setLoading(false);
+               setBooking(data[0]);
+               console.log("data!", data);
             }
          };
-         fetchGuestData();
-      };
-      handleData();
-   }, [data, router, supabase]);
+         fetchBooking();
+      }
+   }, [params.slug, supabase, userId]);
 
-   const status = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+   const bookingStatus =
+      booking?.status?.charAt(0).toUpperCase() + booking?.status?.slice(1);
 
    return (
-      <Container
-         size="xl"
-         style={{ marginTop: "140px", marginBottom: "140px" }}
-      >
-         <Grid>
-            <RequestInfo>
-               <RequestInfoSection>
-                  <Info>
-                     {userId === data.hostUserId ? (
-                        <RequestBy>
-                           {guestData && (
-                              <>
+      <>
+         {loading ? (
+            <CenterLoading>
+               <Loading />
+            </CenterLoading>
+         ) : (
+            <>
+               <Grid>
+                  <Wrapper>
+                     <BookingInfoSection>
+                        <Info>
+                           {userId === booking?.guest_user_id ? (
+                              <BookingBy>
                                  <Image
                                     alt=""
                                     loader={supabaseLoader}
-                                    src={`/user-images/${guestData?.logo}`}
+                                    src={
+                                       booking?.bookings_host_company_id_fkey
+                                          ?.logo
+                                          ? `user-images/${booking?.bookings_host_company_id_fkey?.logo}`
+                                          : "/assets/fallback_images/fallback_company_logo.svg"
+                                    }
                                     width={60}
                                     height={60}
                                     style={{
@@ -78,7 +91,7 @@ export default function Booking() {
                                     }}
                                  >
                                     <Link
-                                       href={`/profiles/${data?.guestUserId}`}
+                                       href={`/profiles/${booking?.guest_user_id}`}
                                     >
                                        <Para
                                           $isLink={true}
@@ -86,151 +99,177 @@ export default function Booking() {
                                           $weight="semibold"
                                           color="black"
                                        >
-                                          {guestData?.name}
+                                          {
+                                             booking
+                                                ?.bookings_guest_company_id_fkey
+                                                ?.name
+                                          }
                                        </Para>
                                     </Link>
                                     <Para size="textmd" $weight="regular">
-                                       {userId === data.hostUserId
+                                       {userId === booking?.host_user_id
                                           ? "Guest"
                                           : " Host"}
                                     </Para>
                                  </div>
-                              </>
+                              </BookingBy>
+                           ) : (
+                              <HostedBy>
+                                 <Image
+                                    alt=""
+                                    loader={supabaseLoader}
+                                    src={
+                                       booking?.bookings_guest_company_id_fkey
+                                          ?.logo
+                                          ? `user-images/${booking?.bookings_guest_company_id_fkey?.logo}`
+                                          : "/assets/fallback_images/fallback_company_logo.svg"
+                                    }
+                                    width={60}
+                                    height={60}
+                                    style={{
+                                       objectFit: "cover",
+                                       borderRadius: "100%",
+                                    }}
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                 />
+                                 <div
+                                    style={{
+                                       display: "flex",
+                                       flexDirection: "column",
+                                    }}
+                                 >
+                                    <Link
+                                       href={`/profiles/${booking?.host_user_id}`}
+                                    >
+                                       <Para
+                                          $isLink={true}
+                                          size="textlg"
+                                          $weight="semibold"
+                                          color="black"
+                                       >
+                                          {
+                                             booking
+                                                ?.bookings_host_company_id_fkey
+                                                ?.name
+                                          }
+                                       </Para>
+                                    </Link>
+                                    <Para size="textmd" $weight="regular">
+                                       {userId === booking?.host_user_id
+                                          ? "Guest"
+                                          : " Host"}
+                                    </Para>
+                                 </div>
+                              </HostedBy>
                            )}
-                        </RequestBy>
-                     ) : (
-                        <HostedBy>
-                           <Image
-                              alt=""
-                              loader={supabaseLoader}
-                              src={`/user-images/${data.hostLogo}`}
-                              width={60}
-                              height={60}
-                              style={{
-                                 objectFit: "cover",
-                                 borderRadius: "100%",
-                              }}
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                           />
-                           <div
-                              style={{
-                                 display: "flex",
-                                 flexDirection: "column",
-                              }}
+                        </Info>
+                     </BookingInfoSection>
+                     <Divider />
+                     <BookingInfoSection>
+                        <Info>
+                           <Para size="textlg" $weight="semibold">
+                              Status
+                           </Para>
+                           <Para
+                              size="textmd"
+                              $weight="regular"
+                              color="primary.grey.g800"
                            >
-                              <Link href={`/profiles/${data?.hostUserId}`}>
+                              {userId === booking?.host_user_id
+                                 ? bookingStatus === "Pending"
+                                    ? "Waiting for you to accept or decline."
+                                    : bookingStatus === "Accepted"
+                                    ? "You accepted this booking."
+                                    : bookingStatus === "Declined"
+                                    ? "You declined this booking."
+                                    : bookingStatus === "Completed"
+                                    ? "This booking has been completed."
+                                    : bookingStatus === "Canceled"
+                                    ? "This booking has been canceled."
+                                    : // Add more conditions for other bookingStatuses here
+                                      "Unknown bookingStatus"
+                                 : bookingStatus === "Pending"
+                                 ? "Waiting for host to accept or decline."
+                                 : bookingStatus === "Accepted"
+                                 ? `Get ready for ${new Date(booking?.start_date).toLocaleDateString(
+                                      "en-us",
+                                      {
+                                         weekday: "long",
+                                         year: "numeric",
+                                         month: "short",
+                                         day: "numeric",
+                                      }
+                                   )}! The host accepted your booking.`
+                                 : bookingStatus === "Declined"
+                                 ? "The host declined this booking."
+                                 : bookingStatus === "Complete"
+                                 ? "This booking has been completed."
+                                 : bookingStatus === "Canceled"
+                                 ? "This booking has been canceled."
+                                 : // Add more conditions for other bookingStatuses here
+                                   "Unknown bookingStatus"}
+                           </Para>
+                        </Info>
+                     </BookingInfoSection>
+                     <Divider />
+                     <BookingInfoSection>
+                        <Info>
+                           <Para size="textlg" $weight="semibold">
+                              {userId === booking?.host_user_id
+                                 ? "Guest's Plan"
+                                 : "Your Plan"}
+                           </Para>
+                           <Para
+                              size="textmd"
+                              $weight="regular"
+                              color="primary.grey.g800"
+                           >
+                              {booking?.guest_plan}
+                           </Para>
+                        </Info>
+                     </BookingInfoSection>
+                     <Divider />
+                     {booking?.guest_questions !== null && (
+                        <BookingInfoSection>
+                           <Info>
+                              <Para size="textlg" $weight="semibold">
+                                 {userId === booking?.host_user_id
+                                    ? "Their Questions"
+                                    : "Your Questions"}
+                              </Para>
+                              <Para
+                                 size="textmd"
+                                 $weight="regular"
+                                 color="primary.grey.g800"
+                              >
+                                 {booking?.guest_questions}
+                              </Para>
+                           </Info>
+                        </BookingInfoSection>
+                     )}
+                     {userId === booking?.host_user_id &&
+                        booking?.guest_questions !== null && (
+                           <BookingInfoSection>
+                              <a
+                                 href={`mailto: ${booking?.bookings_guest_company_id_fkey?.email}`}
+                              >
                                  <Para
                                     $isLink={true}
-                                    size="textlg"
-                                    $weight="semibold"
-                                    color="black"
+                                    size="textmd"
+                                    $weight="medium"
+                                    color="primary.brand.b600"
                                  >
-                                    {data.hostName}
+                                    Reply via Email
                                  </Para>
-                              </Link>
-                              <Para size="textmd" $weight="regular">
-                                 {userId === data.hostUserId
-                                    ? "Guest"
-                                    : " Host"}
-                              </Para>
-                           </div>
-                        </HostedBy>
-                     )}
-                  </Info>
-               </RequestInfoSection>
-               <Divider />
-               <RequestInfoSection>
-                  <Info>
-                     <Para size="textlg" $weight="semibold">
-                        Status
-                     </Para>
-                     <Para
-                        size="textmd"
-                        $weight="regular"
-                        color="primary.grey.g800"
-                     >
-                        {userId === data.hostUserId
-                           ? status === "Pending"
-                              ? "Waiting for you to accept or decline."
-                              : status === "Accepted"
-                              ? "You accepted this booking request."
-                              : status === "Declined"
-                              ? "You declined this booking request."
-                              : status === "Completed"
-                              ? "This booking has been completed."
-                              : status === "Canceled"
-                              ? "This booking has been canceled."
-                              : // Add more conditions for other statuses here
-                                "Unknown Status"
-                           : status === "Pending"
-                           ? "Waiting for host to accept or decline."
-                           : status === "Accepted"
-                           ? "Get ready! The host accepted your booking request."
-                           : status === "Declined"
-                           ? "The host declined this booking request."
-                           : status === "Complete"
-                           ? "This booking has been completed."
-                           : status === "Canceled"
-                           ? "This booking has been canceled."
-                           : // Add more conditions for other statuses here
-                             "Unknown Status"}
-                     </Para>
-                  </Info>
-               </RequestInfoSection>
-               <Divider />
-               <RequestInfoSection>
-                  <Info>
-                     <Para size="textlg" $weight="semibold">
-                        {userId === data.hostUserId
-                           ? "Guest's Plan"
-                           : "Your Plan"}
-                     </Para>
-                     <Para
-                        size="textmd"
-                        $weight="regular"
-                        color="primary.grey.g800"
-                     >
-                        {data?.guestPlan}
-                     </Para>
-                  </Info>
-               </RequestInfoSection>
-               <Divider />
-               {data.guestQuestions !== null && (
-                  <RequestInfoSection>
-                     <Info>
-                        <Para size="textlg" $weight="semibold">
-                           {userId === data.hostUserId
-                              ? "Their Questions"
-                              : "Your Questions"}
-                        </Para>
-                        <Para
-                           size="textmd"
-                           $weight="regular"
-                           color="primary.grey.g800"
-                        >
-                           {data?.guestQuestions}
-                        </Para>
-                     </Info>
-                  </RequestInfoSection>
-               )}
-               {(userId === data.hostUserId && data.guestQuestions !== null) && (
-                  <RequestInfoSection>
-                     <a href={`mailto: ${guestData?.email}`}>
-                        <Para
-                           $isLink={true}
-                           size="textmd"
-                           $weight="medium"
-                           color="primary.brand.b600"
-                        >
-                           Reply via Email
-                        </Para>
-                     </a>
-                  </RequestInfoSection>
-               )}
-            </RequestInfo>
-            <Summary userId={userId} />
-         </Grid>
-      </Container>
+                              </a>
+                           </BookingInfoSection>
+                        )}
+                  </Wrapper>
+                  <Summary userId={userId} />
+               </Grid>
+            </>
+         )}
+      </>
    );
 }
 
@@ -246,14 +285,14 @@ const Grid = styled.div`
    }
 `;
 
-const RequestInfo = styled.div`
+const Wrapper = styled.div`
    display: flex;
    flex-direction: column;
    row-gap: 40px;
    height: auto;
 `;
 
-const RequestInfoSection = styled.div`
+const BookingInfoSection = styled.div`
    display: flex;
    flex-direction: column;
 `;
@@ -264,7 +303,7 @@ const Info = styled.div`
    row-gap: 6px;
 `;
 
-const RequestBy = styled.div`
+const BookingBy = styled.div`
    display: flex;
    flex-direction: row;
    column-gap: 12px;
@@ -272,4 +311,12 @@ const RequestBy = styled.div`
    width: 100%;
 `;
 
-const HostedBy = styled(RequestBy)``;
+const HostedBy = styled(BookingBy)``;
+
+const CenterLoading = styled.div`
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   align-items: center;
+   width: 100%;
+`;

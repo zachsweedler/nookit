@@ -25,9 +25,7 @@ client.defineJob({
     },
     trigger: intervalTrigger({ seconds: 3600 }), // Run every hour
     run: async (payload, io, ctx) => {
-      
-      const currentDate = new Date().toISOString()
-
+  
       // Fetch accepted bookings where end_date is less than or equal to current date
       const bookings = await io.supabase.runTask(
         "fetch-completed-bookings",
@@ -35,7 +33,7 @@ client.defineJob({
           const { data, error } = await supabaseClient
             .from("bookings")
             .select("*")
-            .lte("end_date", currentDate)
+            .lte("end_date", payload.ts)
             .eq("status", "accepted")
           if (error) {
             await io.logger.error("Failed to fetch completed bookings:", { error });
@@ -48,7 +46,6 @@ client.defineJob({
 
       // For each completed booking, create a payment intent and update the booking with the payment_intent_id
       for (const booking of bookings) {
-
         const paymentMethod = await io.stripe.runTask(
           "get-payment-method",
           async (stripeClient) => {
@@ -67,7 +64,7 @@ client.defineJob({
 
         const paymentIntent = await io.stripe.runTask(
           "create-payment-intent",
-          async (stripeClient) => {
+          async (stripeClient, task) => {
             const createPaymentIntent = await stripeClient.paymentIntents.create({
               automatic_payment_methods: {
                 enabled: true,
@@ -82,6 +79,9 @@ client.defineJob({
               transfer_data: {
                 destination: booking.host_connect_account_id,
               },
+            }, 
+            {
+              idempotencyKey: task.idempotencyKey
             });
             if (createPaymentIntent.error) {
               await io.logger.error("Failed to create payment intent:", createPaymentIntent.error);
@@ -94,14 +94,14 @@ client.defineJob({
         const updateBookingTable = await io.supabase.runTask(
           "update-booking-with-payment-intent",
           async (supabaseClient) => {
-            console.log('payment intent', paymentIntent)
             const { data, error } = await supabaseClient
               .from("bookings")
               .update({ 
                 payment_intent_id: paymentIntent.id,
                 status: "completed"
               })
-              .eq("id", booking.id);
+              .eq("id", booking.id)
+              .select();
             if (error) {
               throw error;
             } 

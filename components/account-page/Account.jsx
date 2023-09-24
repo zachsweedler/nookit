@@ -8,7 +8,6 @@ import PageHeader from "../page-header/PageHeader";
 import { Divider } from "@/styles/mui/Divider";
 
 export default function Account() {
-   
    const menuItems = [
       {
          title: "Profile",
@@ -17,7 +16,7 @@ export default function Account() {
       },
       {
          title: "Payments & Payouts",
-         href: "/account/payments-payouts",
+         href: "/account/payments-payouts/payments",
          src: "/dollar-icon-black.svg",
       },
    ];

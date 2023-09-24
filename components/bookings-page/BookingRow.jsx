@@ -4,17 +4,15 @@ import Image from "next/image";
 import { styled } from "styled-components";
 import supabaseLoader from "@/supabase-image-loader";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
-import { setBookingRequest } from "@/slices/bookingRequestSlice";
 import { GridCell } from "./HostBookings";
 import { formatCurrency } from "@/utils/currencyFormatter";
+import { useRouter } from "next/navigation";
 
 export default function BookingRow({ ...props }) {
-   const request = { ...props };
-   const dispatch = useDispatch();
+   const router = useRouter();
 
-   const handleClick = async () => {
-      dispatch(setBookingRequest(request));
+   const handleClick = () => {
+      router.push(`/bookings/${props.bookingId}`);
    };
 
    return (
@@ -51,14 +49,14 @@ export default function BookingRow({ ...props }) {
                      loader={supabaseLoader}
                      alt="host-company-logo"
                      src={
-                        props.guestUserId === props.authUserId
-                          ? props.hostLogo
-                            ? `user-images/${props.hostLogo}`
-                            : "/assets/fallback_images/fallback_company_logo.svg"
-                          : props.guestLogo
-                            ? `user-images/${props.guestLogo}`
-                            : "/assets/fallback_images/fallback_company_logo.svg"
-                      }
+                        props.guestUserId === props.userId
+                           ? props.hostLogo
+                              ? `user-images/${props.hostLogo}`
+                              : "/assets/fallback_images/fallback_company_logo.svg"
+                           : props.guestLogo
+                           ? `user-images/${props.guestLogo}`
+                           : "/assets/fallback_images/fallback_company_logo.svg"
+                     }
                      width={30}
                      height={30}
                      style={{ borderRadius: "100%", objectFit: "cover" }}
@@ -82,7 +80,7 @@ export default function BookingRow({ ...props }) {
             </GridCell>
             <GridCell>
                <StyledPara size="textmd" $weight="regular">
-                  {props.guestUserId === props.authUserId
+                  {props.guestUserId === props.userId
                      ? `${formatCurrency(props.bookingPriceTotalBeforeTax)}`
                      : `${formatCurrency(props.hostPayout)}`}
                </StyledPara>

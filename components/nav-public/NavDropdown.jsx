@@ -2,6 +2,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { styled } from "styled-components";
 
 export default function NavDropdown({
@@ -12,9 +13,10 @@ export default function NavDropdown({
 }) {
    const supabase = createClientComponentClient();
    const router = useRouter();
+   const dropdownRef = useRef();
 
    const loggedInItems = [
-      { id: 1, title: "Bookings", href: "/bookings" },
+      { id: 1, title: "Bookings", href: "/bookings/guest" },
       { id: 2, title: "My Nooks", href: "/my-nooks" },
       { id: 3, title: "Account", href: "/account" },
       { id: 4, title: "Sign Out", href: "/" },
@@ -25,6 +27,18 @@ export default function NavDropdown({
       { id: 2, title: "Sign Up", href: "/login" },
       { id: 3, title: "Browse Nooks", href: "/s" },
    ];
+
+   useEffect(() => {
+      function handleClickOutside(event) {
+         if (isVisible && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            toggleDropdownVisibility();
+         }
+      }
+      document.addEventListener('click', handleClickOutside);
+      return () => {
+         document.removeEventListener('click', handleClickOutside);
+      };
+   }, [isVisible, toggleDropdownVisibility]);
 
    const handleSignOut = async () => {
       const { error } = await supabase.auth.signOut();
@@ -38,7 +52,7 @@ export default function NavDropdown({
 
    return (
       isVisible && (
-         <Wrapper $mobile={mobile}>
+         <Wrapper $mobile={mobile} ref={dropdownRef}>
             {(!session ? loggedOutItems : loggedInItems).map((item, index) => (
                <Link
                   key={item.id}

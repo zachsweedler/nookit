@@ -2,8 +2,12 @@
 import { styled } from "styled-components";
 import BookingRow, { StyledPara } from "./BookingRow";
 import EmptyState from "../empty-state/EmptyState";
+import { useUserId } from "@/hooks/client-side/useUserId";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useEffect, useState } from "react";
+import Loading from "../loading/Loading";
 
-export default function HostBookings({ bookings, authUserId }) {
+export default function HostBookings() {
    const headers = [
       "",
       "Nook",
@@ -14,15 +18,49 @@ export default function HostBookings({ bookings, authUserId }) {
       "Your Payout",
    ];
 
-   const hostBookings = bookings.filter(
-      (booking) =>
-         booking.host_user_id == authUserId
-   );
+   const supabase = createClientComponentClient();
+   const userId = useUserId(supabase)
+   const [bookings, setBookings] = useState();
+   const [loading, setLoading] = useState(true);
+
+   useEffect(() => {
+      if (userId) {
+         const fetchBookings = async () => {
+            setLoading(true)
+            const { data, error } = await supabase
+               .from("bookings")
+               .select(
+                `*,
+                bookings_guest_company_id_fkey(name, logo),
+                bookings_host_company_id_fkey(name, logo),
+                nooks(
+                   id, location_images, location_name, location_address, location_city, location_state_code, location_zip, daily_rate, company_id
+                )`
+               )
+               .order("created_at", { ascending: false })
+               .neq("status", "draft")
+               .or(`host_user_id.eq.${userId}`);
+            if (error) {
+               setLoading(false)
+               console.log("error fetching bookings", error);
+            } else {
+               setLoading(false)
+               setBookings(data);
+            }
+         };
+         fetchBookings();
+      }
+   }, [supabase, userId]);
 
    return (
       <>
+      {loading ? (
+            <CenterLoading>
+               <Loading />
+            </CenterLoading>
+         ) : (
          <Grid>
-            {hostBookings && hostBookings.length > 0 ? (
+            {bookings && bookings.length > 0 ? (
                <>
                   <TableHeader>
                      {headers.map((header, index) => (
@@ -37,7 +75,7 @@ export default function HostBookings({ bookings, authUserId }) {
                         </GridCell>
                      ))}
                   </TableHeader>
-                  {hostBookings.map((booking) => (
+                  {bookings.map((booking) => (
                      <BookingRow
                         key={booking.id}
                         status={booking.status}
@@ -45,7 +83,7 @@ export default function HostBookings({ bookings, authUserId }) {
                         nookId={booking.nooks.id}
                         hostUserId={booking.host_user_id}
                         guestUserId={booking.guest_user_id}
-                        authUserId={authUserId}
+                        userId={userId}
                         locationImage={booking.nooks.location_images?.[0]}
                         locationName={booking.nooks.location_name}
                         locationAddress={booking.nooks.location_address}
@@ -82,6 +120,7 @@ export default function HostBookings({ bookings, authUserId }) {
                />
             )}
          </Grid>
+         )}
       </>
    );
 }
@@ -112,4 +151,12 @@ const TableHeader = styled.div`
    background: ${({ theme }) => theme.color.primary.grey.g25};
    border-radius: 5px;
    align-items: center;
+`;
+
+const CenterLoading = styled.div`
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   align-items: center;
+   width: 100%;
 `;

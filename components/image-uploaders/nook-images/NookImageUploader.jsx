@@ -113,7 +113,6 @@ function NookImageUploader({ fieldName, isNookPhotos, title }) {
       setImagesArray(filteredImages);
       setValue(fieldName, filteredImages);
       updateNookTable(filteredImages);
-      console.log(getValues());
    };
 
    return (

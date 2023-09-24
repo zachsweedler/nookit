@@ -36,7 +36,6 @@ export default function UserNooks() {
                console.error("error fetching nooks", error);
             } else {
                setNooks(data);
-               console.log('nook data', data)
             }
          };
          const fetchConnectAccountId = async () => {
@@ -64,7 +63,6 @@ export default function UserNooks() {
                console.log("error getting company data", error);
             } else {
                setCompanyData(data[0]);
-               console.log('company data', data)
             }
          };
          const fetchData = async () => {
@@ -112,7 +110,6 @@ export default function UserNooks() {
 
    
    async function createStripeAccount() {
-      console.log("company data", companyData);
       const res = await fetch(
          `${window.location.origin}/api/create-express-account`,
          {
@@ -130,7 +127,6 @@ export default function UserNooks() {
       if (!newAccountData.success) {
          console.log("error creating connect account");
       } else {
-         console.log("account data", newAccountData);
          const { error } = await supabase
             .from("stripe_connect")
             .insert({

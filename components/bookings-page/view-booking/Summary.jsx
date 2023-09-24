@@ -4,21 +4,53 @@ import { Divider } from "@/styles/mui/Divider";
 import { styled } from "styled-components";
 import Image from "next/image";
 import supabaseLoader from "@/supabase-image-loader";
-import { useSelector } from "react-redux";
 import { Button } from "@/styles/Buttons";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Snackbar from "@/styles/mui/Snackbar";
 import { formatCurrency } from "@/utils/currencyFormatter";
+import { useUserId } from "@/hooks/client-side/useUserId";
 
 
-export default function Summary({ userId }) {
-   const data = useSelector((state) => state.bookingRequest.data);
+export default function Summary() {
    const supabase = createClientComponentClient();
+   const userId = useUserId(supabase)
    const params = useParams();
    const [success, setSuccess] = useState();
    const [error, setError] = useState();
+   const [booking, setBooking]= useState();
+   const [loading, setLoading] = useState();
+
+   useEffect(() => {
+      if (userId) {
+         const fetchBookings = async () => {
+            setLoading(true);
+            const { data, error } = await supabase
+               .from("bookings")
+               .select(
+                  `*,
+                bookings_guest_company_id_fkey(name, logo),
+                bookings_host_company_id_fkey(name, logo),
+                nooks(
+                   id, location_images, location_name, location_address, location_city, location_state_code, location_zip, daily_rate, company_id
+                )`
+               )
+               .order("created_at", { ascending: false })
+               .neq("status", "draft")
+               .or(`guest_user_id.eq.${userId}, host_user_id.eq.${userId}`);
+            if (error) {
+               console.log("error fetching bookings", error);
+               setLoading(false);
+            } else {
+               setBooking(data[0]);
+               setLoading(false);
+               console.log('data', data)
+            }
+         };
+         fetchBookings();
+      }
+   }, [supabase, userId]);
 
    const handleAccept = async () => {
       // update the booking with a stab
@@ -39,23 +71,24 @@ export default function Summary({ userId }) {
       }
 
       // get current booked dates of nook
-      const { data: bookedData, error: bookedError } = await supabase
+      const { booking: bookedbooking, error: bookedError } = await supabase
          .from("nooks")
          .select("booked_dates")
-         .eq("id", data.nookId);
-      const currBookedDatesArray = bookedData[0].booked_dates;
+         .eq("id", booking.nookId);
+         
+      const currBookedDatesArray = booking.booked_dates;
 
       if (bookedError) {
          setSuccess(false)
          setError(bookedError)
-         console.error("Error fetching current booking data:", bookedError);
+         console.error("Error fetching current booking booking:", bookedError);
          return;
       }
 
       // format this booking's date range
       const bookingDates = {
-         start_date: data.startDate,
-         end_date: data.endDate,
+         start_date: booking.start_date,
+         end_date: booking.end_date,
       };
 
       // add it to the current booked dates array for nook
@@ -67,7 +100,7 @@ export default function Summary({ userId }) {
          .update({
             booked_dates: newBookedDatesArray,
          })
-         .eq("id", data.nookId);
+         .eq("id", booking.id);
 
       if (nookUpdateError) {
          setSuccess(false)
@@ -75,8 +108,8 @@ export default function Summary({ userId }) {
          console.error("Error updating nook:", nookUpdateError);
          return;
       }
-      console.log("Booking accepted and nook updated successfully!");
       setSuccess('Booking request accepted succesfully')
+      window.location.reload();
    };
 
    const handleDecline = async () => {
@@ -96,6 +129,7 @@ export default function Summary({ userId }) {
          return;
       }
       setSuccess("Booking request declined succesfully")
+      window.location.reload();
    };
 
    const handleCancel = async () => {
@@ -115,6 +149,7 @@ export default function Summary({ userId }) {
          return;
       }
       setSuccess("Booking canceled succesfully")
+      window.location.reload();
    };
 
    return (
@@ -124,14 +159,14 @@ export default function Summary({ userId }) {
                <Image
                   loader={supabaseLoader}
                   alt=""
-                  src={`/user-images/${data?.locationImage}`}
+                  src={`/user-images/${booking?.nooks?.location_images[0]}`}
                   width={60}
                   height={60}
                   style={{ objectFit: "cover", borderRadius: "5px" }}
                />
                <TitleWrapper>
                   <Para size="textmd" $weight="semibold" color="black">
-                     {data?.locationName}
+                     {booking?.nooks?.location_name}
                   </Para>
                   <LocationWrapper>
                      <Image
@@ -147,8 +182,8 @@ export default function Summary({ userId }) {
                         color="black"
                         style={{ textOverflow: "ellipsis" }}
                      >
-                        {data?.locationAddress}, {data?.locationCity},{" "}
-                        {data?.locationState}, {data?.locationZip}
+                        {booking?.nooks?.location_address}, {booking?.nooks?.location_city},{" "}
+                        {booking?.nooks?.location_state_code}, {booking?.nooks?.location_zip}
                      </Para>
                   </LocationWrapper>
                </TitleWrapper>
@@ -160,7 +195,7 @@ export default function Summary({ userId }) {
                      Start date
                   </Para>
                   <Para size="textmd" $weight="regular">
-                     {data?.startDate}
+                     {booking?.start_date}
                   </Para>
                </LineItem>
                <LineItem>
@@ -168,7 +203,7 @@ export default function Summary({ userId }) {
                      End date
                   </Para>
                   <Para size="textmd" $weight="regular">
-                     {data?.endDate}
+                     {booking?.end_date}
                   </Para>
                </LineItem>
             </Calculation>
@@ -176,20 +211,20 @@ export default function Summary({ userId }) {
             <Calculation>
                <LineItem>
                   <Para size="textmd" $weight="regular">
-                     {formatCurrency(data?.dailyRate)} x {data?.daysCount} days
+                     {formatCurrency(booking?.booking_price)} x {booking?.days_count} days
                   </Para>
                   <Para size="textmd" $weight="regular">
-                     ${data?.bookingPrice}
+                     ${booking?.booking_price}
                   </Para>
                </LineItem>
                <LineItem>
                   <Para size="textmd" $weight="regular">
-                     {userId === data.hostUserId ? "Host fee" : "Processing"}
+                     {userId === booking?.host_user_id ? "Host fee" : "Processing"}
                   </Para>
                   <Para size="textmd" $weight="regular">
-                     {userId === data.hostUserId
-                        ? `-${formatCurrency(data?.processingFee)}`
-                        : `${formatCurrency(data?.processingFee)}`}
+                     {userId === booking?.hosting_user_id
+                        ? `-${formatCurrency(booking?.processing_fee)}`
+                        : `${formatCurrency(booking?.processing_fee)}`}
                   </Para>
                </LineItem>
                <Divider style={{ width: "100%" }} />
@@ -197,21 +232,21 @@ export default function Summary({ userId }) {
             <Calculation>
                <LineItem>
                   <Para size="textmd" $weight="medium">
-                     {userId === data.hostUserId
+                     {userId === booking?.host_user_id
                         ? "Your payout"
                         : "Total before taxes"}
                   </Para>
                   <Para size="textmd" $weight="medium">
-                     {userId === data.hostUserId
-                        ? `${formatCurrency(data?.hostPayout)}`
-                        : `${formatCurrency(data?.bookingPriceTotalBeforeTax)}`}
+                     {userId === booking?.host_user_id
+                        ? `${formatCurrency(booking?.booking_price - booking?.processing_fee)}`
+                        : `${formatCurrency(booking?.booking_price_total_before_taxes)}`}
                   </Para>
                </LineItem>
             </Calculation>
             <>
-               {userId === data.hostUserId && (
+               {userId === booking?.host_user_id && (
                   <>
-                     {data.status === "pending" && (
+                     {booking?.status === "pending" && (
                         <>
                            <Divider style={{ width: "100%" }} />
                            <ActionButtons>
@@ -227,7 +262,7 @@ export default function Summary({ userId }) {
                            </ActionButtons>
                         </>
                      )}
-                     {data.status === "accepted" && (
+                     {booking?.status === "accepted" && (
                         <>
                            <Divider style={{ width: "100%" }} />
                            <ActionButtons>
@@ -242,9 +277,9 @@ export default function Summary({ userId }) {
                      )}
                   </>
                )}
-               {userId === data.guestUserId && (
+               {userId === booking?.guest_user_id && (
                   <>
-                     {data.status === "pending" && (
+                     {booking.status === "pending" && (
                         <>
                            <Divider style={{ width: "100%" }} />
                            <ActionButtons>

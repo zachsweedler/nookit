@@ -218,7 +218,7 @@ export default function PayoutsForm() {
          if (!data.success) {
             console.log("account link failed", data);
          } else {
-            window.location.replace(data.accountLink.url);
+            window.open(data.accountLink.url, '_blank');
          }
       } else {
          const res = await fetch(
@@ -237,7 +237,7 @@ export default function PayoutsForm() {
          if (!data.success) {
             console.log("login link failed", data);
          } else {
-            window.location.replace(data.link);
+            window.open(data.link, '_blank');
          }
       }
    }

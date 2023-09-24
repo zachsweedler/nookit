@@ -28,8 +28,8 @@ export default function RootLayout({ children }) {
                <body className={poppins.className}>
                   <ReduxProvider>
                      <NavPublic />
-                     {children}
                      <Analytics/>
+                     {children}
                   </ReduxProvider>
                </body>
                </ConfigProvider>

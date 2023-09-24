@@ -89,9 +89,9 @@ export default function PaymentsForm() {
          console.log("error", data.message);
       } else {
          if (existingCustomer) {
-            window.location.replace(data.sessionUrl);
+            window.open(data.sessionUrl, '_blank');
          } else {
-            const { data: insertCustomerId, error } = await supabase
+            const { error } = await supabase
                .from("stripe_customers")
                .insert({
                   customer_id: data.customerId,
@@ -101,7 +101,7 @@ export default function PaymentsForm() {
             if (error) {
                console.log("error upserting customer id", error);
             } else {
-               window.location.replace(data.sessionUrl);
+               window.open(data.sessionUrl, '_blank');
             }
          }
       }
