@@ -25,7 +25,8 @@ import {
    receiptRow,
    row,
    section,
-   button
+   heading,
+   button,
 } from "./emailStyles";
 
 export const ConfirmedBooking = ({

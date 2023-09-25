@@ -24,6 +24,7 @@ import {
    paraReg,
    row,
    section,
+   heading,
    button,
 } from "./emailStyles";
 

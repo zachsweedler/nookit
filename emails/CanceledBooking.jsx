@@ -25,6 +25,7 @@ import {
    receiptRow,
    row,
    section,
+   heading,
    button
 } from "./emailStyles";
 export const CanceledBooking = ({
