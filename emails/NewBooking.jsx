@@ -36,7 +36,7 @@ export const DeclinedBooking = ({
    locationImage = "https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/user-images/ac757734-5615-45c5-b406-9146286a11a4/nooks/6b789ace-2253-45d4-a810-88b33bd81564/space/RB-Store-Opening-19_v2-scaled%20(1).webp?t=2023-09-24T15%3A41%3A11.216Z",
    startDate = "Saturday, June 12th, 2023",
    endDate = "Monday, June 14th, 2023",
-   nookitLogoImage = `https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/brand/nookit-logo-black.svg`,
+   nookitLogoImage = `https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/brand/nookit-logo-black.png`,
 }) => {
    const previewText = `Booking Request Declined`;
    const supabaseLoader = `https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/`;
@@ -62,7 +62,7 @@ export const DeclinedBooking = ({
                   <Row style={row}>
                      <Column style={{ width: "0%", paddingRight: "12px" }}>
                         <Img
-                           src={supabaseLoader + guestLogo}
+                           src={supabaseLoader + `users-images/${guestLogo}`}
                            width={50}
                            height={50}
                            style={avatar}

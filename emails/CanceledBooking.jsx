@@ -44,7 +44,7 @@ export const CanceledBooking = ({
    daysCount = 3,
    bookingPrice = 320,
    processingFee = 60,
-   nookitLogoImage = `https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/brand/nookit-logo-black.svg`,
+   nookitLogoImage = `https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/brand/nookit-logo-black.png`,
    forGuest = false,
 }) => {
    const previewText = `Booking Canceled`;
@@ -75,8 +75,8 @@ export const CanceledBooking = ({
                         <Img
                            src={
                               forGuest
-                                 ? supabaseLoader + hostLogo
-                                 : supabaseLoader + guestLogo
+                                 ? supabaseLoader + `user-images/${hostLogo}`
+                                 : supabaseLoader + `user-images/${guestLogo}`
                            }
                            width={50}
                            height={50}
