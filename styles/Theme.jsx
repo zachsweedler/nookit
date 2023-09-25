@@ -53,7 +53,7 @@ const theme = {
     textxs: "1.1rem", // <Para xs />
     tablet: {
       display2xl: "5rem", // <H1 />
-      displayxl: "4.rem", // <H2 />
+      displayxl: "4rem", // <H2 />
       displaylg: "4rem", // <H3 />
       displaymd: "3rem", // <H4 />
       displaysm: "2.5rem", // <H5 />

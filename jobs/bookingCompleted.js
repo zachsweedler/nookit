@@ -94,7 +94,7 @@ client.defineJob({
 
       const hostEmail = await io.resend.sendEmail("email-host", {
          to: [hostData.email],
-         subject: `Your booking is complete!`,
+         subject: `Your booking with ${guestData.name} is complete!`,
          from: "Nookit <team@nookit.app>",
          react: CompletedBooking({
             forGuest: false,
@@ -119,7 +119,7 @@ client.defineJob({
 
       const guestEmail = await io.resend.sendEmail("email-guest", {
          to: [guestData.email],
-         subject: `Your booking is complete!`,
+         subject: `Your booking with ${hostData.name} is complete!`,
          from: "Nookit <team@nookit.app>",
          react: CompletedBooking({
             forGuest: true,

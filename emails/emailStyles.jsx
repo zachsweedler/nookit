@@ -12,6 +12,7 @@ export const container = {
 export const heading = {
     lineHeight: "1.14",
     letterSpacing: "0px",
+    fontSize: '24px'
  };
  
 export const section = {

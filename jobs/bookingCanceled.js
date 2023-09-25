@@ -97,7 +97,7 @@ client.defineJob({
 
       const hostEmail = await io.resend.sendEmail("email-host", {
          to: [hostData.email],
-         subject: `Your booking was canceled`,
+         subject: `Your booking with ${guestData.name} was canceled`,
          from: "Nookit <team@nookit.app>",
          react: CanceledBooking({
             forGuest: false,
@@ -122,7 +122,7 @@ client.defineJob({
 
       const guestEmail = await io.resend.sendEmail("email-guest", {
          to: [guestData.email],
-         subject: `Your booking was canceled`,
+         subject: `Your booking with ${hostData.name} was canceled`,
          from: "Nookit <team@nookit.app>",
          react: CanceledBooking({
             forGuest: true,
