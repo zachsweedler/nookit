@@ -49,7 +49,7 @@ export const DeclinedBooking = ({
             <Container style={container}>
                <Section style={section}>
                   <Row>
-                     <Img src={nookitLogoImage} />
+                     <Img src={nookitLogoImage} width={76} height={23} />
                   </Row>
                </Section>
                <Hr style={hr} />
