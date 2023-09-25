@@ -25,7 +25,7 @@ client.defineJob({
     },
     trigger: intervalTrigger({ seconds: 3600 }), // Run every hour
     run: async (payload, io, ctx) => {
-  
+      
       // Fetch accepted bookings where end_date is less than or equal to current date
       const bookings = await io.supabase.runTask(
         "fetch-completed-bookings",
@@ -33,7 +33,7 @@ client.defineJob({
           const { data, error } = await supabaseClient
             .from("bookings")
             .select("*")
-            .lte("end_date", payload.ts)
+            .lte("end_date", payload.ts.toISOString())
             .eq("status", "accepted")
           if (error) {
             await io.logger.error("Failed to fetch completed bookings:", { error });

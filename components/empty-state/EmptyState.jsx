@@ -17,7 +17,11 @@ export default function EmptyState({
    return (
       <Container size="xs">
         <Wrapper>
-            {imgSrc && <Image alt="add-payout-image" src={imgSrc} width={300} height={200} style={{marginBottom: "30px"}}/>}
+            {imgSrc &&
+                <ImageWrapper>
+                <Image alt="add-payout-image" src={imgSrc} fill={true} style={{marginBottom: "30px", objectFit: "contain"}}/>
+                </ImageWrapper>
+            }
             <CopyWrapper>
                 <Para size="textlg" $weight="medium">
                     {title}
@@ -45,6 +49,13 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
 `
+
+const ImageWrapper = styled.div`
+    width: 100%;
+    height: 250px;
+    position: relative;
+`
+
 
 const CopyWrapper = styled.div`
     display: flex;

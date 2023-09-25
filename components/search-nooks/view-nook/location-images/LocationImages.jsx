@@ -3,13 +3,26 @@ import supabaseLoader from "@/supabase-image-loader";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { styled } from "styled-components";
+import { Button } from "@/styles/Buttons";
+import ImageGallery from "@/components/image-gallery/ImageGallery";
+import { useState } from "react";
 
 export default function LocationImages() {
    const nook = useSelector((state) => state.viewNook.nook);
+   const [open, setOpen] = useState(false);
+
+   function closeModal() {
+      setOpen(false);
+   }
+
+   const onButtonClick = () => {
+      setOpen(true)
+   }
 
    return (
+      <>
       <LocationGrid>
-         <LocationGridCover>
+         <LocationGridCover onClick={()=>setOpen(true)}>
             <Image
                loader={supabaseLoader}
                alt="nook-image"
@@ -18,7 +31,7 @@ export default function LocationImages() {
                style={{ objectFit: "cover" }}
             />
          </LocationGridCover>
-         <LocationGridTopRight>
+         <LocationGridTopRight onClick={()=>setOpen(true)}>
             <Image
                loader={supabaseLoader}
                alt="nook-image"
@@ -27,7 +40,7 @@ export default function LocationImages() {
                style={{ objectFit: "cover" }}
             />
          </LocationGridTopRight>
-         <LocationGridTopLeft>
+         <LocationGridTopLeft onClick={()=>setOpen(true)}>
             <Image
                loader={supabaseLoader}
                alt="nook-image"
@@ -36,7 +49,7 @@ export default function LocationImages() {
                style={{ objectFit: "cover" }}
             />
          </LocationGridTopLeft>
-         <LocationGridBottomLeft>
+         <LocationGridBottomLeft onClick={()=>setOpen(true)}>
             <Image
                loader={supabaseLoader}
                alt="nook-image"
@@ -45,7 +58,7 @@ export default function LocationImages() {
                style={{ objectFit: "cover" }}
             />
          </LocationGridBottomLeft>
-         <LocationGridBottomRight>
+         <LocationGridBottomRight onClick={()=>setOpen(true)}>
             <Image
                loader={supabaseLoader}
                alt="nook-image"
@@ -54,7 +67,10 @@ export default function LocationImages() {
                style={{ objectFit: "cover" }}
             />
          </LocationGridBottomRight>
+         <ViewPhotosButton $whitecolor={true} onClick={onButtonClick}>View All Photos</ViewPhotosButton>
       </LocationGrid>
+      <ImageGallery isOpen={open} onRequestClose={closeModal} locationImages={nook.location_images} nookImages={nook.images}/>
+      </>
    );
 }
 
@@ -85,6 +101,19 @@ const LocationGridCover = styled.div`
    grid-row: 1 / span 2;
    border-radius: 0px 12px 12px 0px;
    overflow: hidden;
+   &:hover::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.159);
+      z-index: 1; 
+   }
+   &:hover {
+      cursor: pointer;
+   }
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       border-radius: 0px;
    }
@@ -96,6 +125,19 @@ const LocationGridTopLeft = styled.div`
    position: relative;
    border-radius: 12px;
    overflow: hidden;
+   &:hover::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.159);
+      z-index: 1; 
+   }
+   &:hover {
+      cursor: pointer;
+   }
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       display: none;
    }
@@ -107,6 +149,19 @@ const LocationGridTopRight = styled.div`
    position: relative;
    border-radius: 12px 0px 0px 12px;
    overflow: hidden;
+   &:hover::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.159);
+      z-index: 1; 
+   }
+   &:hover {
+      cursor: pointer;
+   }
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       display: none;
    }
@@ -120,6 +175,19 @@ const LocationGridBottomLeft = styled.div`
    border-radius: 5px;
    border-radius: 12px;
    overflow: hidden;
+   &:hover::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.159);
+      z-index: 1; 
+   }
+   &:hover {
+      cursor: pointer;
+   }
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       display: none;
    }
@@ -132,7 +200,30 @@ const LocationGridBottomRight = styled.div`
    border-radius: 5px;
    overflow: hidden;
    border-radius: 12px 0px 0px 12px;
+   &:hover::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.159);
+      z-index: 1; 
+   }
+   &:hover {
+      cursor: pointer;
+   }
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       display: none;
    }
 `;
+
+
+const ViewPhotosButton = styled(Button)`
+   position: absolute;
+   bottom: 20px;
+   right: 20px;
+   width: auto;
+   z-index: 100;
+   background-color: white;
+`
