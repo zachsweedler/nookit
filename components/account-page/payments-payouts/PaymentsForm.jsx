@@ -93,6 +93,7 @@ export default function PaymentsForm() {
          console.log("error", data.message);
       } else {
          if (existingCustomer) {
+               setLoading(false);
                setTimeout(() => {
                   window.open(data.sessionUrl, '_blank');
                })
