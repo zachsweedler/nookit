@@ -19,6 +19,7 @@ export default function PaymentsForm() {
    const [paymentMethods, setPaymentMethods] = useState([]);
    const [customerCheckLoading, setCustomerCheckLoading] = useState(true);
    const [paymentMethodLoading, setPaymentMethodLoading] = useState(true);
+   const [loading, setLoading] = useState(null)
 
    useEffect(() => {
       if (user) {
@@ -70,7 +71,9 @@ export default function PaymentsForm() {
       }
    }, [customerId]);
 
+   
    const createCustomerPortalSession = async () => {
+      setLoading(true)
       const requestBody = existingCustomer
          ? { customer_id: customerId, email: email, user_id: userId }
          : { email: email, user_id: userId };
@@ -86,10 +89,13 @@ export default function PaymentsForm() {
       );
       const data = await response.json();
       if (!data.success) {
+         setLoading(false)
          console.log("error", data.message);
       } else {
          if (existingCustomer) {
-            window.open(data.sessionUrl, '_blank');
+               setTimeout(() => {
+                  window.open(data.sessionUrl, '_blank');
+               })
          } else {
             const { error } = await supabase
                .from("stripe_customers")
@@ -99,9 +105,13 @@ export default function PaymentsForm() {
                })
                .select();
             if (error) {
+               setLoading(false)
                console.log("error upserting customer id", error);
             } else {
-               window.open(data.sessionUrl, '_blank');
+               setLoading(false)
+               setTimeout(() => {
+                  window.open(data.sessionUrl, '_blank');
+               })
             }
          }
       }
@@ -148,7 +158,7 @@ export default function PaymentsForm() {
                   <CardInfo>
                      <Para size="textmd" weight="regular">No payment methods added</Para>
                   </CardInfo>
-                  <Button $brandoutline={true} onClick={createCustomerPortalSession} style={{width: "auto"}}>Add Card</Button>
+                  <Button $brandoutline={true} onClick={createCustomerPortalSession} style={{width: "auto"}}>{loading ? <Loading/> : "Add Card"}</Button>
                </Card>
             )
          )}

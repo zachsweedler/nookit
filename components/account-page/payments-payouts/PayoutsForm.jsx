@@ -153,6 +153,7 @@ export default function PayoutsForm() {
    }, [connectAccountId, companyData]);
 
    async function createStripeAccount() {
+      setLoading(true)
       const res = await fetch(
          `${window.location.origin}/api/create-express-account`,
          {
@@ -169,6 +170,7 @@ export default function PayoutsForm() {
       const newAccountData = await res.json();
       if (!newAccountData.success) {
          console.log("error creating connect account");
+         setLoading(false)
       } else {
          console.log("account data", newAccountData);
          const { error } = await supabase
@@ -194,15 +196,20 @@ export default function PayoutsForm() {
             );
             const accountLinkData = await res.json();
             if (!accountLinkData.success) {
+               setLoading(false)
                console.log("error creating account link");
             } else {
-               window.location.replace(accountLinkData.accountLink.url);
+               setLoading(false)
+               setTimeout(() => {
+                  window.open(accountLinkData.accountLink.url, '_blank');
+               })
             }
          }
       }
    }
 
    async function expressLogin() {
+      setLoading(true)
       if (missingInfo) {
          const res = await fetch(
             `${window.location.origin}/api/create-account-link`,
@@ -216,9 +223,13 @@ export default function PayoutsForm() {
          );
          const data = await res.json();
          if (!data.success) {
+            setLoading(false)
             console.log("account link failed", data);
          } else {
-            window.open(data.accountLink.url, '_blank');
+            setLoading(false)
+            setTimeout(() => {
+               window.open(data.accountLink.url, '_blank');
+            })
          }
       } else {
          const res = await fetch(
@@ -235,9 +246,13 @@ export default function PayoutsForm() {
          );
          const data = await res.json();
          if (!data.success) {
+            setLoading(false)
             console.log("login link failed", data);
          } else {
-            window.open(data.link, '_blank');
+            setLoading(false)
+            setTimeout(() => {
+               window.open(data.link, '_blank');
+            })
          }
       }
    }
@@ -320,7 +335,7 @@ export default function PayoutsForm() {
                                        style={{ width: "auto" }}
                                        onClick={expressLogin}
                                     >
-                                       Manage
+                                       {loading ? <Loading/> : "Manage"}
                                     </Button>
                                  </Card>
                               ))}
@@ -340,7 +355,7 @@ export default function PayoutsForm() {
                         style={{ width: "auto" }}
                         onClick={createStripeAccount}
                      >
-                        Add Payout
+                        {loading ? <Loading/> : "Add Payout"}
                      </Button>
                   </Card>
                )}
