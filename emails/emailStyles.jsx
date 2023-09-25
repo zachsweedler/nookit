@@ -10,7 +10,7 @@ export const container = {
  };
  
 export const heading = {
-    lineHeight: "1.5",
+    lineHeight: "1.14",
     letterSpacing: "0px",
  };
  
