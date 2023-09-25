@@ -1,4 +1,4 @@
-import { ConfirmedBooking } from "@/emails/ConfirmedBooking";
+import { DeclinedBooking } from "@/emails/DeclinedBooking";
 import { client } from "@/trigger";
 import { Resend } from "@trigger.dev/resend";
 import { Supabase, SupabaseManagement } from "@trigger.dev/supabase";
@@ -98,7 +98,7 @@ client.defineJob({
          to: [hostData.email],
          subject: `Your booking request from ${guestData.name} was declined.`,
          from: "Nookit <team@nookit.app>",
-         react: ConfirmedBooking({
+         react: DeclinedBooking({
             forGuest: false,
             guestMailto: `mailto:${guestData.email}`,
             guestLogo: guestData.logo,
@@ -123,7 +123,7 @@ client.defineJob({
          to: [guestData.email],
          subject: `Your booking request to ${hostData.name} was declined.`,
          from: "Nookit <team@nookit.app>",
-         react: ConfirmedBooking({
+         react: DeclinedBooking({
             forGuest: true,
             guestMailto: `mailto:${guestData.email}`,
             guestLogo: guestData.logo,

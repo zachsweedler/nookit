@@ -1,4 +1,5 @@
 import { CompletedBooking } from "@/emails/CompletedBooking";
+import { NewBooking } from "@/emails/NewBooking";
 import { client } from "@/trigger";
 import { Resend } from "@trigger.dev/resend";
 import { Supabase, SupabaseManagement } from "@trigger.dev/supabase";
@@ -91,7 +92,7 @@ client.defineJob({
         to: [hostData.email],
         subject: `New booking request from ${guestData.name}.`,
         from: "Nookit <team@nookit.app>",
-        react: ConfirmedBooking({
+        react: NewBooking({
            guestLogo: guestData.logo,
            guestName: guestData.name,
            locationName: locationData.location_name,
