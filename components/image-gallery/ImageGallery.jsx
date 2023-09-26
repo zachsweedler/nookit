@@ -23,7 +23,7 @@ export default function ImageGallery({
          display: "flex",
          alignItems: "start",
          justifyContent: "center",
-         overflow: 'hidden'
+         overflow: "hidden",
       },
       content: {
          border: "none",
@@ -78,7 +78,11 @@ export default function ImageGallery({
                   </div>
                   <ImageGrid>
                      {locationImages.map((image, index) => (
-                        <ImageWrapper key={image} spanTwoRows={index === 1}                            onClick={handleImageClick}>
+                        <ImageWrapper
+                           key={image}
+                           spanTwoRows={index === 1}
+                           onClick={handleImageClick}
+                        >
                            <Image
                               loader={supabaseLoader}
                               alt="nookit-image"

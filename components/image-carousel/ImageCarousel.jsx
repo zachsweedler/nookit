@@ -12,7 +12,7 @@ import "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/thumbs";
-import { ImageCarouselButton } from "./ImageCarouselButtons";
+import { ImageSliderCardButtons } from "../image-slider/card/ImageSliderCardButtons";
 
 export default function ImageCarousel({
    locationImages,
@@ -60,6 +60,7 @@ export default function ImageCarousel({
          isOpen={isOpen}
          style={customModalStyles}
          onRequestClose={onRequestClose}
+         
       >
          <Nav onClick={onRequestClose}>
             <Image
@@ -105,8 +106,7 @@ export default function ImageCarousel({
                      />
                   </SwiperSlide>
                ))}
-               <ImageCarouselButton direction="next" />
-               <ImageCarouselButton direction="prev" />
+               <ImageSliderCardButtons/>
             </Swiper>
             <Swiper
                onSwiper={setThumbsSwiper}
@@ -172,6 +172,6 @@ const Wrapper = styled.div`
    z-index: 1000;
    padding: 50px;
    width: 100vw;
-   padding: 60px 0pc 90px 0px;
+   padding: 60px 0px 0px 0px;
    margin: auto;
 `;

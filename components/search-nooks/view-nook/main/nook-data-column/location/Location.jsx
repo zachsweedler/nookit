@@ -29,7 +29,7 @@ export default function Location() {
 const Wrapper = styled.div`
    display: flex;
    flex-direction: column;
-   row-gap: 14px;
+   row-gap: 9px;
    width: 100%;
 `;
 

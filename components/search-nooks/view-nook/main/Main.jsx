@@ -16,9 +16,8 @@ export default function Main () {
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-column-gap: 100px;
+  grid-column-gap: 90px;
   @media screen and (max-width: ${({theme}) => theme.breakPoint.tablet})  {
         grid-template-columns: 1fr;
-        grid-row-gap: 50px;
-    }
+  }
 `

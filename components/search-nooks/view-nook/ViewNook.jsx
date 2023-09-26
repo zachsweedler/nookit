@@ -48,12 +48,10 @@ export default function ViewNook() {
 const Wrapper = styled.div`
    display: flex;
    flex-direction: column;
-   row-gap: 60px;
 `;
 
 const ImageMainWrapper = styled.div`
-   display: flex;
-   flex-direction: column;
-   row-gap: 70px;
-   margin-bottom: 60px;
+   display: grid;
+   grid-template-columns: 1fr;
+   grid-row-gap: 70px;
 `;

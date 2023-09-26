@@ -351,6 +351,11 @@ const Grid = styled.div`
    grid-template-rows: 1fr;
    grid-column-gap: 100px;
    height: auto;
+   @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
+      display: flex;
+      flex-direction: column;
+      row-gap: 50px;
+   }
 `;
 
 const Form = styled.form`

@@ -226,4 +226,6 @@ const ViewPhotosButton = styled(Button)`
    width: auto;
    z-index: 100;
    background-color: white;
+   color: black;
+   padding: 12px;
 `

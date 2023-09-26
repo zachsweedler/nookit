@@ -1,0 +1,20 @@
+.ant-picker-focused {
+    border-color: #dddddd !important;
+    border-inline-end-width: 1px;
+ }
+
+.ant-picker:hover {
+    border-color: #dddddd !important;
+    border-inline-end-width: 1px;
+ }
+
+ .ant-picker-active-bar {
+    background: #C1482F !important;
+    height: 4px;
+ }
+
+ @media screen and (max-width: 760px) {
+    .ant-picker-panels {
+       flex-direction: column !important;
+    }
+ }

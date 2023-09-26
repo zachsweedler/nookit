@@ -20,6 +20,6 @@ export default function About () {
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
-    row-gap: 20px;
+    row-gap: 9px;
     width: 100%;
 `
