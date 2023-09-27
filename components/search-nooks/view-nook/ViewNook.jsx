@@ -52,6 +52,6 @@ const Wrapper = styled.div`
 
 const ImageMainWrapper = styled.div`
    display: grid;
-   grid-template-columns: 1fr;
-   grid-row-gap: 70px;
+   flex-direction: column;
+   row-gap: 70px;
 `;

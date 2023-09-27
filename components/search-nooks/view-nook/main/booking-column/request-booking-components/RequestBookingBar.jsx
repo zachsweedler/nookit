@@ -42,8 +42,8 @@ export default function RequestBookingBar({
                            pointer: "cursor",
                         }}
                      >
-                        {startDate?.substring(0, 4)} -{" "}
-                        {endDate?.substring(0, 4)}
+                        {startDate} -
+                        {endDate}
                      </Para>
                   </Dates>
                )}
@@ -68,6 +68,7 @@ export default function RequestBookingBar({
                            disabledDate={disabledDate}
                            name={name}
                            ref={ref}
+                           inputReadOnly={true}
                         />
                         {errors.dates && (
                            <Para size="textxs" $weight="regular" color="error">

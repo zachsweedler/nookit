@@ -23,7 +23,6 @@ export default function NookDataColumn () {
             <Amenities/>
             <Divider/>
             <Map/>
-            
         </Wrapper>
     )
 }
@@ -33,5 +32,5 @@ const Wrapper = styled.div`
     grid-template-columns: 1fr;
     grid-row-gap: 50px;
     width: 100%;
-    padding-bottom: 50px;
+    padding-bottom: 100px;
 `

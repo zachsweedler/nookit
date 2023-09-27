@@ -77,7 +77,7 @@ export default function ImageGallery({
                      </Para>
                   </div>
                   <ImageGrid>
-                     {locationImages.map((image, index) => (
+                     {locationImages?.map((image, index) => (
                         <ImageWrapper
                            key={image}
                            spanTwoRows={index === 1}
@@ -103,7 +103,7 @@ export default function ImageGallery({
                      </Para>
                   </div>
                   <ImageGrid>
-                     {nookImages.map((image, index) => (
+                     {nookImages?.map((image, index) => (
                         <ImageWrapper
                            key={image}
                            spanTwoRows={index % 2 === 1}

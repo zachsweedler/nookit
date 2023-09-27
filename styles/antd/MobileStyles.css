@@ -1,20 +1,49 @@
 .ant-picker-focused {
-    border-color: #dddddd !important;
-    border-inline-end-width: 1px;
- }
+   border-color: #dddddd !important;
+   border-inline-end-width: 1px;
+}
 
 .ant-picker:hover {
-    border-color: #dddddd !important;
-    border-inline-end-width: 1px;
- }
+   border-color: #dddddd !important;
+   border-inline-end-width: 1px;
+}
 
- .ant-picker-active-bar {
-    background: #C1482F !important;
-    height: 4px;
- }
+.ant-picker-active-bar {
+   background: #c1482f !important;
+   height: 4px;
+}
 
- @media screen and (max-width: 760px) {
-    .ant-picker-panels {
-       flex-direction: column !important;
+.ant-picker-range-wrapper.ant-picker-date-range-wrapper {
+    min-width: 100% !important;
+}
+
+.ant-picker-panel {
+    &:last-child {
+      width: 0;
+      .ant-picker-header {
+        position: absolute;
+        right: 0;
+        .ant-picker-header-prev-btn, .ant-picker-header-view {
+          visibility: hidden;
+        }
+      }
+
+      .ant-picker-body {
+        display: none;
+      }
+
+      @media (min-width: 768px) {
+        width: 280px!important;
+        .ant-picker-header {
+          position: relative;
+          .ant-picker-header-prev-btn, .ant-picker-header-view {
+            visibility: initial;
+          }
+        }
+
+        .ant-picker-body {
+          display: block;
+        }
+      }
     }
- }
+  }

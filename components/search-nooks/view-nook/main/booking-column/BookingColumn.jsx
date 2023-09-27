@@ -16,7 +16,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import AuthForm from "@/components/auth-page/AuthForm";
 import EmptyState from "@/components/empty-state/EmptyState";
 import Modal from "react-modal";
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid } from "uuid";
 
 export default function BookingColumn() {
    const [dayCount, setDayCount] = useState();
@@ -37,16 +37,16 @@ export default function BookingColumn() {
    const userId = useUserId(supabase);
    const guestCompanyId = useCompanyId(supabase);
    const [isDesktop, setIsDesktop] = useState();
-   const theme = useTheme()
-
-   const updateMedia = () => {
-      setIsDesktop(window.innerWidth > parseInt(theme.breakPoint.tablet));
-   };
+   const theme = useTheme();
 
    useEffect(() => {
+      const updateMedia = () => {
+         setIsDesktop(window.innerWidth > parseInt(theme.breakPoint.tablet));
+      };
       window.addEventListener("resize", updateMedia);
+      updateMedia();
       return () => window.removeEventListener("resize", updateMedia);
-   });
+   }, [theme.breakPoint.tablet]);
 
    // setting nook const to redux state of the nook slice.
    const nook = useSelector((state) => state.viewNook.nook);
@@ -305,6 +305,7 @@ export default function BookingColumn() {
                   handleNewRequest={handleSubmit(handleNewRequest)}
                   userId={userId}
                   errors={errors}
+                  ref={ref}
                />
             ) : (
                <RequestBookingBar
@@ -320,6 +321,7 @@ export default function BookingColumn() {
                   startDate={startDate}
                   endDate={endDate}
                   errors={errors}
+                  ref={ref}
                />
             )}
          </Wrapper>

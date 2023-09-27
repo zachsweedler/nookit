@@ -20,7 +20,8 @@ export default function ImageCarousel({
    isOpen,
    onRequestClose,
 }) {
-   const images = [...locationImages, ...nookImages];
+   const images =
+      locationImages && nookImages ? [...locationImages, ...nookImages] : [];
    const [thumbsSwiper, setThumbsSwiper] = useState(null);
    const [isDesktop, setIsDesktop] = useState();
 
@@ -60,7 +61,6 @@ export default function ImageCarousel({
          isOpen={isOpen}
          style={customModalStyles}
          onRequestClose={onRequestClose}
-         
       >
          <Nav onClick={onRequestClose}>
             <Image
@@ -106,7 +106,7 @@ export default function ImageCarousel({
                      />
                   </SwiperSlide>
                ))}
-               <ImageSliderCardButtons/>
+               <ImageSliderCardButtons />
             </Swiper>
             <Swiper
                onSwiper={setThumbsSwiper}
