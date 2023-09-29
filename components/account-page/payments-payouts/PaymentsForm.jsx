@@ -14,7 +14,7 @@ export default function PaymentsForm() {
    const user = useUser(supabase);
    const email = user?.email;
    const userId = user?.id;
-   const [existingCustomer, setExistingCustomer] = useState(false);
+   const [existingCustomer, setExistingCustomer] = useState();
    const [customerId, setCustomerId] = useState();
    const [paymentMethods, setPaymentMethods] = useState([]);
    const [customerCheckLoading, setCustomerCheckLoading] = useState(true);
