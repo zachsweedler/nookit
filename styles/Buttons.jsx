@@ -56,9 +56,31 @@ export const Button = styled.button`
   }
 `;
 
+export const ButtonDiv = styled.div`
+  width: 100%;
+  height: 45px;
+  background-color: ${getBackgroundColor};
+  border-radius: 5px;
+  color: ${getTextColor};
+  border: 1px solid ${getBorderColor};
+  font-size: ${({ theme }) => theme.fontSize.textmd};
+  font-weight: ${({ theme }) => theme.fontWeight.textmd.medium};
+  font-family: __Poppins_1562c7;
+  padding-left: 15px; 
+  padding-right: 15px;
+  display: flex;
+  align-items: center;
+  text-decoration: transparent !important;
+  justify-content: center;
+  &:hover {
+    background-color: ${getBackgroundColorHover};
+    cursor: pointer;
+  }
+`;
+
 /////////////
 
-export const ButtonTab = styled.button`
+export const ButtonTab = styled.div`
   width: auto;
   height: 40px;
   color: ${({ theme, $isActive }) => $isActive ? theme.color.primary.brand.b600 : theme.color.primary.grey.g500};

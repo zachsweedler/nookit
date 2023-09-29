@@ -6,11 +6,12 @@ const nookFormSlice = createSlice({
   initialState: {
     formValues: {
       id: "",
-      about: "",
       images: [],
       blocked_dates: [],
-      daily_rate: "",
+      price: "",
+      price_type: "",
       location_name: "",
+      location_about: "",
       location_type: "",
       location_max_capacity: "",
       location_full_address: "",
@@ -27,11 +28,12 @@ const nookFormSlice = createSlice({
     },
     restartForm: (state) => {
       state.formValues.id = null;
-      state.formValues.about = "";
       state.formValues.images = [];
       state.formValues.blocked_dates = [];
-      state.formValues.daily_rate = "";
+      state.formValues.price = "";
+      state.formValues.price_type = "";
       state.formValues.location_name = "";
+      state.formValues.location_about = "";
       state.formValues.location_type = "";
       state.formValues.location_max_capacity = "";
       state.formValues.location_images = [];

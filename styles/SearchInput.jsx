@@ -22,7 +22,7 @@ export default function SearchInput({
 
    useEffect(() => {
       const matchingResults = results.filter((result) =>
-         result.toLowerCase().includes(inputValue.toLowerCase())
+         result.toLowerCase().includes(inputValue?.toLowerCase())
       );
       setFilteredResults(matchingResults);
    }, [inputValue, visible, results]);

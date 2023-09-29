@@ -26,10 +26,10 @@ export default function RequestBookingBar({
             <Left>
                <Rate>
                   <Para size="textmd" $weight="medium">
-                     ${nook.daily_rate}
+                     {nook?.price_type === "dailyRate" ? `$${nook.price}` : `${nook.price}%`}
                   </Para>
                   <Para size="textsm" $weight="regular">
-                     per day
+                     {nook?.price_type === "dailyRate" ? `per day` : `of sales`}
                   </Para>
                </Rate>
                {endDate && (

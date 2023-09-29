@@ -91,7 +91,7 @@ export default function Booking() {
                                     }}
                                  >
                                     <Link
-                                       href={`/profiles/${booking?.guest_user_id}`}
+                                       href={`/profiles/${booking?.host_user_id}`}
                                     >
                                        <Para
                                           $isLink={true}
@@ -100,9 +100,7 @@ export default function Booking() {
                                           color="black"
                                        >
                                           {
-                                             booking
-                                                ?.bookings_guest_company_id_fkey
-                                                ?.name
+                                             booking?.bookings_host_company_id_fkey?.name
                                           }
                                        </Para>
                                     </Link>
@@ -139,7 +137,7 @@ export default function Booking() {
                                     }}
                                  >
                                     <Link
-                                       href={`/profiles/${booking?.host_user_id}`}
+                                       href={`/profiles/${booking?.guest_user_id}`}
                                     >
                                        <Para
                                           $isLink={true}
@@ -149,7 +147,7 @@ export default function Booking() {
                                        >
                                           {
                                              booking
-                                                ?.bookings_host_company_id_fkey
+                                                ?.bookings_guest_company_id_fkey
                                                 ?.name
                                           }
                                        </Para>

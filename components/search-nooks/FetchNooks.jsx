@@ -31,6 +31,7 @@ export default function FetchNooks() {
          } else {
             setLoading(false);
             setNooks(data);
+            console.log('nooks', data)
          }
       };
       fetchNooks();
@@ -63,7 +64,6 @@ export default function FetchNooks() {
                <EmptyState
                   title="No Nooks Found"
                   description="Looks like there are no nooks! Interested in hosting one at your store? Click the link below:"
-                  
                   button="Host a Nook"
                   buttonHref="/my-nooks"
                />

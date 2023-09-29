@@ -34,7 +34,7 @@ export default function HostBookings() {
                 bookings_guest_company_id_fkey(name, logo),
                 bookings_host_company_id_fkey(name, logo),
                 nooks(
-                   id, location_images, location_name, location_address, location_city, location_state_code, location_zip, daily_rate, company_id
+                   id, location_images, location_name, location_address, location_city, location_state_code, location_zip, price, company_id
                 )`
                )
                .order("created_at", { ascending: false })
@@ -83,6 +83,10 @@ export default function HostBookings() {
                         nookId={booking.nooks.id}
                         hostUserId={booking.host_user_id}
                         guestUserId={booking.guest_user_id}
+                        hostName={booking.bookings_host_company_id_fkey.name}
+                        hostLogo={booking.bookings_host_company_id_fkey.logo}
+                        guestName={booking.bookings_guest_company_id_fkey.name}
+                        guestLogo={booking.bookings_guest_company_id_fkey.logo}
                         userId={userId}
                         locationImage={booking.nooks.location_images?.[0]}
                         locationName={booking.nooks.location_name}
@@ -90,18 +94,15 @@ export default function HostBookings() {
                         locationCity={booking.nooks.location_city}
                         locationState={booking.nooks.location_state_code}
                         locationZip={booking.nooks.location_zip}
-                        hostName={booking.bookings_host_company_id_fkey.name}
-                        hostLogo={booking.bookings_host_company_id_fkey.logo}
-                        guestName={booking.bookings_guest_company_id_fkey.name}
-                        guestLogo={booking.bookings_guest_company_id_fkey.logo}
-                        dailyRate={booking.nooks.daily_rate}
+                        price={booking.nooks.price}
                         bookingPrice={booking.booking_price}
                         bookingPriceTotalBeforeTax={
                            booking.booking_price_total_before_taxes
                         }
                         processingFee={booking.processing_fee}
                         hostPayout={
-                           booking.booking_price - booking.processing_fee
+                           booking.nooks.price_type === "dailyRate" ?
+                           booking.booking_price - booking.processing_fee : `${booking.nooks.price}% of sales`
                         }
                         startDate={booking.start_date}
                         endDate={booking.end_date}

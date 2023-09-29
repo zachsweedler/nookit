@@ -24,9 +24,9 @@ export default function RequestBookingCard({
       <>
          <Wrapper>
             <Price>
-               <H6 $weight="semibold">${nook?.daily_rate}</H6>
+               <H6 $weight="semibold">{nook?.price_type === "dailyRate" ? `$${nook.price}` : `${nook.price}%`}</H6>
                <Para size="textmd" $weight="medium">
-                  day
+                  {nook?.price_type === "dailyRate" ? `per day` : `of sales`}
                </Para>
             </Price>
             <Divider />
@@ -65,14 +65,25 @@ export default function RequestBookingCard({
             </Form>
             {bookingPriceTotal && (
                <Calculation>
+                  {nook.price_type === "dailyRate" ? 
                   <LineItem>
                      <Para size="textmd" $weight="regular">
-                        {formatCurrency(nook.daily_rate)} x {dayCount} days
+                       `{formatCurrency(nook.price)} x {nook.dayCount} days`
                      </Para>
                      <Para size="textmd" $weight="regular">
                         {formatCurrency(bookingPriceTotal)}
                      </Para>
                   </LineItem>
+                  :
+                  <LineItem>
+                     <Para size="textmd" $weight="regular">
+                       Days
+                     </Para>
+                     <Para size="textmd" $weight="regular">
+                        {dayCount}
+                     </Para>
+                  </LineItem>
+                  }
                   <LineItem>
                      <Para size="textmd" $weight="regular">
                         Processing

@@ -30,6 +30,7 @@ export default function BookingColumn() {
    const [hasPaymentMethod, setHasPaymentMethod] = useState(false);
    const [hostConnectAccountId, setHostConnectAccountId] = useState();
    const [guestCustomerId, setGuestCustomerId] = useState();
+   const [hostCustomerId, setHostCustomerId] = useState();
    const [modalIsOpen, setIsOpen] = useState(false);
    const router = useRouter();
    const params = useParams();
@@ -95,7 +96,7 @@ export default function BookingColumn() {
       }
    }, [existingCustomer, customerId, supabase, userId]);
 
-   // fetch host (connect ID) and guest's (customer ID) stripe IDs
+   // fetch host stripe connect ID and guest's & host's stripe customer IDs.
    useEffect(() => {
       if (nook.user_id) {
          const fetchHostConnectId = async () => {
@@ -110,6 +111,19 @@ export default function BookingColumn() {
             }
          };
          fetchHostConnectId();
+         const fetchHostCustomerId = async () => {
+            const { data, error } = await supabase
+               .from("stripe_customers")
+               .select("customer_id")
+               .eq("user_id", nook?.user_id);
+            if (error) {
+               console.log(`error getting host's customer ID`, error);
+            } else {
+               console.log("host customer id", data);
+               setHostCustomerId(data[0]?.customer_id);
+            }
+         };
+         fetchHostCustomerId();
       }
 
       if (userId) {
@@ -154,7 +168,7 @@ export default function BookingColumn() {
          dates[1]?.$D - dates[0]?.$D === 0
             ? 1
             : dates[1]?.$D - dates[0]?.$D + 1;
-      const price = nook.daily_rate * days;
+      const price = nook.price_type === "dailyRate" ? nook.price * days : null;
       const startDateSelect = `${dates[0]?.$M + 1}/${dates[0]?.$D}/${
          dates[0]?.$y
       }`;
@@ -165,17 +179,24 @@ export default function BookingColumn() {
          shouldValidate: true,
       });
       setDayCount(days);
-      setBookingPriceTotal(price);
       let newProcessingTotal;
-      if (days >= 30) {
-         newProcessingTotal = price * 0.2;
-      } else if (days >= 7) {
-         newProcessingTotal = price * 0.15;
-      } else {
-         newProcessingTotal = price * 0.12;
-      }
+      newProcessingTotal =
+         nook.price_type === "dailyRate"
+            ? days >= 30
+               ? price * 0.2
+               : days >= 7
+               ? price * 0.15
+               : price * 0.12
+            : days >= 30
+            ? days * 15
+            : days >= 7
+            ? days * 25
+            : days * 30;
       setProcessingTotal(newProcessingTotal);
-      setTotalBeforeTaxes(newProcessingTotal + price);
+      setBookingPriceTotal(price ? price * days : newProcessingTotal);
+      setTotalBeforeTaxes(
+         price ? price * days + newProcessingTotal : newProcessingTotal
+      );
       setStartDate(startDateSelect);
       setEndDate(endDateSelect);
    };
@@ -224,6 +245,7 @@ export default function BookingColumn() {
                guest_company_id: guestCompanyId,
                host_company_id: hostCompanyId,
                guest_customer_id: guestCustomerId,
+               host_customer_id: hostCustomerId,
                host_connect_account_id: hostConnectAccountId,
                start_date: startDate,
                end_date: endDate,

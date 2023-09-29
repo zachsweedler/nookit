@@ -10,7 +10,7 @@ import { formatCurrency } from "@/utils/currencyFormatter";
 export default function RequestSummary({ draftData }) {
    const searchParams = useSearchParams();
    const locationImage = searchParams.get("locationImage");
-   
+
    return (
       <Track>
          <Wrapper>
@@ -71,13 +71,26 @@ export default function RequestSummary({ draftData }) {
             <Divider style={{ width: "100%" }} />
             <Calculation>
                <LineItem>
-                  <Para size="textmd" $weight="regular">
-                     {formatCurrency(draftData?.nooks.daily_rate)} x {draftData?.days_count}{" "}
-                     days
-                  </Para>
-                  <Para size="textmd" $weight="regular">
-                     {formatCurrency(draftData?.booking_price)}
-                  </Para>
+                  {draftData?.nooks.price_type === "dailyRate" ? (
+                     <>
+                        <Para size="textmd" $weight="regular">
+                           {formatCurrency(draftData?.nooks.price)} x{" "}
+                           {draftData?.days_count} days
+                        </Para>
+                        <Para size="textmd" $weight="regular">
+                           {formatCurrency(draftData?.booking_price)}
+                        </Para>
+                     </>
+                  ) : (
+                     <>
+                        <Para size="textmd" $weight="regular">
+                           Days
+                        </Para>
+                        <Para size="textmd" $weight="regular">
+                           {draftData?.days_count}
+                        </Para>
+                     </>
+                  )}
                </LineItem>
                <LineItem>
                   <Para size="textmd" $weight="regular">
@@ -95,7 +108,9 @@ export default function RequestSummary({ draftData }) {
                      Total before taxes
                   </Para>
                   <Para size="textmd" $weight="medium">
-                     {formatCurrency(draftData?.booking_price_total_before_taxes)}
+                     {formatCurrency(
+                        draftData?.booking_price_total_before_taxes
+                     )}
                   </Para>
                </LineItem>
             </Calculation>

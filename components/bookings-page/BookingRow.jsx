@@ -62,7 +62,7 @@ export default function BookingRow({ ...props }) {
                      style={{ borderRadius: "100%", objectFit: "cover" }}
                   />
                   <StyledPara size="textmd" $weight="regular">
-                     {props.guestUserId === props.authUserId
+                     {props.guestUserId === props.userId
                         ? props.hostName
                         : props.guestName}
                   </StyledPara>
@@ -82,7 +82,7 @@ export default function BookingRow({ ...props }) {
                <StyledPara size="textmd" $weight="regular">
                   {props.guestUserId === props.userId
                      ? `${formatCurrency(props.bookingPriceTotalBeforeTax)}`
-                     : `${formatCurrency(props.hostPayout)}`}
+                     : `${props.hostPayout}`}
                </StyledPara>
             </GridCell>
          </GridRow>

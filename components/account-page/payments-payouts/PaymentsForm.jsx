@@ -7,19 +7,19 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Card, CardInfo, MethodsWrapper } from "./Styles";
-import { Button } from "@/styles/Buttons";
+import { Button, ButtonDiv } from "@/styles/Buttons";
 
 export default function PaymentsForm() {
    const supabase = createClientComponentClient();
    const user = useUser(supabase);
    const email = user?.email;
    const userId = user?.id;
-   const [existingCustomer, setExistingCustomer] = useState();
+   const [existingCustomer, setExistingCustomer] = useState(false);
    const [customerId, setCustomerId] = useState();
    const [paymentMethods, setPaymentMethods] = useState([]);
    const [customerCheckLoading, setCustomerCheckLoading] = useState(true);
    const [paymentMethodLoading, setPaymentMethodLoading] = useState(true);
-   const [loading, setLoading] = useState(null)
+   const [loading, setLoading] = useState(null);
 
    useEffect(() => {
       if (user) {
@@ -32,8 +32,9 @@ export default function PaymentsForm() {
             if (error) {
                console.log("error getting customer Id", error);
             } else {
-               if (data && data.length > 0) {
+               if (data[0].customer_id) {
                   setExistingCustomer(true);
+                  console.log("customer", data[0]);
                   setCustomerId(data[0].customer_id);
                } else {
                   setExistingCustomer(false);
@@ -71,12 +72,23 @@ export default function PaymentsForm() {
       }
    }, [customerId]);
 
-   
    const createCustomerPortalSession = async () => {
-      setLoading(true)
-      const requestBody = existingCustomer
-         ? { customer_id: customerId, email: email, user_id: userId }
-         : { email: email, user_id: userId };
+      setLoading(true);
+
+      // Create the request body with optional customer_id
+      const requestBody = {
+         email: email,
+         user_id: userId,
+      };
+
+      if (existingCustomer && customerId) {
+         // Add customer_id to the request body if it exists
+         requestBody.customer_id = customerId;
+      }
+
+      console.log("existingCustomer:", existingCustomer);
+      console.log("customerId:", customerId);
+
       const response = await fetch(
          `${window.location.origin}/api/create-customer-portal-session`,
          {
@@ -87,32 +99,36 @@ export default function PaymentsForm() {
             body: JSON.stringify(requestBody),
          }
       );
+
       const data = await response.json();
+
       if (!data.success) {
-         setLoading(false)
+         setLoading(false);
          console.log("error", data.message);
       } else {
          if (existingCustomer) {
-               setLoading(false);
-               setTimeout(() => {
-                  window.open(data.sessionUrl, '_blank');
-               })
+            setLoading(false);
+            setTimeout(() => {
+               window.open(data.sessionUrl, "_blank");
+            });
          } else {
-            const { error } = await supabase
+            const { data: upsertData, error } = await supabase
                .from("stripe_customers")
-               .insert({
+               .upsert({
                   customer_id: data.customerId,
                   user_id: userId,
                })
+               .eq('user_id', userId)
                .select();
             if (error) {
-               setLoading(false)
+               setLoading(false);
                console.log("error upserting customer id", error);
             } else {
-               setLoading(false)
+               console.log("success upserting customer id", upsertData);
+               setLoading(false);
                setTimeout(() => {
-                  window.open(data.sessionUrl, '_blank');
-               })
+                  window.open(data.sessionUrl, "_blank");
+               });
             }
          }
       }
@@ -122,48 +138,59 @@ export default function PaymentsForm() {
       <>
          {customerCheckLoading && paymentMethodLoading ? (
             <Loading />
-         ) : (
-            paymentMethods?.length > 0 ? (
-               <MethodsWrapper>
-                  <Para size="textlg" $weight="medium">
-                     Methods
-                  </Para>
-                  {paymentMethods?.map((method) => (
-                     <Card key={method.id}>
-                        <CardInfo>
-                           <Image
-                              alt=""
-                              src={`/payment-cards/${method.card.brand.toLowerCase()}.svg`}
-                              width={50}
-                              height={30}
-                           />
+         ) : paymentMethods?.length > 0 ? (
+            <MethodsWrapper>
+               <Para size="textlg" $weight="medium">
+                  Methods
+               </Para>
+               {paymentMethods?.map((method) => (
+                  <Card key={method.id}>
+                     <CardInfo>
+                        <Image
+                           alt=""
+                           src={`/payment-cards/${method.card.brand.toLowerCase()}.svg`}
+                           width={50}
+                           height={30}
+                        />
 
-                           <Para size="textmd" $weight="medium">
-                              {method.card.brand.charAt(0).toUpperCase() +
-                                 method.card.brand.slice(1)}
-                           </Para>
-                           <Para
-                              size="textsm"
-                              $weight="regular"
-                              color="primary.grey.g600"
-                           >
-                              •••• •••• •••• {method.card.last4}
-                           </Para>
-                        </CardInfo>
-                        <Button $brandoutline={true} onClick={createCustomerPortalSession} style={{width: "auto"}}>Manage</Button>
-                     </Card>
-                  ))}
-               </MethodsWrapper>
-            ) : (
-               <Card>
-                  <CardInfo>
-                     <Para size="textmd" weight="regular">No payment methods added</Para>
-                  </CardInfo>
-                  <Button $brandoutline={true} onClick={createCustomerPortalSession} style={{width: "auto"}}>{loading ? <Loading/> : "Add Card"}</Button>
-               </Card>
-            )
+                        <Para size="textmd" $weight="medium">
+                           {method.card.brand.charAt(0).toUpperCase() +
+                              method.card.brand.slice(1)}
+                        </Para>
+                        <Para
+                           size="textsm"
+                           $weight="regular"
+                           color="primary.grey.g600"
+                        >
+                           •••• •••• •••• {method.card.last4}
+                        </Para>
+                     </CardInfo>
+                     <ButtonDiv
+                        $brandoutline={true}
+                        onClick={createCustomerPortalSession}
+                        style={{ width: "auto" }}
+                     >
+                        Manage
+                     </ButtonDiv>
+                  </Card>
+               ))}
+            </MethodsWrapper>
+         ) : (
+            <Card>
+               <CardInfo>
+                  <Para size="textmd" weight="regular">
+                     No payment methods added
+                  </Para>
+               </CardInfo>
+               <ButtonDiv
+                  $brandoutline={true}
+                  onClick={createCustomerPortalSession}
+                  style={{ width: "auto" }}
+               >
+                  {loading ? <Loading /> : "Add Card"}
+               </ButtonDiv>
+            </Card>
          )}
       </>
    );
 }
-

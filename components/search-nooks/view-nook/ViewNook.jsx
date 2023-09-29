@@ -25,6 +25,7 @@ export default function ViewNook() {
             if (error) {
                console.error("error fetching nook", error);
             } else {
+               console.log('view nook', data)
                dispatch(setViewNook(data));
             }
          };

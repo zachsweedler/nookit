@@ -15,22 +15,20 @@ client.defineJob({
    integrations: {
       supabase,
    },
-   trigger: intervalTrigger({ seconds: 3600 }), // Run every hour
+   trigger: intervalTrigger({ seconds: 604800 }), // Run every week
    run: async (payload, io, ctx) => {
-
       const currentDate = payload.ts;
-      currentDate.setDate(currentDate.getDate() - 30);
-      const thirtyDaysAgo = currentDate.toISOString();
-
+      currentDate.setDate(currentDate.getDate() - 7);
+      const oneWeekAgo = currentDate.toISOString();
       // Fetch active bookings where end_date is 30 days old
-      const bookings = await io.supabase.runTask(
+      await io.supabase.runTask(
          "fetch-month-old-bookings",
          async (supabaseClient) => {
             await io.logger.info('thirty days ago', thirtyDaysAgo)
             const { data, error } = await supabaseClient
                .from("bookings")
                .delete()
-               .lte("created_at", thirtyDaysAgo)
+               .lte("created_at", oneWeekAgo)
                .eq("status", "draft")
                .select();
             if (error) {

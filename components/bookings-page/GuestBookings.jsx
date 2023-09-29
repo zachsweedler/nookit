@@ -34,7 +34,7 @@ export default function GuestBookings() {
                 bookings_guest_company_id_fkey(name, logo),
                 bookings_host_company_id_fkey(name, logo),
                 nooks(
-                   id, location_images, location_name, location_address, location_city, location_state_code, location_zip, daily_rate, company_id
+                   id, location_images, location_name, location_address, location_city, location_state_code, location_zip, price, company_id
                 )`
                )
                .order("created_at", { ascending: false })

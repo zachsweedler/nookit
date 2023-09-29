@@ -124,7 +124,7 @@ export default function RequestForm() {
          const { data, error } = await supabase
             .from("bookings")
             .select(
-               "*, nooks(company_id, daily_rate, location_name, location_address, location_city, location_state_code, location_zip)"
+               "*, nooks(company_id, price, price_type, location_name, location_address, location_city, location_state_code, location_zip)"
             )
             .eq("id", searchParams.get("id"));
          if (error) {
@@ -179,7 +179,7 @@ export default function RequestForm() {
             console.log("error upserting company data", companyError);
          } 
       }
-      router.push("/bookings");
+      router.push("/bookings/guest");
    };
 
    return (

@@ -42,14 +42,18 @@ function NookImageUploader({ fieldName, isNookPhotos, title }) {
                      isNookPhotos ? "nook" : "space"
                   }/${image}`
             );
+            // Use the functional form of setImagesArray to ensure the correct state update
+            setImagesArray((prevImagesArray) => [...prevImagesArray, ...paths]);
             setValue(fieldName, paths);
-            setImagesArray(paths);
          }
       };
       getImagesFromStorage();
-
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [isNookPhotos, getValues, setValue, fieldName, nookId, userId]);
+
+   useEffect(() => {
+      console.log(`images ${isNookPhotos ? "nook" : "location"} `, imagesArray);
+   }, [imagesArray]);
 
    const updateNookTable = async (newArrayOfPaths) => {
       const { data, error } = await supabase
@@ -58,7 +62,7 @@ function NookImageUploader({ fieldName, isNookPhotos, title }) {
          .eq("id", nookId);
       if (error) {
          console.log(error);
-      } 
+      }
    };
 
    const handleImageUpload = async (file) => {

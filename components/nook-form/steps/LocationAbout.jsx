@@ -5,7 +5,7 @@ import { setFormValues } from "@/slices/nookFormSlice";
 import Textarea from "@/styles/Textarea";
 import { Section } from "./Styles";
 
-export default function NookAbout({id}) {
+export default function LocationAbout({id}) {
    const dispatch = useDispatch();
 
    const {
@@ -14,17 +14,17 @@ export default function NookAbout({id}) {
       watch,
    } = useFormContext();
 
-   const about = watch("about");
+   const about = watch("location_about");
 
    useEffect(() => {
-      dispatch(setFormValues({ about: about }));
+      dispatch(setFormValues({ location_about: about }));
    }, [about, dispatch]);
 
    return (
       <Section id={id}>
          <Textarea
-            fieldName="about"
-            label="About"
+            fieldName="location_about"
+            label="About Your Location"
             register={register}
             errors={errors}
             id={id}
