@@ -122,6 +122,7 @@ export const GlobalStyles = createGlobalStyle`
         -webkit-appearance: none;
         -moz-appearance: none;
         font-size: ${({theme}) => theme.fontSize.textmd};
+        color: black !important;
     }
 
     select:focus {
