@@ -64,6 +64,7 @@ const StyledSelect = styled.select`
    border-radius: 5px;
    padding: 0px 15px;
    width: 100%;
+   color: black;
    &::placeholder {
       color: ${({ theme }) => theme.color.primary.brand.b950};
    }

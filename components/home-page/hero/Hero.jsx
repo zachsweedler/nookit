@@ -293,6 +293,10 @@ const StoreInfo = styled.div`
    bottom: 30px;
    right: 30px;
    z-index: 100;
+   @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
+      bottom: 30px;
+      right: auto;
+   }
 `;
 
 const NameLocation = styled.div`

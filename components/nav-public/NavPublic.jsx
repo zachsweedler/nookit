@@ -74,7 +74,7 @@ export default function NavPublic() {
    };
 
    return (
-      <Wrapper $pathname={pathname} $isScrolled={isScrolled}>
+      <Wrapper $pathname={pathname} $isScrolled={isScrolled} $isVisible={isVisible}>
          <Container
             size="xl"
             style={{
@@ -166,11 +166,9 @@ const Wrapper = styled.div`
    position: fixed;
    top: 0;
    z-index: 1000;
-   border-bottom: ${({ $isScrolled, theme }) =>
-      $isScrolled ? `1px solid ${theme.color.primary.grey.g50}` : "none"};
-   background-color: ${({ $isScrolled, theme }) =>
-      $isScrolled ? `${theme.color.white}` : "none"};
-`;
+   border-bottom: ${({ $isScrolled, theme }) => $isScrolled ? `1px solid ${theme.color.primary.grey.g50}` : "none"};
+   background-color: ${({ $isVisible, $isScrolled, theme }) => $isVisible || $isScrolled ? `${theme.color.white}` : 'none'};
+;`
 
 const AuthButtons = styled.div`
    width: auto;
