@@ -15,7 +15,7 @@ const getBackgroundColorHover = ({ theme, $brandcolor, $blackcolor, $whitecolor,
   if ($blackcolor) return theme.color.primary.grey.g900;
   if ($whitecolor) return theme.color.primary.grey.g25;
   if ($googlecolor) return theme.color.primary.grey.g25;
-  if ($brandoutline) return theme.color.primary.brand.b25;
+  if ($brandoutline) return theme.color.primary.brand.b100;
   return theme.color.primary.brand.b600;  // Default value
 };
 

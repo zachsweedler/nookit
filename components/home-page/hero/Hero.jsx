@@ -9,7 +9,6 @@ import Image from "next/image";
 import "./SliderStyle.css";
 import { SelectHero } from "@/styles/SelectHero";
 import { useEffect, useState } from "react";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
 export default function Hero() {
@@ -295,6 +294,7 @@ const StoreInfo = styled.div`
    z-index: 100;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       bottom: 30px;
+      left: 30px;
       right: auto;
    }
 `;

@@ -39,8 +39,7 @@ export default function BecomeHost() {
                         Hosting
                      </Para>
                      <H1>
-                        Earn income as
-                        <br /> a nookit host
+                        Earn income as a nookit host
                      </H1>
                      <Para
                         size="textmd"
@@ -117,6 +116,8 @@ const Copy = styled.div`
    width: 100%;
    text-align: center;
    padding: 60px 30px 0px 30px;
+   max-width: 800px;
+   margin: auto;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       padding: 60px 30px 0px 30px;
       text-align: left;

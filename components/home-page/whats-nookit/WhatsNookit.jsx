@@ -17,7 +17,7 @@ export default function WhatsNookit() {
                   <Para size="textmd" $weight="medium">
                      What’s Nookit?
                   </Para>
-                  <H1>Pop into store’s that align with your brand.</H1>
+                  <H1>Pop into stores that align with your brand.</H1>
                </Header>
                <Copy>
                   <Para size="textmd" $weight="regular">
