@@ -36,11 +36,11 @@ const getBorderColor = ({ theme, $googlecolor, $brandoutline  }) => {
 
 export const Button = styled.button`
   width: 100%;
-  height: 45px;
+  height: 50px;
   background-color: ${getBackgroundColor};
   border-radius: 5px;
   color: ${getTextColor};
-  border: 1px solid ${getBorderColor};
+  border: 1.5px solid ${getBorderColor};
   font-size: ${({ theme }) => theme.fontSize.textmd};
   font-weight: ${({ theme }) => theme.fontWeight.textmd.medium};
   font-family: __Poppins_1562c7;
@@ -58,7 +58,7 @@ export const Button = styled.button`
 
 export const ButtonDiv = styled.div`
   width: 100%;
-  height: 45px;
+  height: 50px;
   background-color: ${getBackgroundColor};
   border-radius: 5px;
   color: ${getTextColor};

@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import { Para } from "./Typography";
 
-export const Select = ({
+export const SelectHero = ({
    options,
    fieldName,
    register = null,
@@ -14,15 +14,15 @@ export const Select = ({
 }) => {
    return (
       <Wrap>
-         <Label htmlFor={fieldName}>{label}</Label>
          <SelectWrapper>
+            {adornment && <Adornment>{adornment}</Adornment>}
             <StyledSelect
                {...register?.(fieldName, {
                   onChange: onChange,
                })}
             >
                <option value="" hidden>
-                  Select {label}
+                  {label}
                </option>
                {options?.map((item) => (
                   <option key={item.value} value={item.value}>
@@ -30,7 +30,6 @@ export const Select = ({
                   </option>
                ))}
             </StyledSelect>
-            {adornment && <Adornment>{adornment}</Adornment>}
          </SelectWrapper>
          {errors?.[fieldName] && (
             <Para size="textxs" $weight="regular" color="error">
@@ -41,7 +40,7 @@ export const Select = ({
    );
 };
 
-export default Select;
+export default SelectHero;
 
 const SelectWrapper = styled.div`
    position: relative;
@@ -62,7 +61,7 @@ const StyledSelect = styled.select`
    overflow: hidden;
    position: relative;
    border-radius: 5px;
-   padding: 0px 15px;
+   padding: 0px 35px;
    width: 100%;
    &::placeholder {
       color: ${({ theme }) => theme.color.primary.brand.b950};
@@ -72,7 +71,7 @@ const StyledSelect = styled.select`
 const Adornment = styled.div`
    position: absolute;
    top: 50%;
-   right: 15px;
+   left: 15px;
    transform: translateY(-50%);
 `;
 

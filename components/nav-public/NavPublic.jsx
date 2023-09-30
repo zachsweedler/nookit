@@ -25,8 +25,7 @@ export default function NavPublic() {
    const logo = useSelector((state) => state.companyLogo.path);
    const dispatch = useDispatch();
    const supabase = createClientComponentClient();
-   const session = useUserSession(supabase)
-
+   const session = useUserSession(supabase);
 
    useEffect(() => {
       const handleScroll = () => {
@@ -34,10 +33,10 @@ export default function NavPublic() {
          setIsScrolled(window.scrollY > 0);
       };
 
-      window.addEventListener('scroll', handleScroll);
+      window.addEventListener("scroll", handleScroll);
       return () => {
          // Clean up the event listener on component unmount
-         window.removeEventListener('scroll', handleScroll);
+         window.removeEventListener("scroll", handleScroll);
       };
    }, []);
 
@@ -100,7 +99,11 @@ export default function NavPublic() {
                   </NavItem>
                </Link>
                <Link href="/my-nooks">
-                  <NavItem size="textmd" $weight="regular" onClick={()=>dispatch(restartForm())}>
+                  <NavItem
+                     size="textmd"
+                     $weight="regular"
+                     onClick={() => dispatch(restartForm())}
+                  >
                      List Your Nook
                   </NavItem>
                </Link>
@@ -130,7 +133,7 @@ export default function NavPublic() {
                         loader={supabaseLoader}
                         alt="business_logo"
                         fill={true}
-                        style={{ objectFit: "cover", borderRadius: "100%"}}
+                        style={{ objectFit: "cover", borderRadius: "100%" }}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         src={imgSrc}
                      />
@@ -163,8 +166,10 @@ const Wrapper = styled.div`
    position: fixed;
    top: 0;
    z-index: 1000;
-   border-bottom: ${({ $isScrolled, theme }) => $isScrolled ? `1px solid ${theme.color.primary.grey.g50}` : 'none'};
-   background-color: ${({ theme }) => theme.color.white};
+   border-bottom: ${({ $isScrolled, theme }) =>
+      $isScrolled ? `1px solid ${theme.color.primary.grey.g50}` : "none"};
+   background-color: ${({ $isScrolled, theme }) =>
+      $isScrolled ? `${theme.color.white}` : "none"};
 `;
 
 const AuthButtons = styled.div`
@@ -211,7 +216,7 @@ const NavItem = styled(Para)`
    display: flex;
    padding: 9px 15px;
    &:hover {
-      background-color: ${({ theme }) => theme.color.primary.grey.g25};
+      background-color: ${({ theme }) => theme.color.primary.brand.b100};
       border-radius: 5px;
       text-decoration: none;
       cursor: pointer;

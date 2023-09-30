@@ -85,8 +85,6 @@ const Wrapper = styled.div`
       rgba(0, 0, 0, 0.12);
    width: ${({ $mobile }) => ($mobile ? "100vw" : "250px")};
    padding: ${({ $mobile }) => ($mobile ? "0px 0px" : "10px 0px")};
-   border-top: ${({ $mobile, theme }) =>
-      $mobile ? `1px solid ${theme.color.primary.grey.g25}` : "none"};
    ${({ $mobile, theme }) =>
       $mobile
          ? `

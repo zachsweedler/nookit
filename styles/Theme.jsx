@@ -17,11 +17,11 @@ const theme = {
         b300: "#E0A396",
         b400: "#D37B69",
         b500: "#C85A44",
-        b600: "#C1482F",
+        b600: "#ED3900",
         b700: "#B73D24",
         b800: "#AC3922",
         b900: "#852B19",
-        b925: "#EFEBEA",
+        b925: "#F8F6F5",
         b950: "#998A87"
       },
       grey: {
@@ -40,8 +40,8 @@ const theme = {
     },
   },
   fontSize: {
-    display2xl: "9rem", // <H1 />
-    displayxl: "8rem", // <H2 />
+    display2xl: "8rem", // <H1 />
+    displayxl: "7rem", // <H2 />
     displaylg: "6rem", // <H3 />
     displaymd: "5rem", // <H4 />
     displaysm: "3rem", // <H5 />

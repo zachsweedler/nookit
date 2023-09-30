@@ -8,6 +8,10 @@ const Container = styled.div`
   margin-right: auto;
   padding-left: 30px; 
   padding-right: 30px;
+  @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
+    padding-left: 25px; 
+    padding-right: 25px;
+   }
 `;
 
 export default Container;
