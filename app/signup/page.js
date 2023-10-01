@@ -3,14 +3,14 @@ import { cookies } from 'next/headers'
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useUserSession } from "@/hooks/server-side/useUserSession";
 import { redirect } from "next/navigation";
-import Login from "@/components/auth-page/Login";
+import SignUp from "@/components/auth-page/SignUp";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Nookit | Login",
+  title: "Nookit | Sign Up",
 };
 
-export default async function LogIn() {
+export default async function SignIn() {
   const supabase = createServerComponentClient({ cookies });
   const session = await useUserSession(supabase);
 
@@ -21,7 +21,7 @@ export default async function LogIn() {
   return (
     <main>
       <AuthGrid>
-        <Login/>
+        <SignUp/>
       </AuthGrid>
     </main>
   );

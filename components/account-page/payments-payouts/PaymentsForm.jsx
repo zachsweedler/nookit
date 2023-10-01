@@ -118,7 +118,7 @@ export default function PaymentsForm() {
                   customer_id: data.customerId,
                   user_id: userId,
                })
-               .eq('user_id', userId)
+               .eq("user_id", userId)
                .select();
             if (error) {
                setLoading(false);

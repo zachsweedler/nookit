@@ -24,7 +24,7 @@ client.defineJob({
       await io.supabase.runTask(
          "fetch-month-old-bookings",
          async (supabaseClient) => {
-            await io.logger.info('thirty days ago', thirtyDaysAgo)
+            await io.logger.info('thirty days ago', oneWeekAgo)
             const { data, error } = await supabaseClient
                .from("bookings")
                .delete()

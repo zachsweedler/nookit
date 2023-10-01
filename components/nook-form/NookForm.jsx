@@ -155,7 +155,6 @@ export default function NookForm() {
          status: "listed",
          company_id: companyId,
          user_id: userId,
-         about: formValuesRedux.about,
          price: formValuesRedux.price,
          price_type: formValuesRedux.price_type,
          description: formValuesRedux.description,
@@ -174,6 +173,7 @@ export default function NookForm() {
          location_longitude: formValuesRedux.location_longitude,
          location_latitude: formValuesRedux.location_latitude,
          location_geo_point: formValuesRedux.location_geo_point,
+         location_about: formValuesRedux.location_about,
          location_images: formState.location_images,
       });
       if (error) {

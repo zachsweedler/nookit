@@ -14,11 +14,15 @@ import ConfirmationPopup from "./ConfirmationPopup";
 import Container from "@/styles/Containers";
 import Agreement from "./Agreement";
 import Input from "@/styles/Input";
+import { useRouter } from "next/navigation";
+import Snackbar from "@/styles/mui/Snackbar";
 
-export default function AuthForm() {
+export default function SignUp() {
    const [loading, setLoading] = useState(null);
    const [success, setSuccess] = useState(null);
+   const [error, setError] = useState()
    const supabase = createClientComponentClient();
+   const router = useRouter();
    const validationSchema = yup.object().shape({
       email: yup.string().required("This is a required field."),
    });
@@ -28,57 +32,90 @@ export default function AuthForm() {
       formState: { errors },
       handleSubmit,
    } = useForm({
-      mode: 'onChange',
+      mode: "onChange",
       resolver: yupResolver(validationSchema),
    });
 
    const onSubmit = async (formData) => {
       setSuccess(null);
       setLoading(true);
-      const { error } = await supabase.auth.signInWithOtp({
+      setError(null)
+      const { error } = await supabase.auth.signUp({
          email: formData.email,
+         password: formData.password
       });
       if (error) {
          console.log(error);
          setLoading(false);
          setSuccess(false);
+         setError(error.message)
       } else {
          setLoading(false);
-         setSuccess(true);
+         setSuccess('You successfully signed up!');
+         setTimeout(()=>{
+            location.replace(window.location.origin)
+         }, 3000)
       }
    };
 
-   const handleGoogleSignIn = async () => {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-         provider: "google",
-      });
-      if (error) {
-         console.log("sign in error", error);
-      }
-   };
+   const handleLogin = () => {
+      router.push('/login')
+   }
+
+   // const handleGoogleSignIn = async () => {
+   //    const { data, error } = await supabase.auth.signInWithOAuth({
+   //       provider: "google",
+   //    });
+   //    if (error) {
+   //       console.log("sign in error", error);
+   //    }
+   // };
 
    return (
       <Container size="xs" style={{ display: "flex", alignItems: "center" }}>
-         {success ? (
-            <ConfirmationPopup onClick={handleSubmit(onSubmit)} />
-         ) : (
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
                <FormSection style={{ rowGap: "9px" }}>
-                  <Para size="textsm" $weight="medium" color="primary.grey.g600">Login or sign up</Para>
-                  <H6 $weight="medium">Welcome to Nookit</H6>
+                  <Para
+                     size="textsm"
+                     $weight="medium"
+                     color="primary.grey.g600"
+                  >
+                     Sign Up
+                  </Para>
+                  <H6 $weight="medium">Create an Account</H6>
+                  <SwapForm>
+                     <Para size="textsm" $weight="regular" color="black">
+                        Already have an account? 
+                     </Para>
+                     <Para size="textsm" $weight="medium" color="black" $isLink={true} onClick={handleLogin}>
+                        Log in
+                     </Para>
+                  </SwapForm>
                </FormSection>
                <FormSection>
+                  
+                  <InputWrapper>
                   <Input
                      fieldName="email"
                      placeholder="Work Email"
                      register={register}
                      errors={errors}
                   />
+                  <Input
+                     fieldName="password"
+                     placeholder="Password"
+                     register={register}
+                     errors={errors}
+                     type="password"
+                  />
+                  </InputWrapper>
                   <Button $brandcolor="true" type="submit">
-                     {loading ? "Loading..." : "Continue"}
+                     {loading ? "Loading..." : "Sign Up"}
                   </Button>
+                  {error && <Para size="textsm" $weight="regular" color="error">{error}</Para>}
+                  {success && <Snackbar success text={success} />}
                </FormSection>
-               <OrContainer>
+               {/* <OrContainer>
                   <hr
                      style={{
                         width: "100%",
@@ -95,9 +132,9 @@ export default function AuthForm() {
                         backgroundColor: "#dddddd",
                         borderWidth: "0",
                      }}
-                  />
-               </OrContainer>
-               <Button
+                  /> */}
+               {/* </OrContainer> */}
+               {/* <Button
                   onClick={handleGoogleSignIn}
                   $googlecolor="true"
                   style={{ position: "relative" }}
@@ -110,11 +147,10 @@ export default function AuthForm() {
                      style={{ position: "absolute", left: "12px" }}
                   />
                   Continue with Google
-               </Button>
+               </Button> */}
                <Agreement />
-               
             </FormWrapper>
-         )}
+ 
       </Container>
    );
 }
@@ -132,6 +168,20 @@ const FormSection = styled.div`
    display: flex;
    flex-direction: column;
    row-gap: 20px;
+   width: 100%;
+`;
+
+const InputWrapper = styled.div`
+   display: flex;
+   flex-direction: column;
+   row-gap: 5px;
+   width: 100%;
+`;
+
+const SwapForm = styled.div`
+   display: flex;
+   flex-direction: row;
+   column-gap: 5px;
    width: 100%;
 `;
 

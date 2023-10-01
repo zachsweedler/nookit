@@ -36,9 +36,9 @@ client.defineJob({
       table: "bookings",
    }),
    run: async (payload, io, ctx) => {
-
-      await io.logger.info("payload", payload);
       
+      await io.logger.info("payload", payload);
+
       const hostData = await io.supabase.runTask(
          "fetch-host-data",
          async (supabaseClient) => {
@@ -88,7 +88,7 @@ client.defineJob({
       );
 
    
-      const hostEmail = await io.resend.sendEmail("email-host", {
+      await io.resend.sendEmail("email-host", {
         to: [hostData.email],
         subject: `New booking request from ${guestData.name}.`,
         from: "Nookit <team@nookit.app>",

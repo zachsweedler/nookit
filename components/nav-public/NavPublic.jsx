@@ -22,6 +22,7 @@ export default function NavPublic() {
    const [imgSrc, setImgSrc] = useState(null);
    const [loading, setLoading] = useState(true);
    const [isScrolled, setIsScrolled] = useState(false);
+   const [isDesktop, setIsDesktop] = useState();
    const logo = useSelector((state) => state.companyLogo.path);
    const dispatch = useDispatch();
    const supabase = createClientComponentClient();
@@ -33,10 +34,18 @@ export default function NavPublic() {
          setIsScrolled(window.scrollY > 0);
       };
 
+      const updateMedia = () => {
+         setIsDesktop(window.innerWidth > 1000);
+      };
+
+      window.addEventListener("resize", updateMedia);
+      updateMedia();
       window.addEventListener("scroll", handleScroll);
+
       return () => {
          // Clean up the event listener on component unmount
          window.removeEventListener("scroll", handleScroll);
+         window.removeEventListener("resize", updateMedia);
       };
    }, []);
 
@@ -74,7 +83,12 @@ export default function NavPublic() {
    };
 
    return (
-      <Wrapper $pathname={pathname} $isScrolled={isScrolled} $isVisible={isVisible}>
+      <Wrapper
+         $pathname={pathname}
+         $isScrolled={isScrolled}
+         $isVisible={isVisible}
+         $isDesktop={isDesktop}
+      >
          <Container
             size="xl"
             style={{
@@ -115,7 +129,7 @@ export default function NavPublic() {
                               Log in
                            </NavItem>
                         </Link>
-                        <Link href="/login">
+                        <Link href="/signup">
                            <Button $blackcolor="true">Sign Up</Button>
                         </Link>
                      </AuthButtons>
@@ -166,9 +180,13 @@ const Wrapper = styled.div`
    position: fixed;
    top: 0;
    z-index: 1000;
-   border-bottom: ${({ $isScrolled, theme }) => $isScrolled ? `1px solid ${theme.color.primary.grey.g50}` : "none"};
-   background-color: ${({ $isVisible, $isScrolled, theme }) => $isVisible || $isScrolled ? `${theme.color.white}` : 'none'};
-;`
+   border-bottom: ${({ $isScrolled, theme }) =>
+      $isScrolled ? `1px solid ${theme.color.primary.grey.g50}` : "none"};
+   background-color: ${({ $isVisible, $isScrolled, $isDesktop, theme }) =>
+      ($isVisible && !$isDesktop) || $isScrolled
+         ? `${theme.color.white}`
+         : "none"};
+`;
 
 const AuthButtons = styled.div`
    width: auto;

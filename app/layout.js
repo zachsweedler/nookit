@@ -6,6 +6,7 @@ import { antdTheme } from "@/styles/antd/theme";
 import { poppins } from "@/styles/fonts";
 import { ConfigProvider } from "antd";
 import { Analytics } from '@vercel/analytics/react';
+import { loadStripe } from "@stripe/stripe-js";
 
 export const metadata = {
    title: "Nookit | Showcase Your Brand Within a Store",

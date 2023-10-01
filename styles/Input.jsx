@@ -13,7 +13,9 @@ export default function Input({
    disabled,
    hidden,
    adornmentRight,
-   adornmentLeft
+   adornmentLeft,
+   type,
+   pattern
 }) {
    return (
       <Wrap>
@@ -26,6 +28,8 @@ export default function Input({
                ref={ref}
                name={fieldName}
                placeholder={placeholder}
+               type={type}
+               pattern={pattern}
                {...register(fieldName, {
                   onChange: onChange,
                })}

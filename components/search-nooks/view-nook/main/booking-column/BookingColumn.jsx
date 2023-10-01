@@ -13,7 +13,7 @@ import dayjs from "dayjs";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import AuthForm from "@/components/auth-page/AuthForm";
+import AuthForm from "@/components/auth-page/SignUp";
 import EmptyState from "@/components/empty-state/EmptyState";
 import Modal from "react-modal";
 import { v4 as uuid } from "uuid";
@@ -356,4 +356,5 @@ const Wrapper = styled.div`
    flex-direction: column;
    position: relative;
    height: 100%;
+   padding-bottom: 100px;
 `;

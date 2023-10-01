@@ -8,6 +8,7 @@ import { Para } from "@/styles/Typography";
 import { ButtonTab } from "@/styles/Buttons";
 import styled from "styled-components";
 import PaymentsForm from "@/components/account-page/payments-payouts/PaymentsForm";
+import PaymentsFormV2 from "@/components/account-page/payments-payouts/PaymentsFormV2";
 
 export default function NookPrice({ id, priceType, hasPaymentMethod }) {
    const dispatch = useDispatch();
@@ -79,7 +80,7 @@ export default function NookPrice({ id, priceType, hasPaymentMethod }) {
                      fieldName="price"
                      label="Percent of Sales to Collect from Guest"
                      adornmentRight={
-                        <Para size="textmd" weight="regular">
+                        <Para size="textmd" $weight="regular">
                            %
                         </Para>
                      }
@@ -89,11 +90,11 @@ export default function NookPrice({ id, priceType, hasPaymentMethod }) {
                   />
                   {!hasPaymentMethod && (
                      <>
-                      <Para size="textmd" weight="regular">
-                      Listings that charge guests a percentage of sales require the host to have a valid payment method on file:
-                     </Para>
                      <PaymentWrapper>
-                        <PaymentsForm />
+                        <Para size="textmd" $weight="regular">
+                           ⓘ This type of pricing requires that hosts have a payment method on file. Add one below:
+                        </Para>
+                        <PaymentsFormV2/>
                         {errors.existing_customer && (
                            <Para size="textxs" $weight="regular" color="error">
                               {errors.existing_customer.message}
@@ -131,5 +132,5 @@ const Wrapper = styled.div`
 const PaymentWrapper = styled.div`
    display: flex;
    flex-direction: column;
-   row-gap: 9px;
+   row-gap: 20px;
 `;

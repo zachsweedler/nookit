@@ -11,6 +11,8 @@ export const Card = styled.div`
    padding: 15px 18px;
    display: flex;
    flex-direction: row;
+   row-gap: 12px;
+   width: 100%;
    align-items: center;
    border-radius: 5px;
    border: 1px solid ${({ theme }) => theme.color.primary.grey.g50};
@@ -25,14 +27,3 @@ export const CardInfo = styled.div`
    column-gap: 15px;
 `;
 
-export const PaymentMethodForm = styled.div`
-   display: flex;
-   flex-direction: column;
-   row-gap: 12px;
-`;
-
-export const ExpirationDate = styled.div`
-   display: flex;
-   flex-direction: row;
-   column-gap: 5px;
-`;
