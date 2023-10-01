@@ -13,7 +13,7 @@ function Agreement() {
          color="primary.grey.g500"
          style={{ display: "inline" }}
       >
-         By hitting &quot;Continue&quot; you agree to the Nookit&apos;s
+         By hitting &quot;Sign Up&quot; you agree to the Nookit&apos;s
          <Link
             href="/privacy"
             style={{

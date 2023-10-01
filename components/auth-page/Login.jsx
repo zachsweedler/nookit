@@ -169,7 +169,6 @@ export default function Login() {
                   />
                   Continue with Google
                </Button> */}
-            <Agreement />
          </FormWrapper>
       </Container>
    );
