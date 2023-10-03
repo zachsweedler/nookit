@@ -37,6 +37,7 @@ export default function Hero() {
    const handleSearch = (e) => {
       e.preventDefault();
       router.push('/s');
+      console.log('clicked')
    }
 
    return (
@@ -49,6 +50,7 @@ export default function Hero() {
                   alignItems: "end",
                   justifyContent: "end",
                   height: "100%",
+                  width: "100%"
                }}
             >
                {isDesktop ? (
@@ -158,7 +160,7 @@ export default function Hero() {
                                  />
                               }
                            />
-                           <Button $brandcolor={true}>Browse Nooks</Button>
+                           <Button $brandcolor={true} onClick={handleSearch}>Browse Nooks</Button>
                         </Form>
                      </BrowseCard>
                      <StoreSlider>

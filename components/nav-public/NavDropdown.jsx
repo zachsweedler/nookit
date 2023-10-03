@@ -24,7 +24,7 @@ export default function NavDropdown({
 
    const loggedOutItems = [
       { id: 1, title: "Log In", href: "/login" },
-      { id: 2, title: "Sign Up", href: "/login" },
+      { id: 2, title: "Sign Up", href: "/signup" },
       { id: 3, title: "Browse Nooks", href: "/s" },
    ];
 

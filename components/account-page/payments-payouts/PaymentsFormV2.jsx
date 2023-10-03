@@ -22,7 +22,6 @@ export default function PaymentsFormV2() {
    const user = useUser(supabase);
    const email = user?.email;
    const userId = user?.id;
-   const [customerId, setCustomerId] = useState();
    const [paymentMethods, setPaymentMethods] = useState([]);
    const [customerCheckLoading, setCustomerCheckLoading] = useState(true);
    const [paymentMethodLoading, setPaymentMethodLoading] = useState(false);
@@ -40,7 +39,6 @@ export default function PaymentsFormV2() {
                console.log("error getting customer Id", error);
             } else {
                if (data[0]?.customer_id) {
-                  setCustomerId(data[0]?.customer_id);
                   const hasPaymentMethods = await listPaymentMethods(
                      data[0]?.customer_id
                   );
