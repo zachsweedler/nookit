@@ -1,4 +1,3 @@
-import { CompletedBooking } from "@/emails/CompletedBooking";
 import { NewBooking } from "@/emails/NewBooking";
 import { client } from "@/trigger";
 import { Resend } from "@trigger.dev/resend";
@@ -36,7 +35,7 @@ client.defineJob({
       table: "bookings",
    }),
    run: async (payload, io, ctx) => {
-      
+
       await io.logger.info("payload", payload);
 
       const hostData = await io.supabase.runTask(
@@ -93,6 +92,7 @@ client.defineJob({
         subject: `New booking request from ${guestData.name}.`,
         from: "Nookit <team@nookit.app>",
         react: NewBooking({
+           payload: payload,
            guestLogo: guestData.logo,
            guestName: guestData.name,
            locationName: locationData.location_name,
@@ -103,7 +103,7 @@ client.defineJob({
            dailyRate: payload.record.daily_rate,
            daysCount: payload.record.days_count,
            bookingPrice: payload.record.booking_price,
-           processingFee: payload.record.processing_fee
+           processingFee: payload.record.processing_fee,ad
         })
      });
    },

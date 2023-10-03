@@ -37,6 +37,7 @@ export const NewBooking = ({
    startDate = "Saturday, June 12th, 2023",
    endDate = "Monday, June 14th, 2023",
    nookitLogoImage = `https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/brand/nookit-logo-black.png`,
+   payload
 }) => {
    const previewText = `Booking Request Declined`;
    const supabaseLoader = `https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/`;

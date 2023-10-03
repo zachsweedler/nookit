@@ -34,6 +34,11 @@ export default function Hero() {
       return () => window.removeEventListener("resize", updateMedia);
    });
 
+   const handleSearch = (e) => {
+      e.preventDefault();
+      router.push('/s');
+   }
+
    return (
       <>
          <Wrapper>
@@ -70,7 +75,7 @@ export default function Hero() {
                                  />
                               }
                            />
-                           <Button $brandcolor={true} onClick={() => router.push('/s')}>Browse Nooks</Button>
+                           <Button $brandcolor={true} onClick={handleSearch}>Browse Nooks</Button>
                         </Form>
                      </BrowseCard>
                      <Swiper

@@ -2,7 +2,7 @@
 
 import { Button } from "@/styles/Buttons";
 import Container from "@/styles/Containers";
-import { H1, H3, Para } from "@/styles/Typography";
+import { H1, Para } from "@/styles/Typography";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -49,7 +49,7 @@ export default function WhatsNookit() {
                </StoreCard>
                <JoinButton
                   $brandcolor={true}
-                  onClick={() => router.push("/login")}
+                  onClick={() => router.push("/signup")}
                >
                   Join Nookit
                </JoinButton>
