@@ -5,6 +5,10 @@ import { redirect } from "next/navigation";
 import { cookies } from 'next/headers'
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+   title: "Nookit | Manage My Nooks",
+};
+
 export default async function MyNooks() {
    const supabase = createServerComponentClient({ cookies });
    const session = await useUserSession(supabase);

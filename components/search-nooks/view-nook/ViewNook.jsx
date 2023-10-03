@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import LocationImages from "./location-images/LocationImages";
 
 export default function ViewNook() {
+
    const supabase = createClientComponentClient();
    const dispatch = useDispatch();
    const params = useParams();
@@ -31,7 +32,7 @@ export default function ViewNook() {
          };
          fetchNook();
       }
-   }, [dispatch, params, supabase]); // Empty dependency array to run the effect only once
+   }, [dispatch, params, supabase]); 
 
    return (
       <Wrapper>

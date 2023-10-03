@@ -233,6 +233,7 @@ const NavItem = styled(Para)`
    padding: 9px 15px;
    &:hover {
       background-color: ${({ theme }) => theme.color.primary.brand.b100};
+      color: ${({ theme }) => theme.color.primary.brand.b600};
       border-radius: 5px;
       text-decoration: none;
       cursor: pointer;

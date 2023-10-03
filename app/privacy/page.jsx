@@ -1,5 +1,10 @@
-'use client'
+
+import Footer from "@/components/home-page/footer/Footer";
 import LegalPage from "@/components/legal/LegalPage";
+
+export const metadata = {
+   title: "Nookit | Privacy Policy",
+};
 
 export default function Privacy() {
 
@@ -227,9 +232,12 @@ export default function Privacy() {
       </>
    );
    return (
+      <>
       <LegalPage
          title="Privacy"
          content={content()}
       />
+      <Footer/>
+      </>
    );
 }

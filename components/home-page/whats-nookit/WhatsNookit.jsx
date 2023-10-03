@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/styles/Buttons";
 import Container from "@/styles/Containers";
 import { H1, Para } from "@/styles/Typography";

@@ -12,7 +12,7 @@ import { styled } from "styled-components";
 import supabaseLoader from "@/supabase-image-loader";
 
 function NookImageUploader({ fieldName, isNookPhotos, title }) {
-   const maxNumber = 6;
+   const maxNumber = 15;
    const acceptedTypes = ["jpg", "jpeg", "png", "tif", "gif", "bmp", "webp"];
    const nookId = useNookUUID();
    const supabase = createClientComponentClient();

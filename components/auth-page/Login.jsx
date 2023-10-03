@@ -51,7 +51,7 @@ export default function Login() {
          setError(error.message);
       } else {
          setLoading(false);
-         setSuccess(true);
+         setSuccess("Signed in successfully!");
          location.replace(window.location.origin);
       }
    };
