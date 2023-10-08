@@ -91,10 +91,14 @@ export default function Hero() {
                         watchSlidesProgress
                         loop={true}
                         style={{
-                           width: "80%",
+                           width: "100%",
                            height: "100%",
                            borderRadius: "20px",
                            overflow: "hidden",
+                           margin: "0px",
+                           display: "flex",
+                           justifyContent: "end",
+                           paddingLeft: "20%"
                         }}
                      >
                         {stores?.map((store) => (
@@ -288,8 +292,6 @@ const StoreSlider = styled.div`
    position: relative;
    height: 100%;
    width: 100%;
-   padding-left: 20%;
-   border-radius: 20px;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       padding-left: 0px;
       padding-top: 30px;
