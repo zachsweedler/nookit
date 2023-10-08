@@ -189,6 +189,8 @@ export default function Hero() {
                            style={{
                               borderRadius: "20px",
                               overflow: "hidden",
+                              width: "100%",
+                              height: "100%",
                            }}
                         >
                            {stores?.map((store) => (
