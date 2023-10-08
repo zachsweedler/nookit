@@ -7,6 +7,8 @@ import { availableCities } from "@/utils/availableCities";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import "./SliderStyle.css";
+import "swiper/react";
+import "swiper/css";
 import { SelectHero } from "@/styles/SelectHero";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -21,7 +23,7 @@ export default function Hero() {
       },
    ];
 
-   const router = useRouter()
+   const router = useRouter();
    const [isDesktop, setIsDesktop] = useState();
 
    const updateMedia = () => {
@@ -32,13 +34,14 @@ export default function Hero() {
       window.addEventListener("resize", updateMedia);
       updateMedia();
       return () => window.removeEventListener("resize", updateMedia);
-   });
+   },[]);
 
    const handleSearch = (e) => {
       e.preventDefault();
-      router.push('/s');
-      console.log('clicked')
-   }
+      router.push("/s");
+      console.log("clicked");
+   };
+  
 
    return (
       <>
@@ -50,7 +53,7 @@ export default function Hero() {
                   alignItems: "end",
                   justifyContent: "end",
                   height: "100%",
-                  width: "100%"
+                  width: "100%",
                }}
             >
                {isDesktop ? (
@@ -77,7 +80,9 @@ export default function Hero() {
                                  />
                               }
                            />
-                           <Button $brandcolor={true} onClick={handleSearch}>Browse Nooks</Button>
+                           <Button $brandcolor={true} onClick={handleSearch}>
+                              Browse Nooks
+                           </Button>
                         </Form>
                      </BrowseCard>
                      <Swiper
@@ -86,14 +91,14 @@ export default function Hero() {
                         watchSlidesProgress
                         loop={true}
                         style={{
-                           width: "100%",
+                           width: "80%",
                            height: "100%",
                            borderRadius: "20px",
                            overflow: "hidden",
                         }}
                      >
                         {stores?.map((store) => (
-                           <SwiperSlide key={store} style={{ width: "100%" }}>
+                           <SwiperSlide key={store}>
                               <LinearGradient>
                                  <Image
                                     alt="nook-images"
@@ -137,7 +142,13 @@ export default function Hero() {
                      </Swiper>
                   </StoreSlider>
                ) : (
-                  <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                  <div
+                     style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "100%",
+                     }}
+                  >
                      <BrowseCard>
                         <H2>
                            Book a nook
@@ -160,7 +171,9 @@ export default function Hero() {
                                  />
                               }
                            />
-                           <Button $brandcolor={true} onClick={handleSearch}>Browse Nooks</Button>
+                           <Button $brandcolor={true} onClick={handleSearch}>
+                              Browse Nooks
+                           </Button>
                         </Form>
                      </BrowseCard>
                      <StoreSlider>
@@ -170,17 +183,12 @@ export default function Hero() {
                            watchSlidesProgress
                            loop={true}
                            style={{
-                              width: "100%",
-                              height: "100%",
                               borderRadius: "20px",
                               overflow: "hidden",
                            }}
                         >
                            {stores?.map((store) => (
-                              <SwiperSlide
-                                 key={store}
-                                 style={{ width: "100%" }}
-                              >
+                              <SwiperSlide key={store}>
                                  <LinearGradient>
                                     <Image
                                        alt="nook-images"

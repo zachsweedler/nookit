@@ -7,7 +7,6 @@ import { Section } from "./Styles";
 import { Para } from "@/styles/Typography";
 import { ButtonTab } from "@/styles/Buttons";
 import styled from "styled-components";
-import PaymentsForm from "@/components/account-page/payments-payouts/PaymentsForm";
 import PaymentsFormV2 from "@/components/account-page/payments-payouts/PaymentsFormV2";
 
 export default function NookPrice({ id, priceType, hasPaymentMethod }) {

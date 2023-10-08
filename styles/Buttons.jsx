@@ -95,6 +95,6 @@ export const ButtonTab = styled.div`
   border-radius: 5px;
   &:hover {
     background-color: ${({ theme, $isActive }) => $isActive ? theme.color.primary.brand.b100 : theme.color.primary.grey.g25};
-    cursor: pointer;
+    cursor: pointer !important;
   }
 `

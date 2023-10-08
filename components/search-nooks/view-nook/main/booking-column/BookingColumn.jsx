@@ -183,10 +183,10 @@ export default function BookingColumn() {
       newProcessingTotal =
          nook.price_type === "dailyRate"
             ? days >= 30
-               ? price * 0.2
+               ? price * 0.12
                : days >= 7
                ? price * 0.15
-               : price * 0.12
+               : price * 0.18
             : days >= 30
             ? days * 15
             : days >= 7

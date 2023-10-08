@@ -53,6 +53,7 @@ export default function PaymentsFormV2() {
          };
          checkCustomerExists();
       }
+   // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [supabase, email, userId, user]);
 
    const listPaymentMethods = async (customerId) => {

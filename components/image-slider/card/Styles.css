@@ -10,4 +10,6 @@
    background: #fff;
    position: relative;
    height: 250px;
+   width: 100% !important;
+   border-radius: 12px !important;
 }
