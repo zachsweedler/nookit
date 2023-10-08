@@ -25,7 +25,7 @@ function Faq() {
       {
          question: "As a pop in guest, what do I pay in additional fees?",
          answer:
-            "As of today, the only additional fee you pay on top of the price to book the nook is our platform's processing fee. For listings that charge guests a daily rate, this fee will range anywhere from 12% to 18% of booking price; the percentage varies based on the length of the booking in days. Alternatively, for listings that charge pop in guests a percentage of sales, Nookit charges the host a fixed daily rate.",
+            "As of today, the only additional fee you pay on top of the price to book the nook is our platform's processing fee. For listings that charge guests a daily rate, this fee will range anywhere from 12% to 18% of the booking price; the percentage varies based on the length of the booking in days. Alternatively, for listings that charge pop in guests a percentage of sales, Nookit charges the host a fixed daily rate.",
       },
       {
          question: "As a pop in guest, when is my card charged for the booking?",
