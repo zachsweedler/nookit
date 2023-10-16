@@ -53,6 +53,7 @@ function NookImageUploader({ fieldName, isNookPhotos, title }) {
 
    useEffect(() => {
       console.log(`images ${isNookPhotos ? "nook" : "location"} `, imagesArray);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [imagesArray]);
 
    const updateNookTable = async (newArrayOfPaths) => {

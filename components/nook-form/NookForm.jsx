@@ -26,7 +26,7 @@ import MissingCompanyInfo from "./steps/MissingCompanyInfo";
 import LocationAbout from "./steps/LocationAbout";
 
 export default function NookForm() {
-   const { location_images, images, price_type, ...formValuesRedux } =
+   const { location_images, images, ...formValuesRedux } =
       useSelector((state) => state.nookForm.formValues);
    const [loading, setLoading] = useState(false);
    const dispatch = useDispatch();
@@ -69,7 +69,7 @@ export default function NookForm() {
          otherwise: () => yup.string().nullable().notRequired(),
       }),
       existing_customer: yup.string().when([], {
-         is: () => !hasPaymentMethod,
+         is: () => !hasPaymentMethod && formValuesRedux.price_type === "salesPercent",
          then: () =>
             yup
                .string()
@@ -195,6 +195,7 @@ export default function NookForm() {
       "Location Images",
       "Amenities",
    ];
+   
    const nookMenu = ["Pricing", "About", "Nook Images"];
 
    // fetch missing company profile fields
@@ -336,7 +337,7 @@ export default function NookForm() {
                         <Steps>
                            <NookPrice
                               id="Pricing"
-                              priceType={price_type}
+                              priceType={formValuesRedux.price_type}
                               hasPaymentMethod={hasPaymentMethod}
                            />
                            <NookImages id="Nook Images" />

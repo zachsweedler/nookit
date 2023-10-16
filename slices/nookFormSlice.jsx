@@ -5,18 +5,29 @@ const nookFormSlice = createSlice({
   name: 'nookForm',
   initialState: {
     formValues: {
-      id: "",
-      images: [],
+      id: null,
+      created_at: "",
+      status: "unlisted",
+      user_id: null,
+      company_id: null,
       blocked_dates: [],
+      booked_dates: [],
       price: "",
-      price_type: "",
+      price_type: "dailyRate",
+      about: "",
       location_name: "",
-      location_about: "",
       location_type: "",
       location_max_capacity: "",
-      location_full_address: "",
-      location_images: [],
       location_amenities: [],
+      location_full_address: "",
+      location_address: "",
+      location_state_code: "",
+      location_city: "",
+      location_zip: "",
+      location_country: "",
+      location_longitude: "",
+      location_latitude: "",
+      location_geo_point: "",
     }
   },
   reducers: {
@@ -28,17 +39,29 @@ const nookFormSlice = createSlice({
     },
     restartForm: (state) => {
       state.formValues.id = null;
-      state.formValues.images = [];
+      state.formValues.created_at = "";
+      state.formValues.status = "unlisted";
+      state.formValues.user_id = null,
+      state.formValues.company_id = null,
       state.formValues.blocked_dates = [];
+      state.formValues.booked_dates = [],
       state.formValues.price = "";
-      state.formValues.price_type = "";
+      state.formValues.price_type = "dailyRate";
+      state.formValues.about = "",
       state.formValues.location_name = "";
       state.formValues.location_about = "";
       state.formValues.location_type = "";
       state.formValues.location_max_capacity = "";
-      state.formValues.location_images = [];
       state.formValues.location_amenities = [];
       state.formValues.location_full_address = "";
+      state.formValues.location_geo_point = "";
+      state.formValues.location_address = "";
+      state.formValues.location_state_code = "";
+      state.formValues.location_city = "";
+      state.formValues.location_zip = "";
+      state.formValues.location_country = "";
+      state.formValues.location_longitude = "";
+      state.formValues.location_latitude = "";
     }
   }
 });

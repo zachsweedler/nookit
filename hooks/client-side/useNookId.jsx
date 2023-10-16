@@ -20,6 +20,5 @@ export const useNookUUID = () => {
          dispatch(setNookId(newUUID));
       }
    }, [dispatch, id]);
-
    return id;
 };

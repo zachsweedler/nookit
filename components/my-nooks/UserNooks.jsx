@@ -107,8 +107,6 @@ export default function UserNooks() {
       }
    }, [connectAccountId]);
 
-
-   
    async function createStripeAccount() {
       const res = await fetch(
          `${window.location.origin}/api/create-express-account`,
@@ -248,8 +246,12 @@ export default function UserNooks() {
                         title="No Nooks Added"
                         description="With your payout information setup, you're ready to list your first nook! Click the below button to get started."
                         imgSrc="/no-nooks-added.svg"
-                        button="List Your Nook"
                         buttonHref="/my-nooks/upload"
+                        button="List Your Nook"
+                        onButtonClick={() => {
+                           dispatch(restartForm());
+                           localStorage.removeItem("nookUUID");
+                        }}
                      />
                   )}
                </>
