@@ -79,6 +79,7 @@ const Grid = styled.div`
    flex-direction: column;
    grid-column-gap: 30px;
    grid-row-gap: 60px;
+   padding-bottom: 60px;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       grid-template-columns: 1fr;
       grid-row-gap: 40px;

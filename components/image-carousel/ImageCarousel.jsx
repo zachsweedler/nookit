@@ -31,8 +31,10 @@ export default function ImageCarousel({
 
    useEffect(() => {
       window.addEventListener("resize", updateMedia);
+      updateMedia();
+      console.log('media updated')
       return () => window.removeEventListener("resize", updateMedia);
-   });
+   }); 
 
    const customModalStyles = {
       overlay: {

@@ -341,9 +341,11 @@ export default function NookForm() {
                               hasPaymentMethod={hasPaymentMethod}
                            />
                            <NookImages id="Nook Images" />
-                           <Button type="submit" $brandcolor={true}>
-                              {loading ? "Uploading..." : "Publish Nook"}
-                           </Button>
+                           <FixedWrapper>
+                              <Button type="submit" $brandcolor={true} style={{width: "auto"}}>
+                                 {loading ? "Uploading..." : "Publish Nook"}
+                              </Button>
+                           </FixedWrapper>
                         </Steps>
                      </FormGrid>
                   </SectionGrid>
@@ -476,3 +478,17 @@ const ContentMenuItem = styled(Para)`
       cursor: pointer;
    }
 `;
+
+
+const FixedWrapper = styled.div`
+   display: flex;
+   position: fixed;
+   bottom: 0;
+   left: 0;
+   background-color: #ffffff;
+   border-top: 1px solid ${({ theme }) => theme.color.primary.grey.g50};
+   padding: 20px 30px;
+   justify-content: flex-end;
+   width: 100%;
+   z-index: 1000;
+`
