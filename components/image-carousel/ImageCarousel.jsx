@@ -87,7 +87,7 @@ export default function ImageCarousel({
                watchSlidesProgress
                loop={true}
                style={{
-                  height: "calc(100dvh - 250px)",
+                  height: isDesktop ? 'calc(100dvh - 250px)' : 'calc(100dvh - 200px)',
                   width: "100%",
                }}
             >
@@ -111,11 +111,11 @@ export default function ImageCarousel({
             <Swiper
                onSwiper={setThumbsSwiper}
                spaceBetween={20}
-               slidesPerView={isDesktop ? 5 : 2}
+               slidesPerView={isDesktop ? 5 : 3}
                freeMode={true}
                watchSlidesProgress={true}
                modules={[Thumbs]}
-               style={{ width: "100%", height: "150px" }}
+               style={{ width: "100%", bottom: "0", height: isDesktop ? "150px" : '100px'}}
             >
                {images?.map((image) => (
                   <SwiperSlide

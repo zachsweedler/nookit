@@ -207,7 +207,10 @@ export default function UserNooks() {
                            title="My Nooks"
                            button="Add Nook"
                            buttonLink="/my-nooks/upload"
-                           onClick={() => dispatch(restartForm())}
+                           onClick={() => {
+                              dispatch(restartForm());
+                              localStorage.removeItem("nookUUID");
+                           }}
                         />
                         <Grid>
                            {nooks?.map((nook, index) => (
