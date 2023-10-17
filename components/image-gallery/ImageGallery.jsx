@@ -35,7 +35,7 @@ export default function ImageGallery({
          margin: "0",
          inset: "0px",
          overflowY: "scroll",
-         padding: "0px",
+         padding: "100px 0px 0px 0px",
       },
    };
 
@@ -70,7 +70,7 @@ export default function ImageGallery({
                   </Para>
                </Nav>
                <Section>
-                  <div>
+                  <div style={{padding: "0px 15px"}}>
                      <H6 $weight="semibold">The Store</H6>
                      <Para size="textmd">
                         Photos of the overall store location
@@ -96,7 +96,7 @@ export default function ImageGallery({
                </Section>
                <Divider />
                <Section>
-                  <div>
+                  <div style={{padding: "0px 15px"}}>
                      <H6 $weight="semibold">The Nook</H6>
                      <Para size="textmd">
                         Photos of the nook within the store location
@@ -139,7 +139,6 @@ const Main = styled.div`
    width: 100%;
    max-width: ${({ theme }) => theme.container.md};
    margin: auto;
-   padding: 90px 30px 90px 30px;
 `;
 
 const Section = styled.div`
@@ -185,10 +184,12 @@ const ImageWrapper = styled.div`
    grid-row: span ${(props) => (props.spanTwoRows ? "2" : "1")};
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       height: ${(props) => (props.spanTwoRows ? "auto" : "250px")};
+      border-radius: 0px;
    }
 
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.mobile}) {
       height: ${(props) => (props.spanTwoRows ? "250px" : "250px")};
+      border-radius: 0px;
    }
 `;
 

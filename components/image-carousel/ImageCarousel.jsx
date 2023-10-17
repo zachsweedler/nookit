@@ -124,7 +124,7 @@ export default function ImageCarousel({
                      style={{
                         width: "200px",
                         position: "relative",
-                        borderRadius: "5px",
+                        borderRadius: "0px",
                         overflow: "hidden",
                         cursor: "pointer",
                      }}
@@ -172,7 +172,7 @@ const Wrapper = styled.div`
    height: auto;
    overflow: hidden;
    z-index: 1000;
-   padding: 50px;
+   padding: 0px;
    width: 100vw;
    padding: 60px 0px 0px 0px;
    margin: auto;

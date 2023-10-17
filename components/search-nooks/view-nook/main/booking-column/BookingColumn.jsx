@@ -168,7 +168,12 @@ export default function BookingColumn() {
          dates[1]?.$D - dates[0]?.$D === 0
             ? 1
             : dates[1]?.$D - dates[0]?.$D + 1;
-      const price = nook.price_type === "dailyRate" ? nook.price * days : null;
+
+      const price = nook.price_type === "dailyRate" ? nook.price : null;
+      console.log('price', price)
+      const bookingPrice = price ? price * days : newProcessingTotal
+      setBookingPriceTotal(bookingPrice);
+      
       const startDateSelect = `${dates[0]?.$M + 1}/${dates[0]?.$D}/${
          dates[0]?.$y
       }`;
@@ -181,25 +186,28 @@ export default function BookingColumn() {
       setDayCount(days);
       let newProcessingTotal;
       newProcessingTotal =
-         nook.price_type === "dailyRate"
-            ? days >= 30
-               ? price * 0.12
-               : days >= 7
-               ? price * 0.15
-               : price * 0.18
-            : days >= 30
-            ? days * 15
-            : days >= 7
-            ? days * 25
+         nook.price_type === "dailyRate" ? 
+            days >= 30 ? bookingPrice * 0.12
+            : days >= 7 ? bookingPrice * 0.15
+            : bookingPrice * 0.18
+
+            : days >= 30 ? days * 15
+            : days >= 7 ? days * 25
             : days * 30;
+      console.log('processing', newProcessingTotal)
       setProcessingTotal(newProcessingTotal);
-      setBookingPriceTotal(price ? price * days : newProcessingTotal);
       setTotalBeforeTaxes(
          price ? price * days + newProcessingTotal : newProcessingTotal
       );
+      console.log('calcuation', price, days, newProcessingTotal)
       setStartDate(startDateSelect);
       setEndDate(endDateSelect);
    };
+
+   useEffect(()=>{
+      console.log('dayCount', dayCount)
+      console.log('totalPrice', totalBeforeTaxes)
+   },[dayCount, processingTotal, totalBeforeTaxes])
 
    // this is what calculates which dates to disable for the antd date range picker.
    const getBookedDatesList = (bookedDates) => {
@@ -356,5 +364,4 @@ const Wrapper = styled.div`
    flex-direction: column;
    position: relative;
    height: 100%;
-   padding-bottom: 100px;
 `;

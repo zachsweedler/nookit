@@ -68,7 +68,7 @@ export default function RequestBookingCard({
                   {nook.price_type === "dailyRate" ? 
                   <LineItem>
                      <Para size="textmd" $weight="regular">
-                       `{formatCurrency(nook.price)} x {nook.dayCount} days`
+                       {formatCurrency(nook.price)} x {dayCount} days
                      </Para>
                      <Para size="textmd" $weight="regular">
                         {formatCurrency(bookingPriceTotal)}
@@ -121,6 +121,7 @@ const Wrapper = styled.div`
    padding: 30px;
    border-radius: 12px;
    width: 450px;
+   margin-bottom: 100px;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       width: 100%;
    }

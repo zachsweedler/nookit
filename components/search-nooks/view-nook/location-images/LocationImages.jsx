@@ -84,6 +84,7 @@ const LocationGrid = styled.div`
    overflow: hidden; 
    height: 65vh;
    width: 100%;
+   max-width: ${({ theme }) => theme.container.xl};
    margin: auto;
    margin-top: 90px;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
@@ -99,7 +100,7 @@ const LocationGridCover = styled.div`
    position: relative;
    grid-column: 1 / span 2;
    grid-row: 1 / span 2;
-   border-radius: 0px 12px 12px 0px;
+   border-radius: 12px;
    overflow: hidden;
    &:hover::before {
       content: "";
@@ -147,7 +148,7 @@ const LocationGridTopRight = styled.div`
    grid-column:4;
    grid-row: 1;
    position: relative;
-   border-radius: 12px 0px 0px 12px;
+   border-radius: 12px;
    overflow: hidden;
    &:hover::before {
       content: "";
@@ -172,7 +173,6 @@ const LocationGridBottomLeft = styled.div`
    grid-column: 3;
    grid-row: 2;
    position: relative;
-   border-radius: 5px;
    border-radius: 12px;
    overflow: hidden;
    &:hover::before {
@@ -197,9 +197,9 @@ const LocationGridBottomRight = styled.div`
    grid-column: 4;
    grid-row: 2;
    position: relative;
-   border-radius: 5px;
+   border-radius: 12px;
    overflow: hidden;
-   border-radius: 12px 0px 0px 12px;
+   border-radius: 12px;
    &:hover::before {
       content: "";
       position: absolute;
