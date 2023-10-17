@@ -295,5 +295,4 @@ const Wrapper = styled.div`
    display: flex;
    flex-direction: column;
    row-gap: 30px;
-   margin-bottom: 100px;
 `;

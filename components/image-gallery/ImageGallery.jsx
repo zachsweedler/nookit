@@ -70,12 +70,7 @@ export default function ImageGallery({
                   </Para>
                </Nav>
                <Section>
-                  <div style={{padding: "0px 15px"}}>
-                     <H6 $weight="semibold">The Store</H6>
-                     <Para size="textmd">
-                        Photos of the overall store location
-                     </Para>
-                  </div>
+   
                   <ImageGrid>
                      {locationImages?.map((image, index) => (
                         <ImageWrapper
@@ -92,21 +87,10 @@ export default function ImageGallery({
                            />
                         </ImageWrapper>
                      ))}
-                  </ImageGrid>
-               </Section>
-               <Divider />
-               <Section>
-                  <div style={{padding: "0px 15px"}}>
-                     <H6 $weight="semibold">The Nook</H6>
-                     <Para size="textmd">
-                        Photos of the nook within the store location
-                     </Para>
-                  </div>
-                  <ImageGrid>
                      {nookImages?.map((image, index) => (
                         <ImageWrapper
                            key={image}
-                           spanTwoRows={index % 2 === 1}
+                           spanTwoRows={index % 3 === 1}
                            onClick={handleImageClick}
                         >
                            <Image
@@ -151,9 +135,9 @@ const ImageGrid = styled.div`
    display: grid;
    gap: 14px;
    width: 100%;
-   overflow: hidden;
    grid-template-rows: auto;
    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+   padding-bottom: 100px;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       grid-template-columns: repeat(auto-fill, minmax(1fr, 1fr));
    }
@@ -165,7 +149,7 @@ const ImageGrid = styled.div`
 const ImageWrapper = styled.div`
    position: relative;
    width: 100%;
-   height: ${(props) => (props.spanTwoRows ? "auto" : "200px")};
+   height: ${(props) => (props.spanTwoRows ? "auto" : "250px")};
    border-radius: 5px;
    overflow: hidden;
    &:hover::before {

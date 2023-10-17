@@ -22,20 +22,7 @@ export default function ImageCarousel({
 }) {
    const images =
       locationImages && nookImages ? [...locationImages, ...nookImages] : [];
-   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-   const [isDesktop, setIsDesktop] = useState();
-
-   const updateMedia = () => {
-      setIsDesktop(window.innerWidth > 1000);
-   };
-
-   useEffect(() => {
-      window.addEventListener("resize", updateMedia);
-      updateMedia();
-      console.log('media updated')
-      return () => window.removeEventListener("resize", updateMedia);
-   }); 
-
+ 
    const customModalStyles = {
       overlay: {
          backgroundColor: "#ffffff",
@@ -77,19 +64,13 @@ export default function ImageCarousel({
          </Nav>
          <Wrapper>
             <Swiper
-               thumbs={{
-                  swiper:
-                     thumbsSwiper && !thumbsSwiper.destroyed
-                        ? thumbsSwiper
-                        : null,
-               }}
-               modules={[FreeMode, Navigation, Thumbs]}
+               modules={[FreeMode, Navigation]}
                spaceBetween={0}
                slidesPerView={1}
                watchSlidesProgress
                loop={true}
                style={{
-                  height: isDesktop ? 'calc(100dvh - 250px)' : 'calc(100dvh - 200px)',
+                  height: 'calc(100dvh - 60px)',
                   width: "100%",
                }}
             >
@@ -109,37 +90,6 @@ export default function ImageCarousel({
                   </SwiperSlide>
                ))}
                <ImageSliderCardButtons />
-            </Swiper>
-            <Swiper
-               onSwiper={setThumbsSwiper}
-               spaceBetween={20}
-               slidesPerView={isDesktop ? 5 : 3}
-               freeMode={true}
-               watchSlidesProgress={true}
-               modules={[Thumbs]}
-               style={{ width: "100%", bottom: "0", height: isDesktop ? "150px" : '100px'}}
-            >
-               {images?.map((image) => (
-                  <SwiperSlide
-                     style={{
-                        width: "200px",
-                        position: "relative",
-                        borderRadius: "0px",
-                        overflow: "hidden",
-                        cursor: "pointer",
-                     }}
-                     key={image}
-                  >
-                     <Image
-                        loader={supabaseLoader}
-                        alt="nook-images"
-                        src={`user-images/${image}`}
-                        fill={true}
-                        style={{ objectFit: "cover" }}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                     />
-                  </SwiperSlide>
-               ))}
             </Swiper>
          </Wrapper>
       </Modal>
