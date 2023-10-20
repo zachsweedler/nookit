@@ -60,6 +60,7 @@ export const locationTypes = [
   "Pet Store",
   "Pharmacy",
   "Record Store",
+  "Restaurant",
   "Shoe Store",
   "Souvenir Store",
   "Stationery Store",
