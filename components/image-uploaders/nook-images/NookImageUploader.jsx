@@ -30,7 +30,10 @@ function NookImageUploader({ fieldName, isNookPhotos, title }) {
          const { data: images, error: imagesError } = await supabase.storage
             .from("user-images")
             .list(
-               `${userId}/nooks/${nookId}/${isNookPhotos ? "nook" : "space"}`
+               `${userId}/nooks/${nookId}/${isNookPhotos ? "nook" : "space"}`,
+               {
+                  sortBy: { column: 'created_at', order: 'asc' },
+               }
             );
          if (imagesError) {
             console.log("error listing images", imagesError);

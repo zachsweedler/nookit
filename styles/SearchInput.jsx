@@ -2,7 +2,7 @@
 import { styled } from "styled-components";
 import { Para } from "./Typography";
 import Input from "./Input";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setFormValues } from "@/slices/nookFormSlice";
 
@@ -19,6 +19,7 @@ export default function SearchInput({
    const dispatch = useDispatch();
    const [visible, setVisible] = useState(false);
    const [filteredResults, setFilteredResults] = useState([]);
+   const ref = useRef();
 
    useEffect(() => {
       const matchingResults = results.filter((result) =>
@@ -33,6 +34,18 @@ export default function SearchInput({
       setVisible(false);
    };
 
+   useEffect(() => {
+      const handleClickOutside = (event) => {
+         if (ref.current && !ref.current.contains(event.target)) {
+            setVisible(false);
+         }
+      };
+      document.addEventListener("click", handleClickOutside, true);
+      return () => {
+         document.removeEventListener("click", handleClickOutside, true);
+      };
+   }, []);
+
    return (
       <Wrap>
          <Input
@@ -40,10 +53,13 @@ export default function SearchInput({
             register={register}
             fieldName={fieldName}
             errors={errors}
-            onChange={()=>setVisible(true)}
+            onClick={() => {
+               setVisible(true);
+               console.log("clicked");
+            }}
          />
          {visible && (
-            <Results>
+            <Results ref={ref}>
                {filteredResults.length > 0 ? (
                   filteredResults.map((result, index) => (
                      <MenuItem

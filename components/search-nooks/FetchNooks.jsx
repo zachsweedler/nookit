@@ -25,6 +25,7 @@ export default function FetchNooks() {
          const { data, error } = await supabase
             .from("nooks")
             .select(`*, company_profiles(user_id, name, logo)`)
+            .order('created_at', { ascending: false })
             .eq('status', 'listed');
          if (error) {
             console.error("error fetching nooks", error);

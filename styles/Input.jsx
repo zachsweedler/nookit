@@ -10,6 +10,7 @@ export default function Input({
    label,
    ref,
    onChange,
+   onClick,
    disabled,
    hidden,
    adornmentRight,
@@ -30,6 +31,7 @@ export default function Input({
                placeholder={placeholder}
                type={type}
                pattern={pattern}
+               onClick={onClick}
                {...register(fieldName, {
                   onChange: onChange,
                })}
