@@ -1,10 +1,9 @@
 "use client";
 import Modal from "react-modal";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Para } from "@/styles/Typography";
 import supabaseLoader from "@/supabase-image-loader";
-import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import { FreeMode, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { styled } from "styled-components";
 import "./Styles.css";
