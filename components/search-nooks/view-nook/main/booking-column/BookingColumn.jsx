@@ -17,6 +17,8 @@ import AuthForm from "@/components/auth-page/SignUp";
 import EmptyState from "@/components/empty-state/EmptyState";
 import Modal from "react-modal";
 import { v4 as uuid } from "uuid";
+import PaymentsFormV2 from "@/components/account-page/payments-payouts/PaymentsFormV2";
+import { H5 } from "@/styles/Typography";
 
 export default function BookingColumn() {
    const [dayCount, setDayCount] = useState();
@@ -173,7 +175,7 @@ export default function BookingColumn() {
       console.log('price', price)
       const bookingPrice = price ? price * days : newProcessingTotal
       setBookingPriceTotal(bookingPrice);
-      
+
       const startDateSelect = `${dates[0]?.$M + 1}/${dates[0]?.$D}/${
          dates[0]?.$y
       }`;
@@ -312,10 +314,7 @@ export default function BookingColumn() {
             ) : (
                (!existingCustomer || !hasPaymentMethod) && (
                   <EmptyState
-                     title="No Payment Methods"
-                     description="Please add a payment method before making a booking request."
-                     button="Go to Payment Settings"
-                     buttonHref="/account/payments-payouts/payments"
+                     component={<PaymentsFormV2/>}
                   />
                )
             )}
