@@ -2,6 +2,8 @@
 import React from "react";
 import styled from "styled-components";
 import { Para } from "./Typography";
+import { useRouter } from "next/navigation";
+import { Button } from "./Buttons";
 
 export const SelectHero = ({
    options,
@@ -12,6 +14,14 @@ export const SelectHero = ({
    onChange,
    adornment,
 }) => {
+   const router = useRouter();
+
+   const handleSearch = (e) => {
+      e.preventDefault();
+      router.push("/s");
+      console.log("clicked");
+   };
+
    return (
       <Wrap>
          <SelectWrapper>
@@ -36,6 +46,9 @@ export const SelectHero = ({
                {errors?.[fieldName].message}
             </Para>
          )}
+         <Button $brandcolor={true} onClick={handleSearch} style={{width: 'auto', borderRadius: '0px'}}>
+            Browse
+         </Button>
       </Wrap>
    );
 };
@@ -47,22 +60,16 @@ const SelectWrapper = styled.div`
    width: 100%;
 `;
 
-const Label = styled.label`
-   font-weight: 500;
-   font-size: 1.4rem !important;
-   color: ${({ theme }) => theme.color.black};
-`;
-
 const StyledSelect = styled.select`
    align-items: center;
    height: 50px;
-   border-radius: 5px;
-   border: 1px solid ${({ theme }) => theme.color.primary.grey.g100};
+   border-radius: 0px !important;
    overflow: hidden;
    position: relative;
    border-radius: 5px;
    padding: 0px 35px;
    width: 100%;
+   background-color: white;
    &::placeholder {
       color: ${({ theme }) => theme.color.primary.brand.b950};
    }
@@ -73,12 +80,21 @@ const Adornment = styled.div`
    top: 50%;
    left: 15px;
    transform: translateY(-50%);
+   z-index: 100;
 `;
 
 const Wrap = styled.div`
    display: flex;
-   flex-direction: column;
-   row-gap: 12px;
+   flex-direction: row;
+   column-gap: 0px;
    width: 100%;
    align-items: start;
+   border: 1px solid ${({ theme }) => theme.color.primary.grey.g100};
+   border-radius: 100px;
+   overflow: hidden;
+   box-shadow: ${({ theme }) => theme.boxShadow.shadowlg};
+   transition: box-shadow 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+   &:hover {
+      box-shadow: ${({ theme }) => theme.boxShadow.shadow2xl};
+   }
 `;

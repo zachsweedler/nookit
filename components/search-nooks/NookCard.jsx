@@ -16,6 +16,7 @@ export default function NookCard({
    hostId,
    hostCompany,
    logo,
+   homepage,
 }) {
    return (
       <Wrapper>
@@ -25,6 +26,7 @@ export default function NookCard({
                   images={images}
                   onArrowsClick={(e) => e.stopPropagation()}
                />
+               {!homepage &&
                <TitleWrapper>
                   <Para size="textmd" $weight="semibold" color="black">
                      {name}
@@ -40,7 +42,7 @@ export default function NookCard({
                         {city}, {state}
                      </Para>
                   </LocationWrapper>
-               </TitleWrapper>
+               </TitleWrapper>}
             </ImageTitleLocation>
          </Link>
          <HostWrapper>
@@ -82,6 +84,7 @@ const ImageTitleLocation = styled.div`
 const TitleWrapper = styled.div`
    display: flex;
    flex-direction: column;
+   align-items: start;
    row-gap: 0px;
    width: 100%;
 `;

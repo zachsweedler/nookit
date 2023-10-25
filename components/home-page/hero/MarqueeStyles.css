@@ -1,0 +1,9 @@
+.child {
+    width: 400px;
+    padding-right: 30px;
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.child:hover {
+    transform: scale(0.98);
+}

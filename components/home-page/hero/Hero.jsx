@@ -1,245 +1,84 @@
 "use client";
 import { Button } from "@/styles/Buttons";
 import Container from "@/styles/Containers";
-import { H2, Para } from "@/styles/Typography";
+import { H1, H2, Para } from "@/styles/Typography";
 import { styled } from "styled-components";
 import { availableCities } from "@/utils/availableCities";
-import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
-import "./SliderStyle.css";
-import "swiper/react";
-import "swiper/css";
 import { SelectHero } from "@/styles/SelectHero";
+import Marquee from "react-fast-marquee";
+import './MarqueeStyles.css'
+import NookCard from "@/components/search-nooks/NookCard";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function Hero() {
-   const stores = [
-      {
-         name: "Boris & Horton, East Village",
-         location: "New York, NY",
-         logo: "/borishorton-logo.png",
-         image: "/boris-horton-store.png",
-      },
-   ];
+   const [nooks, setNooks] = useState([]);
+   const supabase = createClientComponentClient();
 
-   const router = useRouter();
-   const [isDesktop, setIsDesktop] = useState();
-
-   const updateMedia = () => {
-      setIsDesktop(window.innerWidth > 1000);
-   };
-
-   useEffect(() => {
-      window.addEventListener("resize", updateMedia);
-      updateMedia();
-      return () => window.removeEventListener("resize", updateMedia);
-   },[]);
-
-   const handleSearch = (e) => {
-      e.preventDefault();
-      router.push("/s");
-      console.log("clicked");
-   };
-  
+   useEffect(()=>{
+      const fetchFeaturedNooks = async () => {
+         const {data, error} = await supabase
+            .from("nooks")
+            .select(`*, company_profiles(user_id, name, logo)`)
+            .order('created_at', { ascending: false })
+            .eq('status', 'listed');
+         if (error) {
+            console.log('error gettings nooks', error)
+         } else {
+            console.log('data', data)
+            setNooks(data);
+         }
+      }
+      fetchFeaturedNooks();
+   },[supabase])
 
    return (
       <>
          <Wrapper>
-            <Container
-               size="xl"
-               style={{
-                  display: "flex",
-                  alignItems: "end",
-                  justifyContent: "end",
-                  height: "100%",
-                  width: "100%",
-               }}
-            >
-               {isDesktop ? (
-                  <StoreSlider>
-                     <BrowseCard>
-                        <H2>
-                           Book a nook
-                           <br />
-                           within a store
-                        </H2>
-                        <Form>
-                           <SelectHero
-                              fieldName="city"
-                              label="Find Nooks In"
-                              options={availableCities}
-                              adornment={
-                                 <Image
-                                    alt="nook-images"
-                                    src="/location-pin-grey.svg"
-                                    width={12}
-                                    height={16}
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    style={{ objectFit: "cover" }}
-                                 />
-                              }
+            <Container size="sm">
+               <Content>
+                  <H1>
+                     Book a nook
+                     <br />
+                     within a store
+                  </H1>
+                  <Para size="textlg" $weight="regular" color="primary.brand.b1000">Affordably pop up inside brand aligned store spaces.</Para>
+                  <Form>
+                     <SelectHero
+                        fieldName="city"
+                        label="Find Nooks In"
+                        options={availableCities}
+                        adornment={
+                           <Image
+                              alt="nook-images"
+                              src="/location-pin-grey.svg"
+                              width={12}
+                              height={16}
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              style={{ objectFit: "cover" }}
                            />
-                           <Button $brandcolor={true} onClick={handleSearch}>
-                              Browse Nooks
-                           </Button>
-                        </Form>
-                     </BrowseCard>
-                     <Swiper
-                        spaceBetween={0}
-                        slidesPerView={1}
-                        watchSlidesProgress
-                        loop={true}
-                        style={{
-                           width: "100%",
-                           height: "100%",
-                           borderRadius: "20px",
-                           overflow: "hidden",
-                           margin: "0px",
-                           display: "flex",
-                           justifyContent: "end",
-                           paddingLeft: "20%"
-                        }}
-                     >
-                        {stores?.map((store) => (
-                           <SwiperSlide key={store}>
-                              <LinearGradient>
-                                 <Image
-                                    alt="nook-images"
-                                    src={store.image}
-                                    fill={true}
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    style={{ objectFit: "cover" }}
-                                 />
-                              </LinearGradient>
-                              <StoreInfo>
-                                 <Image
-                                    alt="host-logo"
-                                    src={store.logo}
-                                    width={50}
-                                    height={50}
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    style={{
-                                       objectFit: "cover",
-                                       borderRadius: "100%",
-                                    }}
-                                 />
-                                 <NameLocation>
-                                    <Para
-                                       size="textmd"
-                                       $weight="medium"
-                                       color="white"
-                                    >
-                                       {store.name}
-                                    </Para>
-                                    <Para
-                                       size="textmd"
-                                       $weight="regular"
-                                       color="white"
-                                    >
-                                       {store.location}
-                                    </Para>
-                                 </NameLocation>
-                              </StoreInfo>
-                           </SwiperSlide>
-                        ))}
-                     </Swiper>
-                  </StoreSlider>
-               ) : (
-                  <div
-                     style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        width: "100%",
-                     }}
-                  >
-                     <BrowseCard>
-                        <H2>
-                           Book a nook
-                           <br />
-                           within a store
-                        </H2>
-                        <Form>
-                           <SelectHero
-                              fieldName="city"
-                              label="Find Nooks In"
-                              options={availableCities}
-                              adornment={
-                                 <Image
-                                    alt="nook-images"
-                                    src="/location-pin-grey.svg"
-                                    width={12}
-                                    height={16}
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    style={{ objectFit: "cover" }}
-                                 />
-                              }
-                           />
-                           <Button $brandcolor={true} onClick={handleSearch}>
-                              Browse Nooks
-                           </Button>
-                        </Form>
-                     </BrowseCard>
-                     <StoreSlider>
-                        <Swiper
-                           spaceBetween={0}
-                           slidesPerView={1}
-                           watchSlidesProgress
-                           loop={true}
-                           style={{
-                              borderRadius: "20px",
-                              overflow: "hidden",
-                              width: "100%",
-                              height: "100%",
-                           }}
-                        >
-                           {stores?.map((store) => (
-                              <SwiperSlide key={store}>
-                                 <LinearGradient>
-                                    <Image
-                                       alt="nook-images"
-                                       src={store.image}
-                                       fill={true}
-                                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                       style={{ objectFit: "cover" }}
-                                    />
-                                 </LinearGradient>
-                                 <StoreInfo>
-                                    <Image
-                                       alt="host-logo"
-                                       src={store.logo}
-                                       width={50}
-                                       height={50}
-                                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                       style={{
-                                          objectFit: "cover",
-                                          borderRadius: "100%",
-                                       }}
-                                    />
-                                    <NameLocation>
-                                       <Para
-                                          size="textmd"
-                                          $weight="medium"
-                                          color="white"
-                                       >
-                                          {store.name}
-                                       </Para>
-                                       <Para
-                                          size="textmd"
-                                          $weight="regular"
-                                          color="white"
-                                       >
-                                          {store.location}
-                                       </Para>
-                                    </NameLocation>
-                                 </StoreInfo>
-                              </SwiperSlide>
-                           ))}
-                        </Swiper>
-                     </StoreSlider>
-                  </div>
-               )}
+                        }
+                     />
+                  </Form>
+               </Content>
             </Container>
+            <Marquee speed={15}>
+                 {nooks?.map((nook, index)=>(
+                     <NookCard
+                        homepage={true}
+                        key={index}
+                        id={nook.id}
+                        images={nook?.location_images}
+                        name={nook.location_name}
+                        city={nook.location_city}
+                        state={nook.location_state_code}
+                        hostId={nook.company_profiles.user_id}
+                        logo={nook.company_profiles.logo}
+                        hostCompany={nook.company_profiles.name}
+                     />
+                 ))} 
+            </Marquee>
          </Wrapper>
       </>
    );
@@ -249,95 +88,40 @@ const Wrapper = styled.div`
    display: flex;
    height: 100dvh;
    width: 100vw;
-   align-items: start;
-   justify-content: end;
-   padding: 90px 0px;
-   background-color: ${({ theme }) => theme.color.primary.brand.b925};
-   @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
-      padding: 120px 0px 100px 0px;
-      height: auto;
-   }
-`;
-
-const BrowseCard = styled.div`
-   display: flex;
-   padding: 70px;
-   row-gap: 50px;
+   align-items: center;
+   justify-content: center;
    flex-direction: column;
-   position: absolute;
-   width: fit-content;
+   row-gap: 90px;
+   text-align: center;
+   padding: 120px 0px 100px 0px;
    background-color: ${({ theme }) => theme.color.primary.brand.b925};
-   left: 0;
-   top: 50%;
-   transform: translateY(-50%);
-   z-index: 100;
-   border-radius: 20px;
-   overflow: hidden;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       position: relative;
       transform: translateY(0px);
       padding: 0px;
       width: 100%;
-      row-gap: 40px;
+      row-gap: 90px;
       height: auto;
       border-radius: 0px;
+      align-items: center;
+      height: 100dvh;
    }
 `;
 
 const Form = styled.div`
    display: flex;
-   row-gap: 20px;
-   flex-direction: column;
-`;
-
-const StoreSlider = styled.div`
-   position: relative;
-   height: 100%;
-   width: 100%;
-   @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
-      padding-left: 0px;
-      padding-top: 30px;
-      height: 500px;
-   }
-`;
-
-const StoreInfo = styled.div`
-   display: flex;
+   row-gap: 40px;
    flex-direction: row;
-   column-gap: 12px;
-   align-items: center;
-   justify-content: start;
-   position: absolute;
-   bottom: 30px;
-   right: 30px;
-   z-index: 100;
-   @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
-      bottom: 30px;
-      left: 30px;
-      right: auto;
-   }
+   width: 100%;
+   margin: auto;
+   max-width: ${({ theme }) => theme.container.xs};
 `;
 
-const NameLocation = styled.div`
+const Content = styled.div`
    display: flex;
    flex-direction: column;
-   row-gap: 0px;
-   align-items: start;
-`;
-
-const LinearGradient = styled.div`
-   &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-         180deg,
-         rgba(0, 0, 0, 0) 0%,
-         rgba(0, 0, 0, 0.5) 100%
-      );
-      z-index: 1;
+   row-gap: 30px;
+   @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
+      row-gap: 40px;
    }
-`;
+`

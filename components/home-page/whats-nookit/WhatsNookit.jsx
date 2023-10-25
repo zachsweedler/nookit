@@ -20,11 +20,12 @@ export default function WhatsNookit() {
                </Header>
                <Copy>
                   <Para size="textmd" $weight="regular">
-                     Nookit is a website where brands can book a small space or
-                     as we call it, a &quot;nook,&quot; within another
-                     brand&apos;s storefront; This allows brands to pop-in in
-                     environments that align with their image, offering
-                     collaborative brand experiences for in-store customers.
+                     Nookit is a website where artists, musicians, and business owners can
+                     book a small nook within
+                     branded storefronts; This allows brands to affordably
+                     pop-into environments that align with their image, and
+                     offer collaborative brand experiences for in-store
+                     customers.
                   </Para>
                   <Button
                      $brandoutline={true}
@@ -40,7 +41,7 @@ export default function WhatsNookit() {
                   <StoreImage>
                      <Image
                         alt="nookit-logo"
-                        src="/front-general-circle.png"
+                        src="/neat-burger-home.webp"
                         fill={true}
                         style={{ objectFit: "cover", pointerEvents: "none" }}
                      />
@@ -121,6 +122,8 @@ const StoreImage = styled.div`
    position: relative;
    width: 400px;
    height: 400px;
+   border-radius: 100%;
+   overflow: hidden;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       width: 250px;
       height: 250px;

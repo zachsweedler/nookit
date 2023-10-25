@@ -143,19 +143,28 @@ export default function NavPublic() {
                   </>
                ) : (
                   <AvatarWrapper onClick={toggleDropdownVisibility}>
+                     <Avatar>
+                        <Image
+                           loader={supabaseLoader}
+                           alt="business_logo"
+                           fill={true}
+                           style={{ objectFit: "cover", borderRadius: "100%" }}
+                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                           src={imgSrc}
+                        />
+                        <NavDropdown
+                           isVisible={isVisible}
+                           mobile={false}
+                           session={session}
+                           toggleDropdownVisibility={toggleDropdownVisibility}
+                        />
+                     </Avatar>
                      <Image
-                        loader={supabaseLoader}
-                        alt="business_logo"
-                        fill={true}
-                        style={{ objectFit: "cover", borderRadius: "100%" }}
+                        alt="arrow-icon"
+                        width={12}
+                        height={12}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        src={imgSrc}
-                     />
-                     <NavDropdown
-                        isVisible={isVisible}
-                        mobile={false}
-                        session={session}
-                        toggleDropdownVisibility={toggleDropdownVisibility}
+                        src="/down-arrow-black.svg"
                      />
                   </AvatarWrapper>
                )}
@@ -200,12 +209,16 @@ const AuthButtons = styled.div`
    }
 `;
 
-const AvatarWrapper = styled.div`
+const Avatar = styled.div`
    width: 30px;
    height: 30px;
    position: relative;
-   border-radius: 100%;
+   border-radius: 0px;
    flex-shrink: 0;
+   display: flex;
+   flex-direction: row;
+   column-gap: 3px;
+   align-items: center;
    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
    &:hover {
       box-shadow: 0px 0px 0px 4px #9696967c;
@@ -213,6 +226,13 @@ const AvatarWrapper = styled.div`
       border-radius: 100%;
    }
 `;
+
+const AvatarWrapper = styled.div`
+   display: flex;
+   flex-direction: row;
+   column-gap: 9px;
+   align-items: center;
+`
 
 const MenuIcon = styled(Image)`
    display: none;

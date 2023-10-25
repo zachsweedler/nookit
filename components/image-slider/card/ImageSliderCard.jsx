@@ -71,7 +71,7 @@ const Wrapper = styled.div`
     width: 100%;
     height: 250px;
     position: relative;
-    border-radius: 5px;
+    border-radius: 12px;
     overflow: hidden;
 `
 
