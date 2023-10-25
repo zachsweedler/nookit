@@ -86,14 +86,13 @@ export default function Hero() {
 
 const Wrapper = styled.div`
    display: flex;
-   height: 100dvh;
+   padding: 150px 0px;
    width: 100vw;
    align-items: center;
    justify-content: center;
    flex-direction: column;
    row-gap: 90px;
    text-align: center;
-   padding: 120px 0px 100px 0px;
    background-color: ${({ theme }) => theme.color.primary.brand.b925};
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       position: relative;
@@ -104,7 +103,7 @@ const Wrapper = styled.div`
       height: auto;
       border-radius: 0px;
       align-items: center;
-      height: 100dvh;
+      padding: 150px 0px 100px 0px;
    }
 `;
 
