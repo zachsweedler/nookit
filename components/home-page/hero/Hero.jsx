@@ -73,7 +73,7 @@ export default function Hero() {
                         name={nook.location_name}
                         city={nook.location_city}
                         state={nook.location_state_code}
-                        hostId={nook.company_profiles.user_id}
+                        hostId={nook.company_id}
                         logo={nook.company_profiles.logo}
                         hostCompany={nook.company_profiles.name}
                      />

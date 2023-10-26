@@ -1,7 +1,7 @@
 "use client";
 import { Para } from "@/styles/Typography";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "styled-components";
 import ImageSliderCard from "../image-slider/card/ImageSliderCard";
 import supabaseLoader from "@/supabase-image-loader";
@@ -18,6 +18,7 @@ export default function NookCard({
    logo,
    homepage,
 }) {
+
    return (
       <Wrapper>
          <Link href={`/s/${id}`}>

@@ -22,7 +22,7 @@ export default function Profile() {
             .select(`*`)
             .order("created_at", { ascending: false })
             .eq("status", "listed")
-            .eq("user_id", params.slug);
+            .eq("company_id", params.slug);
          if (error) {
             console.log("error getting nooks", error);
          } else {
@@ -38,7 +38,7 @@ export default function Profile() {
          const { data, error } = await supabase
             .from("company_profiles")
             .select("created_at, about, user_id, name, logo, industry, website")
-            .eq("user_id", params.slug);
+            .eq("id", params.slug);
          if (error) {
             console.log("error getting company", error);
          } else {
@@ -66,6 +66,13 @@ export default function Profile() {
    ];
    const joinedDate = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
 
+   let companyWebsite = company?.website?.toString();
+
+if (companyWebsite && companyWebsite.startsWith("https://")) {
+  companyWebsite = companyWebsite.slice(8);
+}
+
+
    return (
       <Wrapper>
          <Container size="sm">
@@ -87,7 +94,7 @@ export default function Profile() {
                   <Para size="textmd" $weight="regular">
                      {company.industry}
                   </Para>
-                  <a href={`https://${company.website}`} target="_blank">
+                  <a href={`https://${companyWebsite}`} target="_blank">
                      <Para
                         $isLink={true}
                         size="textmd"
@@ -104,9 +111,8 @@ export default function Profile() {
                         About
                      </Para>
                      <Para size="textmd" $weight="regular">
-                     {company.about}
+                        {company.about}
                      </Para>
-
                   </Section>
                )}
                {nooks.length > 0 && (
