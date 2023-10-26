@@ -30,9 +30,17 @@ client.defineJob({
       resend,
       supabase,
    },
-   trigger: supabaseTriggers.onInserted({
+   trigger: supabaseTriggers.onUpdated({
       schema: "public",
       table: "bookings",
+      filter: {
+         old_record: {
+            status: ["draft"],
+         },
+         record: {
+            status: ["pending"],
+         },
+      },
    }),
    run: async (payload, io, ctx) => {
 
@@ -103,7 +111,7 @@ client.defineJob({
            dailyRate: payload.record.daily_rate,
            daysCount: payload.record.days_count,
            bookingPrice: payload.record.booking_price,
-           processingFee: payload.record.processing_fee,ad
+           processingFee: payload.record.processing_fee
         })
      });
    },

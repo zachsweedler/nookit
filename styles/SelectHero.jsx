@@ -89,9 +89,9 @@ const Wrap = styled.div`
    column-gap: 0px;
    width: 100%;
    align-items: start;
-   border: 1px solid ${({ theme }) => theme.color.primary.grey.g100};
    border-radius: 100px;
-   overflow: hidden;
+   overflow: hidden; 
+   border: 1px solid ${({ theme }) => theme.color.primary.grey.g50};
    box-shadow: ${({ theme }) => theme.boxShadow.shadowlg};
    transition: box-shadow 0.5s cubic-bezier(0.23, 1, 0.320, 1);
    &:hover {

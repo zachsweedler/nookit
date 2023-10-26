@@ -230,17 +230,15 @@ export default function UserNooks() {
                      </>
                   ) : !hasConnectAccount ? (
                      <EmptyState
-                        title="No Payout Method Added"
-                        description="To list a nook, you must first configure your payout details, ensuring you have either a bank account or card set up to receive funds. Please click the button below to get started."
-                        imgSrc="/add-payout-method.svg"
+                        title="Setup Payouts"
+                        description="To list a nook, set up payout details with a bank account or card to receive funds. Click the button below to begin:"
                         button="Add Payout Method"
                         onButtonClick={createStripeAccount}
                      />
                   ) : missingInfo ? (
                      <EmptyState
                         title="Finish Payout Setup"
-                        description="To successfully list a nook, all required information for payouts must be provided. At the moment, your account is missing some information required for this process. To proceed and manage your payout information, please click the button below:"
-                        imgSrc="/add-payout-method.svg"
+                        description="To list your nook, provide all required payout info. Your account lacks necessary details. Click below to manage payouts:"
                         button="Finish Payout Setup"
                         onButtonClick={expressLogin}
                      />

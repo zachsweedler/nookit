@@ -16,9 +16,8 @@ export default function NavDropdown({
    const dropdownRef = useRef();
 
    const loggedInItems = [
-      { id: 1, title: "Browse Nooks", href: "/s"},
-      { id: 2, title: "Bookings", href: "/bookings/guest" },
-      { id: 3, title: "My Nooks", href: "/my-nooks" },
+      { id: 2, title: "Manage Nooks", href: "/my-nooks" },
+      { id: 3, title: "My Bookings", href: "/bookings/guest" },
       { id: 4, title: "Account", href: "/account" },
       { id: 5, title: "Sign Out", href: "/" },
    ];

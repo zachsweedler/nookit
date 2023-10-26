@@ -34,8 +34,10 @@ export const locationTypes = [
   "Floral Shop",
   "Fragrance Store",
   "Furniture Store",
+  "Fitness Studio",
   "Game Store",
   "Gift Store",
+  "Gym",
   "Grocery Store",
   "Handbags Store",
   "Hardware Store",
@@ -68,5 +70,6 @@ export const locationTypes = [
   "Thrift Store",
   "Toy Store",
   "Video Games Store",
-  "Watch & Clock Store"
+  "Watch & Clock Store",
+  "Wellness Spa",
 ];

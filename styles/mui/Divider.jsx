@@ -4,7 +4,7 @@ import { styled as muistyled } from "@mui/system";
 
 export const Divider = muistyled(MuiDivider)({
     "&.MuiDivider-root": {
-      borderColor: "#e6e6e6 !important",
+      borderColor: "#eee !important",
 }});
 
 

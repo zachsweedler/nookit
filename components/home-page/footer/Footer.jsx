@@ -145,7 +145,7 @@ const Wrapper = styled.div`
    display: flex;
    flex-direction: column;
    padding: 150px 0px;
-   background-color: ${({ theme }) => theme.color.primary.brand.b25};
+   background-color: ${({ theme }) => theme.color.primary.brand.b925};
    color: ${({ theme }) => theme.color.black};
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       padding: 100px 0px;

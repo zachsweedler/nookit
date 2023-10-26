@@ -67,11 +67,9 @@ export default function Profile() {
    const joinedDate = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
 
    let companyWebsite = company?.website?.toString();
-
-if (companyWebsite && companyWebsite.startsWith("https://")) {
-  companyWebsite = companyWebsite.slice(8);
-}
-
+   if (companyWebsite && companyWebsite.startsWith("https://")) {
+      companyWebsite = companyWebsite.slice(8);
+   }
 
    return (
       <Wrapper>

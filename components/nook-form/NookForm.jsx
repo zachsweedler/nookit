@@ -192,11 +192,12 @@ export default function NookForm() {
       "Address",
       "Type",
       "Capacity",
+      "About",
       "Location Images",
       "Amenities",
    ];
    
-   const nookMenu = ["Pricing", "About", "Nook Images"];
+   const nookMenu = ["Pricing", "Nook Images"];
 
    // fetch missing company profile fields
    useEffect(() => {
@@ -280,7 +281,7 @@ export default function NookForm() {
    return (
       <Container
          size="xl"
-         style={{ marginTop: "120px", marginBottom: "120px" }}
+         style={{ marginTop: "120px", marginBottom: "150px" }}
       >
          <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -454,7 +455,7 @@ const Contents = styled.div`
    flex-direction: column;
    row-gap: 25px;
    padding: 30px;
-   background-color: ${({ theme }) => theme.color.primary.brand.b25};
+   background-color: ${({ theme }) => theme.color.primary.brand.b925};
    border-radius: 12px;
    overflow: hidden;
    border: 1px solid ${({ theme }) => theme.color.primary.grey.g50};
@@ -474,7 +475,7 @@ const ContentMenuItem = styled(Para)`
    padding: 6px 12px;
    border-radius: 5px;
    &:hover {
-      background-color: ${({ theme }) => theme.color.primary.brand.b925};
+      background-color: ${({ theme }) => theme.color.primary.brand.b930};
       cursor: pointer;
    }
 `;

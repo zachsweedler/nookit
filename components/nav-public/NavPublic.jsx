@@ -124,13 +124,13 @@ export default function NavPublic() {
                {!session ? (
                   <>
                      <AuthButtons $pathname={pathname}>
+                        <Link href="/signup">
+                           <SignUpButton>Sign Up</SignUpButton>
+                        </Link>
                         <Link href="/login">
                            <NavItem size="textmd" $weight="regular">
                               Log in
                            </NavItem>
-                        </Link>
-                        <Link href="/signup">
-                           <Button $blackcolor="true">Sign Up</Button>
                         </Link>
                      </AuthButtons>
                      <MenuIcon
@@ -182,7 +182,7 @@ export default function NavPublic() {
 
 const Wrapper = styled.div`
    width: 100vw;
-   height: 90px;
+   height: 70px;
    align-items: center;
    justify-content: space-between;
    display: flex;
@@ -203,9 +203,21 @@ const AuthButtons = styled.div`
    display: flex;
    align-items: center;
    flex-direction: row;
-   column-gap: 30px;
+   column-gap: 20px;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       display: none;
+   }
+`;
+
+const SignUpButton = styled.button`
+   background-color: ${({ theme }) => theme.color.black};
+   font-size: ${({ theme }) => theme.fontSize.textmd};
+   color: white;
+   padding: 12px 18px;
+   border-radius: 5px;
+   &:hover {
+      cursor: pointer;
+      background-color: ${({ theme }) => theme.color.primary.brand.b600};
    }
 `;
 
@@ -232,7 +244,7 @@ const AvatarWrapper = styled.div`
    flex-direction: row;
    column-gap: 9px;
    align-items: center;
-`
+`;
 
 const MenuIcon = styled(Image)`
    display: none;
@@ -244,15 +256,13 @@ const MenuIcon = styled(Image)`
 const MenuWrapper = styled.div`
    display: flex;
    flex-direction: row;
-   column-gap: 20px;
+   column-gap: 30px;
    align-items: center;
 `;
 
 const NavItem = styled(Para)`
    display: flex;
-   padding: 9px 15px;
    &:hover {
-      background-color: ${({ theme }) => theme.color.primary.brand.b100};
       color: ${({ theme }) => theme.color.primary.brand.b600};
       border-radius: 5px;
       text-decoration: none;

@@ -12,7 +12,6 @@ export default async function Home() {
     <main>
       <Hero/>
       <WhatsNookit/>
-      <How/>
       <BecomeHost/>
       <Faq/>
       <Footer/>

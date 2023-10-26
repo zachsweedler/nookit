@@ -5,18 +5,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import NookCard from "./NookCard";
 import { styled } from "styled-components";
-import { Para } from "@/styles/Typography";
-import { useDispatch } from "react-redux";
-import { setViewNook } from "@/slices/viewNookSlice";
 import Loading from "../loading/Loading";
 import EmptyState from "../empty-state/EmptyState";
 
 export default function FetchNooks() {
    const [nooks, setNooks] = useState([]);
    const supabase = createClientComponentClient();
-   const router = useRouter();
-   const pathname = usePathname();
-   const searchParams = useSearchParams();
    const [loading, setLoading] = useState();
 
    useEffect(() => {
@@ -39,7 +33,7 @@ export default function FetchNooks() {
    }, [supabase]);
 
    return (
-      <Container size="xl" style={{ marginTop: "120px" }}>
+      <Container size="xl" style={{ marginTop: "90px" }}>
          {loading ? (
             <CenterWrapper>
                <Loading />

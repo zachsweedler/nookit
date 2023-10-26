@@ -1,8 +1,8 @@
 
 import { createAppRoute } from "@trigger.dev/nextjs";
 import { client } from "@/trigger";
-import "@/jobs/removeOldDraftBookings"
-import "@/jobs/completedBooking"
+import "@/jobs/draftBookingCleanup"
+import "@/jobs/bookingCompletionStripe"
 import "@/jobs/bookingCompleted"
 import "@/jobs/bookingCanceled"
 import "@/jobs/bookingAccepted"
