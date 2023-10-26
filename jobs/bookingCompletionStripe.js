@@ -56,7 +56,7 @@ client.defineJob({
 });
 
 client.defineJob({
-   id: "schedule-booking-completion",
+   id: "initiate-completion",
    name: "Schedule Booking Completion",
    version: "1.0.0",
    trigger: eventTrigger({
@@ -84,7 +84,7 @@ client.defineJob({
             if (error) {
                throw error;
             }
-            return data[0].price_type;
+            return data[0].nooks.price_type;
          }
       );
 

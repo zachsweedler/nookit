@@ -8,11 +8,12 @@ import { useEffect, useState } from "react";
 import { CardInfo, MethodsWrapper } from "./Styles";
 import { ButtonDiv } from "@/styles/Buttons";
 import { Card } from "./StylesV2";
-import { Elements, useStripe } from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import "./Stripe.css";
 import StripePaymentElement from "./StripePaymentElement";
 import { loadStripe } from "@stripe/stripe-js";
 import { useTheme } from "styled-components";
+
 const stripePromise = loadStripe(
    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_LIVE
 );
