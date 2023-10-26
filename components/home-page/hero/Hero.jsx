@@ -43,7 +43,6 @@ export default function Hero() {
                      <br />
                      within a store
                   </H1>
-                  <Para size="textlg" $weight="regular" color="primary.brand.b1000">Affordably pop up inside brand aligned store spaces.</Para>
                   <Form>
                      <SelectHero
                         fieldName="city"
@@ -63,7 +62,7 @@ export default function Hero() {
                   </Form>
                </Content>
             </Container>
-            <Marquee speed={15}>
+            <Marquee speed={40}>
                  {nooks?.map((nook, index)=>(
                      <NookCard
                         homepage={true}
@@ -86,14 +85,13 @@ export default function Hero() {
 
 const Wrapper = styled.div`
    display: flex;
-   padding: 150px 0px;
+   padding: 150px 0px 100px 0px;
    width: 100vw;
    align-items: center;
    justify-content: center;
    flex-direction: column;
    row-gap: 90px;
    text-align: center;
-   background-color: ${({ theme }) => theme.color.primary.brand.b925};
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       position: relative;
       transform: translateY(0px);

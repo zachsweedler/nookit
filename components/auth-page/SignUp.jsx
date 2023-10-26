@@ -25,6 +25,7 @@ export default function SignUp() {
    const router = useRouter();
    const validationSchema = yup.object().shape({
       email: yup.string().required("This is a required field."),
+      password: yup.string().required("This is a required field.")
    });
 
    const {

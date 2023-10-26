@@ -58,7 +58,7 @@ export default function NookCard({
                />
             </HostLogoWrapper>
             <Link href={`/profiles/${hostId}`}>
-               <Para $isLink={true} size="textsm" $weight="medium" color="black">
+               <Para $isLink={true} size={homepage ? "textmd" : "textsm"} $weight="medium" color="black">
                   {hostCompany}
                </Para>
             </Link>

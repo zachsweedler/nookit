@@ -5,7 +5,7 @@ import { Supabase, SupabaseManagement } from "@trigger.dev/supabase";
 
 const stripe = new Stripe({
    id: "stripe",
-   apiKey: process.env.NEXT_PUBLIC_STRIPE_TEST_KEY,
+   apiKey: process.env.STRIPE_SECRET_KEY,
 });
 
 const supabase = new Supabase({

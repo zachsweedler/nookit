@@ -122,11 +122,10 @@ const Wrapper = styled.div`
    flex-direction: column;
    row-gap: 25px;
    position: sticky;
-   top: 140px;
+   top: 120px;
    height: auto;
-   box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.12);
    border: 1px solid ${({ theme }) => theme.color.primary.grey.g50};
-   background-color: #fcfafa;
+   background-color: ${({ theme }) => theme.color.primary.brand.b925};
    padding: 30px;
    border-radius: 12px;
    width: 450px;

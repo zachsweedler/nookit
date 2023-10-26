@@ -86,7 +86,7 @@ const LocationGrid = styled.div`
    width: 100%;
    max-width: ${({ theme }) => theme.container.xl};
    margin: auto;
-   margin-top: 70px;
+   margin-top: 90px;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       grid-template-columns: 1fr;
       grid-row-gap: 100px;

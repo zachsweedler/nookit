@@ -69,7 +69,7 @@ const StyledSelect = styled.select`
    border-radius: 5px;
    padding: 0px 35px;
    width: 100%;
-   background-color: white;
+   background-color:  ${({ theme }) => theme.color.primary.brand.b925};
    &::placeholder {
       color: ${({ theme }) => theme.color.primary.brand.b950};
    }
@@ -91,10 +91,8 @@ const Wrap = styled.div`
    align-items: start;
    border-radius: 100px;
    overflow: hidden; 
-   border: 1px solid ${({ theme }) => theme.color.primary.grey.g50};
-   box-shadow: ${({ theme }) => theme.boxShadow.shadowlg};
    transition: box-shadow 0.5s cubic-bezier(0.23, 1, 0.320, 1);
    &:hover {
-      box-shadow: ${({ theme }) => theme.boxShadow.shadow2xl};
+      box-shadow: ${({ theme }) => theme.boxShadow.shadowxl};
    }
 `;

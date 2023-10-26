@@ -77,7 +77,7 @@ export default function NavDropdown({
 
 const Wrapper = styled.div`
    position: absolute;
-   top: ${({ $mobile }) => ($mobile ? "90px" : "calc(100% + 15px)")};
+   top: ${({ $mobile }) => ($mobile ? "70px" : "calc(100% + 15px)")};
    right: ${({ $mobile }) => ($mobile ? "auto" : "-20px")};
    background-color: ${({ theme }) => theme.color.white};
    border-radius: ${({ $mobile }) => ($mobile ? "0" : "10px")};

@@ -203,7 +203,7 @@ const AuthButtons = styled.div`
    display: flex;
    align-items: center;
    flex-direction: row;
-   column-gap: 20px;
+   column-gap: 30px;
    @media screen and (max-width: ${({ theme }) => theme.breakPoint.tablet}) {
       display: none;
    }
