@@ -166,51 +166,50 @@ export default function BookingColumn() {
    // date selection handler
    const dateFormat = "MM/DD/YYYY";
    const handleDateSelect = (dates) => {
+      let newProcessingTotal;
       const days =
          dates[1]?.$D - dates[0]?.$D === 0
             ? 1
             : dates[1]?.$D - dates[0]?.$D + 1;
 
       const price = nook.price_type === "dailyRate" ? nook.price : null;
-      console.log('price', price)
-      const bookingPrice = price ? price * days : newProcessingTotal
+      const bookingPrice = price ? price * days : newProcessingTotal;
       setBookingPriceTotal(bookingPrice);
-
       const startDateSelect = `${dates[0]?.$M + 1}/${dates[0]?.$D}/${
          dates[0]?.$y
       }`;
       if (dates[1]) {
          endDateSelect = `${dates[1]?.$M + 1}/${dates[1]?.$D}/${dates[1]?.$y}`;
       }
+      setStartDate(startDateSelect);
+      setEndDate(endDateSelect);
       setValue("dates", `${startDateSelect} - ${endDateSelect}`, {
          shouldValidate: true,
       });
       setDayCount(days);
-      let newProcessingTotal;
-      newProcessingTotal =
-         nook.price_type === "dailyRate" ? 
-            days >= 30 ? bookingPrice * 0.12
-            : days >= 7 ? bookingPrice * 0.15
-            : bookingPrice * 0.18
-
-            : days >= 30 ? days * 15
-            : days >= 7 ? days * 25
-            : days * 30;
-      console.log('processing', newProcessingTotal)
+      if (nook.price_type === "dailyRate") {
+         if (days >= 30) {
+           newProcessingTotal = bookingPrice * 0.12;
+         } else if (days >= 7) {
+           newProcessingTotal = bookingPrice * 0.15;
+         } else {
+           newProcessingTotal = bookingPrice * 0.18;
+         }
+       } else {
+         if (days >= 30) {
+           newProcessingTotal = days * 15;
+         } else if (days >= 7) {
+           newProcessingTotal = days * 25;
+         } else {
+           newProcessingTotal = days * 30;
+         }
+       }
       setProcessingTotal(newProcessingTotal);
       setTotalBeforeTaxes(
          price ? price * days + newProcessingTotal : newProcessingTotal
       );
-      console.log('calcuation', price, days, newProcessingTotal)
-      setStartDate(startDateSelect);
-      setEndDate(endDateSelect);
    };
-
-   useEffect(()=>{
-      console.log('dayCount', dayCount)
-      console.log('totalPrice', totalBeforeTaxes)
-   },[dayCount, processingTotal, totalBeforeTaxes])
-
+   
    // this is what calculates which dates to disable for the antd date range picker.
    const getBookedDatesList = (bookedDates) => {
       let bookedDatesList = [];
@@ -313,9 +312,7 @@ export default function BookingColumn() {
                <AuthForm />
             ) : (
                (!existingCustomer || !hasPaymentMethod) && (
-                  <EmptyState
-                     component={<PaymentsFormV2/>}
-                  />
+                  <EmptyState component={<PaymentsFormV2 />} />
                )
             )}
          </Modal>

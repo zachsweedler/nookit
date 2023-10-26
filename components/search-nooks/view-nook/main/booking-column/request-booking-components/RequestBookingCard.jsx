@@ -5,6 +5,8 @@ import { styled } from "styled-components";
 import { Button } from "@/styles/Buttons";
 import { DateRangePicker } from "@/styles/antd/DateRangePicker";
 import { formatCurrency } from "@/utils/currencyFormatter";
+import { Tooltip } from "@mui/material";
+import MuiTooltip from "@/styles/mui/MuiTooltip";
 
 export default function RequestBookingCard({
    nook,
@@ -24,9 +26,13 @@ export default function RequestBookingCard({
       <>
          <Wrapper>
             <Price>
-               <H6 $weight="semibold">{nook?.price_type === "dailyRate" ? `$${nook.price}` : `${nook.price}%`}</H6>
+               <H6 $weight="semibold">
+                  {nook?.price_type === "dailyRate"
+                     ? `$${nook.price}`
+                     : `${nook.price}%`}
+               </H6>
                <Para size="textmd" $weight="medium">
-                  {nook?.price_type === "dailyRate" ? `per day` : `of sales`}
+                  {nook?.price_type === "dailyRate" ? `day` : `of sales`}
                </Para>
             </Price>
             <Divider />
@@ -63,31 +69,34 @@ export default function RequestBookingCard({
                   </Para>
                </RequestButton>
             </Form>
-            {bookingPriceTotal && (
+            {totalBeforeTaxes && (
                <Calculation>
-                  {nook.price_type === "dailyRate" ? 
+                  {nook.price_type === "dailyRate" ? (
+                     <LineItem>
+                        <Para size="textmd" $weight="regular">
+                           {formatCurrency(nook.price)} x {dayCount} days
+                        </Para>
+                        <Para size="textmd" $weight="regular">
+                           {formatCurrency(bookingPriceTotal)}
+                        </Para>
+                     </LineItem>
+                  ) : (
+                     <LineItem>
+                        <Para size="textmd" $weight="regular">
+                           Days
+                        </Para>
+                        <Para size="textmd" $weight="regular">
+                           {dayCount}
+                        </Para>
+                     </LineItem>
+                  )}
                   <LineItem>
-                     <Para size="textmd" $weight="regular">
-                       {formatCurrency(nook.price)} x {dayCount} days
-                     </Para>
-                     <Para size="textmd" $weight="regular">
-                        {formatCurrency(bookingPriceTotal)}
-                     </Para>
-                  </LineItem>
-                  :
-                  <LineItem>
-                     <Para size="textmd" $weight="regular">
-                       Days
-                     </Para>
-                     <Para size="textmd" $weight="regular">
-                        {dayCount}
-                     </Para>
-                  </LineItem>
-                  }
-                  <LineItem>
-                     <Para size="textmd" $weight="regular">
-                        Processing
-                     </Para>
+                     <div style={{display: 'flex', flexDirection: 'row', columnGap: '5px'}}>
+                        <Para size="textmd" $weight="regular">
+                           Processing
+                        </Para>
+                        <MuiTooltip text="This covers costs that allow Nookit to complete your transaction." />
+                     </div>
                      <Para size="textmd" $weight="regular">
                         {formatCurrency(processingTotal)}
                      </Para>
