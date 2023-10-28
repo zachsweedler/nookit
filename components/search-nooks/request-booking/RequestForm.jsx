@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useUserId } from "@/hooks/client-side/useUserId";
 import Input from "@/styles/Input";
 import { useForm } from "react-hook-form";
-import { CompanyLogoUploader } from "@/components/image-uploaders/company-logo/CompanyLogoUploader";
+import { ProfileLogoUploader } from "@/components/image-uploaders/profile-logo/ProfileLogoUploader";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { industries } from "@/utils/industries";
@@ -17,39 +17,39 @@ import Textarea from "@/styles/Textarea";
 import { Divider } from "@/styles/mui/Divider";
 import { Button } from "@/styles/Buttons";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useCompanyId } from "@/hooks/client-side/useCompanyId";
+import { useProfileId } from "@/hooks/client-side/useProfileId";
 import RequestSummary from "./RequestSummary";
 
 export default function RequestForm() {
    const supabase = createClientComponentClient();
    const userId = useUserId(supabase);
-   const companyId = useCompanyId(supabase);
+   const profileId = useProfileId(supabase);
    const searchParams = useSearchParams();
    const params = useParams();
    const router = useRouter();
-   const [nullCompanyFields, setNullCompanyFields] = useState([]);
+   const [nullProfileFields, setNullProfileFields] = useState([]);
    const [draftData, setDraftData] = useState();
 
    const validationSchema = yup.object().shape({
       guest_questions: yup.string().nullable(),
       guest_plan: yup.string().required("Guest plan is required."),
       first_name: yup.string().when([], {
-         is: () => nullCompanyFields.includes("first_name"),
+         is: () => nullProfileFields.includes("first_name"),
          then: () => yup.string().required("First name is required."),
          otherwise: () => yup.string().nullable().notRequired(),
       }),
       last_name: yup.string().when([], {
-         is: () => nullCompanyFields.includes("last_name"),
+         is: () => nullProfileFields.includes("last_name"),
          then: () => yup.string().required("Last name is required."),
          otherwise: () => yup.string().nullable().notRequired(),
       }),
       name: yup.string().when([], {
-         is: () => nullCompanyFields.includes("name"),
-         then: () => yup.string().required("Company name is required."),
+         is: () => nullProfileFields.includes("name"),
+         then: () => yup.string().required("Profile name is required."),
          otherwise: () => yup.string().nullable().notRequired(),
       }),
       website: yup.string().when([], {
-         is: () => nullCompanyFields.includes("website"),
+         is: () => nullProfileFields.includes("website"),
          then: () =>
             yup
                .string()
@@ -58,7 +58,7 @@ export default function RequestForm() {
          otherwise: () => yup.string().nullable().notRequired(),
       }),
       industry: yup.string().when([], {
-         is: () => nullCompanyFields.includes("industry"),
+         is: () => nullProfileFields.includes("industry"),
          then: () => yup.string().required("Industry is required."),
          otherwise: () => yup.string().nullable().notRequired(),
       }),
@@ -100,10 +100,10 @@ export default function RequestForm() {
          }
       };
 
-      const fetchNullCompanyData = async () => {
+      const fetchNullProfileData = async () => {
          if (userId) {
             const { data, error } = await supabase
-               .from("company_profiles")
+               .from("profiles")
                .select("name, website, industry, logo, first_name, last_name")
                .eq("user_id", userId);
             if (error) {
@@ -115,7 +115,7 @@ export default function RequestForm() {
                      nullFields.push(field);
                   }
                });
-               setNullCompanyFields(nullFields);
+               setNullProfileFields(nullFields);
             }
          }
       };
@@ -124,7 +124,7 @@ export default function RequestForm() {
          const { data, error } = await supabase
             .from("bookings")
             .select(
-               "*, nooks(company_id, price, price_type, location_name, location_address, location_city, location_state_code, location_zip)"
+               "*, nooks(profile_id, price, price_type, locations(name, address, city, state_code, zip)"
             )
             .eq("id", searchParams.get("id"));
          if (error) {
@@ -137,7 +137,7 @@ export default function RequestForm() {
       const fetchStatusAndData = async () => {
          const status = await checkOwnership();
          if (!status) return; // Early exit if the user is not the guest of this request
-         await fetchNullCompanyData();
+         await fetchNullProfileData();
          await fetchDraftRequest();
       };
 
@@ -155,9 +155,9 @@ export default function RequestForm() {
       if (error) {
          console.log("error upserting booking request", error);
       }
-      if (nullCompanyFields.length > 0) {
-         const upsertMissingCompanyData = {
-            id: companyId,
+      if (nullProfileFields.length > 0) {
+         const upsertMissingProfileData = {
+            id: profileId,
             user_id: draftData.guest_user_id,
          };
          const fieldsToCheck = [
@@ -169,14 +169,14 @@ export default function RequestForm() {
          ];
          fieldsToCheck.forEach((key) => {
             if (formData[key] !== undefined) {
-               upsertMissingCompanyData[key] = formData[key];
+               upsertMissingProfileData[key] = formData[key];
             }
          });
-         const { error: companyError } = await supabase
-            .from("company_profiles")
-            .upsert(upsertMissingCompanyData);
-         if (companyError) {
-            console.log("error upserting company data", companyError);
+         const { error: profileError } = await supabase
+            .from("profiles")
+            .upsert(upsertMissingProfileData);
+         if (profileError) {
+            console.log("error upserting profile data", profileError);
          } 
       }
       router.push("/bookings/guest");
@@ -200,22 +200,22 @@ export default function RequestForm() {
                      credit card required.
                   </Para>
                </Header>
-               {nullCompanyFields.length > 0 && (
+               {nullProfileFields.length > 0 && (
                   <FormSection>
                      <Divider />
                      <Header>
                         <Para size="textlg" $weight="semibold">
-                           Company Profile
+                           Profile Profile
                         </Para>
                         <Para
                            size="textmd"
                            $weight="regular"
                            color="primary.grey.g800"
                         >
-                           Please complete your company profile.
+                           Please complete your profile profile.
                         </Para>
                      </Header>
-                     {nullCompanyFields?.map((field, index) => {
+                     {nullProfileFields?.map((field, index) => {
                         let label;
                         let component;
                         switch (field) {
@@ -242,7 +242,7 @@ export default function RequestForm() {
                               );
                               break;
                            case "name":
-                              label = "Company Name";
+                              label = "Profile Name";
                               component = (
                                  <Input
                                     fieldName={field}
@@ -276,7 +276,7 @@ export default function RequestForm() {
                               );
                               break;
                            case "logo":
-                              component = <CompanyLogoUploader />;
+                              component = <ProfileLogoUploader />;
                               break;
                         }
                         return <div key={index}>{component}</div>;

@@ -9,7 +9,7 @@ const nookFormSlice = createSlice({
       created_at: "",
       status: "unlisted",
       user_id: null,
-      company_id: null,
+      profile_id: null,
       blocked_dates: [],
       booked_dates: [],
       price: "",
@@ -42,7 +42,7 @@ const nookFormSlice = createSlice({
       state.formValues.created_at = "";
       state.formValues.status = "unlisted";
       state.formValues.user_id = null,
-      state.formValues.company_id = null,
+      state.formValues.profile_id = null,
       state.formValues.blocked_dates = [];
       state.formValues.booked_dates = [],
       state.formValues.price = "";

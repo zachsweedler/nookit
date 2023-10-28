@@ -31,10 +31,10 @@ client.defineJob({
       table: "bookings",
       filter: {
          old_record: {
-            status: ["pending"],
+            status: ["Pending"],
          },
          record: {
-            status: ["accepted"],
+            status: ["Accepted"],
             end_date: [{ $exists: true }],
          },
       },
@@ -70,7 +70,7 @@ client.defineJob({
 
       const booking = payload.record;
 
-      if (booking.status === 'canceled') {
+      if (booking.status === 'Canceled') {
          return null
       } 
 
@@ -92,7 +92,7 @@ client.defineJob({
       await io.supabase.runTask("complete-booking", async (db) => {
          const { data, error } = await db
             .from("bookings")
-            .update({ status: "completed" })
+            .update({ status: "Completed" })
             .eq("id", booking.id);
          if (error) {
             throw error;

@@ -35,10 +35,10 @@ client.defineJob({
       table: "bookings",
       filter: {
          old_record: {
-            status: ["draft"],
+            status: ["Draft"],
          },
          record: {
-            status: ["pending"],
+            status: ["Pending"],
          },
       },
    }),
@@ -50,9 +50,9 @@ client.defineJob({
          "fetch-host-data",
          async (supabaseClient) => {
             const { data, error } = await supabaseClient
-               .from("company_profiles")
+               .from("profiles")
                .select("email, name, logo")
-               .eq("id", payload.record.host_company_id);
+               .eq("id", payload.record.host_profile_id);
             if (error) {
                await io.logger.error("error getting host data", error);
             } else {
@@ -66,9 +66,9 @@ client.defineJob({
          "fetch-guest-data",
          async (supabaseClient) => {
             const { data, error } = await supabaseClient
-               .from("company_profiles")
+               .from("profiles")
                .select("email, name, logo")
-               .eq("id", payload.record.guest_company_id);
+               .eq("id", payload.record.guest_profile_id);
             if (error) {
                await io.logger.error("error getting guest data", error);
             } else {
@@ -82,8 +82,8 @@ client.defineJob({
          "fetch-location-data",
          async (supabaseClient) => {
             const { data, error } = await supabaseClient
-               .from("nooks")
-               .select("location_name, location_address, location_images")
+               .from("locations")
+               .select("name, address, images")
                .eq("id", payload.record.nook_id);
             if (error) {
                await io.logger.error("error getting location data", error);
@@ -95,6 +95,7 @@ client.defineJob({
       );
 
    
+      
       await io.resend.sendEmail("email-host", {
         to: [hostData.email],
         subject: `New booking request from ${guestData.name}.`,
@@ -103,9 +104,9 @@ client.defineJob({
            payload: payload,
            guestLogo: guestData.logo,
            guestName: guestData.name,
-           locationName: locationData.location_name,
+           locationName: locationData.name,
            locationAddress: locationData.locaton_address,
-           locationImage: `user-images/${locationData.location_images?.[0]}`,
+           locationImage: `user-images/${locationData.images?.[0]}`,
            startDate: payload.record.start_date,
            endDate: payload.record.end_date,
            dailyRate: payload.record.daily_rate,

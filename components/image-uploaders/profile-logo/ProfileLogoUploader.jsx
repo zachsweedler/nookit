@@ -6,20 +6,20 @@ import styled from "styled-components";
 import { Para } from "@/styles/Typography";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
-import { updateLogo } from "@/slices/companyLogoSlice";
+import { updateLogo } from "@/slices/profileLogoSlice";
 import { useDispatch, useSelector } from "react-redux";
 import supabaseLoader from "@/supabase-image-loader";
 
-export function CompanyLogoUploader() {
+export function ProfileLogoUploader() {
    const logoInputRef = useRef();
    const [error, setError] = useState();
    const [userId, setUserId] = useState();
-   const [companyId, setCompanyId] = useState();
+   const [profileId, setProfileId] = useState();
    const [imgSrc, setImgSrc] = useState();
    const supabase = createClientComponentClient();
    const router = useRouter();
    const dispatch = useDispatch();
-   const logo = useSelector((state) => state.companyLogo.path);
+   const logo = useSelector((state) => state.profileLogo.path);
    const handleEditClick = () => logoInputRef.current.click();
 
    useEffect(() => {
@@ -32,13 +32,13 @@ export function CompanyLogoUploader() {
          }
          if (userId) {
             const { data, error } = await supabase
-               .from("company_profiles")
+               .from("profiles")
                .select("id, logo")
                .eq("user_id", userId);
             if (error) {
-               console.log("error company id", error);
+               console.log("error profile id", error);
             } else {
-               setCompanyId(data[0]?.id);
+               setProfileId(data[0]?.id);
                dispatch(updateLogo({ path: data[0]?.logo }));
             }
          }
@@ -46,12 +46,12 @@ export function CompanyLogoUploader() {
       fetchData();
    }, [supabase, dispatch, userId, router]);
 
-   const handleVersionUpsert = async (timestamp, companyId, path) => {
+   const handleVersionUpsert = async (timestamp, profileId, path) => {
       const { data, error } = await supabase
-         .from("company_profiles")
-         .upsert({ id: companyId, logo: path, logo_v: `${timestamp}` })
+         .from("profiles")
+         .upsert({ id: profileId, logo: path, logo_v: `${timestamp}` })
          .select()
-         .eq("id", companyId);
+         .eq("id", profileId);
       if (error) {
          console.log("Upsert version error", error);
       } else {
@@ -62,9 +62,9 @@ export function CompanyLogoUploader() {
    // the meat and gravy
    const handleLogoUpload = async (e) => {
       const file = e.target.files[0];
-      if (file && userId && companyId) {
+      if (file && userId && profileId) {
          const timestamp = Date.now();
-         const objectKey = `${userId}/company_logo/logo?version=${timestamp}`;
+         const objectKey = `${userId}/profile_logo/logo?version=${timestamp}`;
          const { data, error } = await supabase.storage
             .from("user-images")
             .upload(objectKey, file, {
@@ -74,7 +74,7 @@ export function CompanyLogoUploader() {
          if (error) {
             setError(error.message);
          } else {
-            await handleVersionUpsert(timestamp, companyId, data.path);
+            await handleVersionUpsert(timestamp, profileId, data.path);
          }
       }
    };
@@ -82,7 +82,7 @@ export function CompanyLogoUploader() {
    useEffect(() => {
       const path = logo.path
          ? `user-images/${logo.path}`
-         : "assets/fallback_images/fallback_company_logo.svg";
+         : "assets/fallback_images/fallback_profile_logo.svg";
       setImgSrc(path)
    }, [logo.path]);
 

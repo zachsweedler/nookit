@@ -1,5 +1,5 @@
 "use client";
-import { useCompanyId } from "@/hooks/client-side/useCompanyId";
+import { useProfileId } from "@/hooks/client-side/useProfileId";
 import { Button } from "@/styles/Buttons";
 import { Para } from "@/styles/Typography";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -12,7 +12,7 @@ import { Card, CardInfo, MethodsWrapper } from "./Styles";
 
 export default function PayoutsForm() {
    const [hasAccount, setHasAccount] = useState();
-   const [companyData, setCompanyData] = useState();
+   const [profileData, setProfileData] = useState();
    const [connectAccountId, setConnectAccountId] = useState();
    const [banks, setBanks] = useState([]);
    const [cards, setCards] = useState([]);
@@ -20,17 +20,17 @@ export default function PayoutsForm() {
    const [loading, setLoading] = useState(true);
    const [dataLoading, setDataLoading] = useState(true);
    const supabase = createClientComponentClient();
-   const companyId = useCompanyId(supabase);
+   const profileId = useProfileId(supabase);
 
    useEffect(() => {
       setLoading(true);
       const fetchData = async () => {
          try {
-            if (companyId) {
+            if (profileId) {
                const { data, error } = await supabase
                   .from("stripe_connect")
                   .select("id, connect_account_id")
-                  .eq("company_id", companyId);
+                  .eq("profile_id", profileId);
                if (error) {
                   console.error("Error getting connect account Id", error);
                } else {
@@ -47,14 +47,14 @@ export default function PayoutsForm() {
                      setLoading(false);
                   }
                }
-               const { data: companyData, error: companyDataError} = await supabase
-                  .from('company_profiles')
+               const { data: profileData, error: profileDataError} = await supabase
+                  .from('profiles')
                   .select('email, website')
-                  .eq('id', companyId)
-               if (companyDataError) {
-                  console.log('error getting company data', companyDataError)
+                  .eq('id', profileId)
+               if (profileDataError) {
+                  console.log('error getting profile data', profileDataError)
                } else {
-                  setCompanyData(companyData[0])
+                  setProfileData(profileData[0])
                }
 
             }
@@ -63,7 +63,7 @@ export default function PayoutsForm() {
          }
       };
       fetchData();
-   }, [companyId, supabase]);
+   }, [profileId, supabase]);
 
    useEffect(() => {
       if (connectAccountId) {
@@ -150,7 +150,7 @@ export default function PayoutsForm() {
       } else {
          setDataLoading(false);
       }
-   }, [connectAccountId, companyData]);
+   }, [connectAccountId, profileData]);
 
    async function createStripeAccount() {
       setLoading(true)
@@ -162,8 +162,8 @@ export default function PayoutsForm() {
                "Content-Type": "application/json",
             },
             body: JSON.stringify({
-               email: companyData?.email,
-               website: companyData?.website,
+               email: profileData?.email,
+               website: profileData?.website,
             }),
          }
       );
@@ -177,7 +177,7 @@ export default function PayoutsForm() {
             .from("stripe_connect")
             .insert({
                id: uuid(),
-               company_id: companyId,
+               profile_id: profileId,
                connect_account_id: newAccountData.account.id,
             })
             .select("id");

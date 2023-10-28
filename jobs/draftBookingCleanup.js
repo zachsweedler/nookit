@@ -29,7 +29,7 @@ client.defineJob({
                .from("bookings")
                .delete()
                .lte("created_at", oneWeekAgo)
-               .eq("status", "draft")
+               .eq("status", "Draft")
                .select();
             if (error) {
                await io.logger.error('error getting draft bookings', error)

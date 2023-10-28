@@ -19,10 +19,10 @@ import LocationAmenities from "./steps/LocationAmenities";
 import NookPrice from "./steps/NookPrice";
 import NookImages from "./steps/NookImages";
 import { Button } from "@/styles/Buttons";
-import { useCompanyId } from "@/hooks/client-side/useCompanyId";
+import { useProfileId } from "@/hooks/client-side/useProfileId";
 import { restartForm } from "@/slices/nookFormSlice";
 import { useUserId } from "@/hooks/client-side/useUserId";
-import MissingCompanyInfo from "./steps/MissingCompanyInfo";
+import MissingProfileInfo from "./steps/MissingProfileInfo";
 import LocationAbout from "./steps/LocationAbout";
 
 export default function NookForm() {
@@ -32,30 +32,30 @@ export default function NookForm() {
    const dispatch = useDispatch();
    const router = useRouter();
    const supabase = createClientComponentClient();
-   const companyId = useCompanyId(supabase);
+   const profileId = useProfileId(supabase);
    const userId = useUserId(supabase);
-   const [nullCompanyFields, setNullCompanyFields] = useState([]);
+   const [nullProfileFields, setNullProfileFields] = useState([]);
    const [hasPaymentMethod, setHasPaymentMethod] = useState(false);
    const [customerId, setCustomerId] = useState();
 
    const validationSchema = yup.object().shape({
       first_name: yup.string().when([], {
-         is: () => nullCompanyFields.includes("first_name"),
+         is: () => nullProfileFields.includes("first_name"),
          then: () => yup.string().required("First name is required."),
          otherwise: () => yup.string().nullable().notRequired(),
       }),
       last_name: yup.string().when([], {
-         is: () => nullCompanyFields.includes("last_name"),
+         is: () => nullProfileFields.includes("last_name"),
          then: () => yup.string().required("Last name is required."),
          otherwise: () => yup.string().nullable().notRequired(),
       }),
       name: yup.string().when([], {
-         is: () => nullCompanyFields.includes("name"),
-         then: () => yup.string().required("Company name is required."),
+         is: () => nullProfileFields.includes("name"),
+         then: () => yup.string().required("Profile name is required."),
          otherwise: () => yup.string().nullable().notRequired(),
       }),
       website: yup.string().when([], {
-         is: () => nullCompanyFields.includes("website"),
+         is: () => nullProfileFields.includes("website"),
          then: () =>
             yup
                .string()
@@ -64,7 +64,7 @@ export default function NookForm() {
          otherwise: () => yup.string().nullable().notRequired(),
       }),
       industry: yup.string().when([], {
-         is: () => nullCompanyFields.includes("industry"),
+         is: () => nullProfileFields.includes("industry"),
          then: () => yup.string().required("Industry is required."),
          otherwise: () => yup.string().nullable().notRequired(),
       }),
@@ -125,9 +125,9 @@ export default function NookForm() {
 
    const onSubmit = async (formState) => {
       setLoading(true);
-      if (nullCompanyFields.length > 0) {
-         const upsertMissingCompanyData = {
-            id: companyId,
+      if (nullProfileFields.length > 0) {
+         const upsertMissingProfileData = {
+            id: profileId,
             user_id: userId,
          };
          const fieldsToCheck = [
@@ -139,21 +139,21 @@ export default function NookForm() {
          ];
          fieldsToCheck.forEach((key) => {
             if (formData[key] !== undefined) {
-               upsertMissingCompanyData[key] = formData[key];
+               upsertMissingProfileData[key] = formData[key];
             }
          });
-         const { error: companyError } = await supabase
-            .from("company_profiles")
-            .upsert(upsertMissingCompanyData);
+         const { error: profileError } = await supabase
+            .from("profiles")
+            .upsert(upsertMissingProfileData);
 
-         if (companyError) {
-            console.log("error upserting company data", companyError);
+         if (profileError) {
+            console.log("error upserting profile data", profileError);
          }
       }
       const { error } = await supabase.from("nooks").upsert({
          id: formValuesRedux.id,
          status: "listed",
-         company_id: companyId,
+         profile_id: profileId,
          user_id: userId,
          price: formValuesRedux.price,
          price_type: formValuesRedux.price_type,
@@ -199,7 +199,7 @@ export default function NookForm() {
    
    const nookMenu = ["Pricing", "Nook Images"];
 
-   // fetch missing company profile fields
+   // fetch missing profile profile fields
    useEffect(() => {
       const orderedFields = [
          "logo",
@@ -209,10 +209,10 @@ export default function NookForm() {
          "industry",
          "website",
       ];
-      const fetchNullCompanyData = async () => {
+      const fetchNullProfileData = async () => {
          if (userId) {
             const { data, error } = await supabase
-               .from("company_profiles")
+               .from("profile_profiles")
                .select("name, website, industry, logo, first_name, last_name")
                .eq("user_id", userId);
             if (error) {
@@ -224,11 +224,11 @@ export default function NookForm() {
                      nullFields.push(field);
                   }
                });
-               setNullCompanyFields(nullFields);
+               setNullProfileFields(nullFields);
             }
          }
       };
-      fetchNullCompanyData();
+      fetchNullProfileData();
       if (userId) {
          const checkCustomerExists = async () => {
             const { data, error } = await supabase
@@ -287,7 +287,7 @@ export default function NookForm() {
             <form onSubmit={methods.handleSubmit(onSubmit)}>
                <MainGrid>
                   <SectionGrid>
-                     {nullCompanyFields.length > 0 && (
+                     {nullProfileFields.length > 0 && (
                         <FormGrid>
                            <LocationTrack>
                               <StickyHeader
@@ -295,12 +295,12 @@ export default function NookForm() {
                                  $weight="semibold"
                                  color="primary.brand.b600"
                               >
-                                 COMPANY
+                                 PROFILE
                               </StickyHeader>
                            </LocationTrack>
                            <Steps>
-                              <MissingCompanyInfo
-                                 nullCompanyFields={nullCompanyFields}
+                              <MissingProfileInfo
+                                 nullProfileFields={nullProfileFields}
                               />
                            </Steps>
                         </FormGrid>

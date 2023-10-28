@@ -25,7 +25,7 @@ export default function RequestSummary({ draftData }) {
                />
                <TitleWrapper>
                   <Para size="textmd" $weight="semibold" color="black">
-                     {draftData?.nooks.location_name}
+                     {draftData?.nooks.locations.name}
                   </Para>
                   <LocationWrapper>
                      <Image
@@ -41,10 +41,10 @@ export default function RequestSummary({ draftData }) {
                         color="black"
                         style={{ textOverflow: "ellipsis" }}
                      >
-                        {draftData?.nooks.location_address},{" "}
-                        {draftData?.nooks.location_city},{" "}
-                        {draftData?.nooks.location_state_code},{" "}
-                        {draftData?.nooks.location_zip}
+                        {draftData?.nooks.locations.address},{" "}
+                        {draftData?.nooks.locations.city},{" "}
+                        {draftData?.nooks.locations.state_code},{" "}
+                        {draftData?.nooks.locations.zip}
                      </Para>
                   </LocationWrapper>
                </TitleWrapper>

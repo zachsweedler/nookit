@@ -28,12 +28,14 @@ import {
    heading,
    button
 } from "./emailStyles";
+
+
 export const CompletedBooking = ({
    guestMailto = "mailto: zachryanco@gmail.com",
-   guestLogo = "https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/fallback_images/fallback_company_logo.png",
+   guestLogo = "https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/fallback_images/fallback_profile_logo.png",
    guestName = "Rowing Blazers",
    hostMailto = "mailto: zachryanco@gmail.com",
-   hostLogo = "https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/fallback_images/fallback_company_logo.png",
+   hostLogo = "https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/fallback_images/fallback_profile_logo.png",
    hostName = "Devoción",
    locationName = "Devoción, Dumbo",
    locationAddress = "100 Front St, Brooklyn, NY, 11201",

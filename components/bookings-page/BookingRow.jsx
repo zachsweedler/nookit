@@ -47,15 +47,15 @@ export default function BookingRow({ ...props }) {
                <Host>
                   <Image
                      loader={supabaseLoader}
-                     alt="host-company-logo"
+                     alt="host-profile-logo"
                      src={
                         props.guestUserId === props.userId
                            ? props.hostLogo
                               ? `user-images/${props.hostLogo}`
-                              : "/assets/fallback_images/fallback_company_logo.svg"
+                              : "/assets/fallback_images/fallback_profile_logo.svg"
                            : props.guestLogo
                            ? `user-images/${props.guestLogo}`
-                           : "/assets/fallback_images/fallback_company_logo.svg"
+                           : "/assets/fallback_images/fallback_profile_logo.svg"
                      }
                      width={30}
                      height={30}

@@ -11,7 +11,7 @@ import NavDropdown from "./NavDropdown";
 import { useDispatch, useSelector } from "react-redux";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { updateLogo } from "@/slices/companyLogoSlice";
+import { updateLogo } from "@/slices/profileLogoSlice";
 import supabaseLoader from "@/supabase-image-loader";
 import { useUserSession } from "@/hooks/client-side/useUserSession";
 import { restartForm } from "@/slices/nookFormSlice";
@@ -23,7 +23,7 @@ export default function NavPublic() {
    const [loading, setLoading] = useState(true);
    const [isScrolled, setIsScrolled] = useState(false);
    const [isDesktop, setIsDesktop] = useState();
-   const logo = useSelector((state) => state.companyLogo.path);
+   const logo = useSelector((state) => state.profileLogo.path);
    const dispatch = useDispatch();
    const supabase = createClientComponentClient();
    const session = useUserSession(supabase);
@@ -57,7 +57,7 @@ export default function NavPublic() {
          } = await supabase.auth.getUser();
          if (user) {
             const { data, error } = await supabase
-               .from("company_profiles")
+               .from("profiles")
                .select("logo")
                .eq("user_id", user?.id);
             if (error) {
@@ -74,7 +74,7 @@ export default function NavPublic() {
    useEffect(() => {
       const path = logo?.path
          ? `user-images/${logo?.path}`
-         : "assets/fallback_images/fallback_company_logo.svg";
+         : "assets/fallback_images/fallback_profile_logo.svg";
       setImgSrc(path);
    }, [logo?.path, loading]);
 

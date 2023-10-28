@@ -30,11 +30,11 @@ export default function Summary() {
                .from("bookings")
                .select(
                   `*,
-                bookings_guest_company_id_fkey(name, logo),
-                bookings_host_company_id_fkey(name, logo),
-                nooks(
-                   id, location_images, location_name, location_address, location_city, location_state_code, location_zip, price, price_type, company_id
-                )`
+                bookings_guest_profile_id_fkey(name, logo),
+                bookings_host_profile_id_fkey(name, logo),
+                nooks(price, price_type, profile_id, locations(
+                   id, images, name, address, city, state_code, zip, 
+                ))`
                )
                .order("created_at", { ascending: false })
                .neq("status", "draft")
@@ -166,14 +166,14 @@ export default function Summary() {
                      <Image
                         loader={supabaseLoader}
                         alt=""
-                        src={`/user-images/${booking?.nooks?.location_images[0]}`}
+                        src={`/user-images/${booking?.nooks?.images[0]}`}
                         width={60}
                         height={60}
                         style={{ objectFit: "cover", borderRadius: "5px" }}
                      />
                      <TitleWrapper>
                         <Para size="textmd" $weight="semibold" color="black">
-                           {booking?.nooks?.location_name}
+                           {booking?.nooks?.name}
                         </Para>
                         <LocationWrapper>
                            <Image
@@ -189,10 +189,10 @@ export default function Summary() {
                               color="black"
                               style={{ textOverflow: "ellipsis" }}
                            >
-                              {booking?.nooks?.location_address},{" "}
-                              {booking?.nooks?.location_city},{" "}
-                              {booking?.nooks?.location_state_code},{" "}
-                              {booking?.nooks?.location_zip}
+                              {booking?.nooks?.address},{" "}
+                              {booking?.nooks?.city},{" "}
+                              {booking?.nooks?.state_code},{" "}
+                              {booking?.nooks?.zip}
                            </Para>
                         </LocationWrapper>
                      </TitleWrapper>

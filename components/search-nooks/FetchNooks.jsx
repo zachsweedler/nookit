@@ -18,7 +18,7 @@ export default function FetchNooks() {
          setLoading(true);
          const { data, error } = await supabase
             .from("nooks")
-            .select(`*, company_profiles(user_id, name, logo)`)
+            .select(`*, profiles(user_id, name, logo)`)
             .order('created_at', { ascending: false })
             .eq('status', 'listed');
          if (error) {
@@ -48,9 +48,9 @@ export default function FetchNooks() {
                      name={nook.location_name}
                      city={nook.location_city}
                      state={nook.location_state_code}
-                     hostId={nook.company_id}
-                     logo={nook.company_profiles.logo}
-                     hostCompany={nook.company_profiles.name}
+                     hostId={nook.profile_id}
+                     logo={nook.profiles.logo}
+                     hostProfile={nook.profiles.name}
                   />
                ))}
             </Grid>

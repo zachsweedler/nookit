@@ -21,7 +21,7 @@ export default function ViewNook() {
          const fetchNook = async () => {
             const { data, error } = await supabase
                .from("nooks")
-               .select(`*, company_profiles(name, logo)`)
+               .select(`*, locations(*), profiles(name, logo)`)
                .eq("id", params?.slug);
             if (error) {
                console.error("error fetching nook", error);

@@ -31,10 +31,10 @@ export default function GuestBookings() {
                .from("bookings")
                .select(
                   `*,
-                bookings_guest_company_id_fkey(name, logo),
-                bookings_host_company_id_fkey(name, logo),
-                nooks(
-                   id, location_images, location_name, location_address, location_city, location_state_code, location_zip, price, company_id
+                bookings_guest_profile_id_fkey(name, logo),
+                bookings_host_profile_id_fkey(name, logo),
+                nooks(price, price_type, profile_id, locations(
+                   id, images, name, address, city, state_code, zip)
                 )`
                )
                .order("created_at", { ascending: false })
@@ -84,21 +84,21 @@ export default function GuestBookings() {
                            hostUserId={booking.host_user_id}
                            guestUserId={booking.guest_user_id}
                            userId={userId}
-                           locationImage={booking.nooks.location_images?.[0]}
-                           locationName={booking.nooks.location_name}
-                           locationAddress={booking.nooks.location_address}
-                           locationCity={booking.nooks.location_city}
-                           locationState={booking.nooks.location_state_code}
-                           locationZip={booking.nooks.location_zip}
-                           hostName={booking.bookings_host_company_id_fkey.name}
-                           hostLogo={booking.bookings_host_company_id_fkey.logo}
+                           locationImage={booking.nooks.locations?.images?.[0]}
+                           locationName={booking.nooks.locations?.name}
+                           locationAddress={booking.nooks.locations?.address}
+                           locationCity={booking.nooks.locations?.city}
+                           locationState={booking.nooks.locations?.state_code}
+                           locationZip={booking.nooks.locations?.zip}
+                           hostName={booking.bookings_host_profile_id_fkey.name}
+                           hostLogo={booking.bookings_host_profile_id_fkey.logo}
                            guestName={
-                              booking.bookings_guest_company_id_fkey.name
+                              booking.bookings_guest_profile_id_fkey.name
                            }
                            guestLogo={
-                              booking.bookings_guest_company_id_fkey.logo
+                              booking.bookings_guest_profile_id_fkey.logo
                            }
-                           dailyRate={booking.nooks.daily_rate}
+                           // dailyRate={booking.nooks.price_type}
                            bookingPrice={booking.booking_price}
                            bookingPriceTotalBeforeTax={
                               booking.booking_price_total_before_taxes

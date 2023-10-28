@@ -32,8 +32,8 @@ export default function Booking() {
                   guest_user_id,
                   guest_plan, 
                   guest_questions,
-                  bookings_guest_company_id_fkey(name, logo, email),
-                  bookings_host_company_id_fkey(name, logo)
+                  bookings_guest_profile_id_fkey(name, logo, email),
+                  bookings_host_profile_id_fkey(name, logo)
                `
                )
                .eq("id", params.slug);
@@ -53,6 +53,55 @@ export default function Booking() {
    const bookingStatus =
       booking?.status?.charAt(0).toUpperCase() + booking?.status?.slice(1);
 
+   function getBookingStatusMessage(userId, booking, bookingStatus) {
+      if (userId === booking?.host_user_id) {
+         return getHostMessage(bookingStatus);
+      } else {
+         return getGuestMessage(booking, bookingStatus);
+      }
+   }
+
+   function getHostMessage(bookingStatus) {
+      switch (bookingStatus) {
+         case "Pending":
+            return "Waiting for you to accept or decline.";
+         case "Accepted":
+            return "You accepted this booking.";
+         case "Declined":
+            return "You declined this booking.";
+         case "Completed":
+            return "This booking has been completed.";
+         case "Canceled":
+            return "This booking has been canceled.";
+         default:
+            return "Unknown bookingStatus";
+      }
+   }
+
+   function getGuestMessage(booking, bookingStatus) {
+      switch (bookingStatus) {
+         case "Pending":
+            return "Waiting for host to accept or decline.";
+         case "Accepted":
+            return `Get ready for ${new Date(
+               booking?.start_date
+            ).toLocaleDateString("en-us", {
+               weekday: "long",
+               year: "numeric",
+               month: "short",
+               day: "numeric",
+            })}! The host accepted your booking.`;
+         case "Declined":
+            return "The host declined this booking.";
+         case "Completed":
+            return "This booking has been completed.";
+         case "Canceled":
+            return "This booking has been canceled.";
+         default:
+            return "Unknown bookingStatus";
+      }
+   }
+
    return (
       <>
          {loading ? (
@@ -71,10 +120,10 @@ export default function Booking() {
                                     alt=""
                                     loader={supabaseLoader}
                                     src={
-                                       booking?.bookings_host_company_id_fkey
+                                       booking?.bookings_host_profile_id_fkey
                                           ?.logo
-                                          ? `user-images/${booking?.bookings_host_company_id_fkey?.logo}`
-                                          : "/assets/fallback_images/fallback_company_logo.svg"
+                                          ? `user-images/${booking?.bookings_host_profile_id_fkey?.logo}`
+                                          : "/assets/fallback_images/fallback_profile_logo.svg"
                                     }
                                     width={60}
                                     height={60}
@@ -100,7 +149,9 @@ export default function Booking() {
                                           color="black"
                                        >
                                           {
-                                             booking?.bookings_host_company_id_fkey?.name
+                                             booking
+                                                ?.bookings_host_profile_id_fkey
+                                                ?.name
                                           }
                                        </Para>
                                     </Link>
@@ -117,10 +168,10 @@ export default function Booking() {
                                     alt=""
                                     loader={supabaseLoader}
                                     src={
-                                       booking?.bookings_guest_company_id_fkey
+                                       booking?.bookings_guest_profile_id_fkey
                                           ?.logo
-                                          ? `user-images/${booking?.bookings_guest_company_id_fkey?.logo}`
-                                          : "/assets/fallback_images/fallback_company_logo.svg"
+                                          ? `user-images/${booking?.bookings_guest_profile_id_fkey?.logo}`
+                                          : "/assets/fallback_images/fallback_profile_logo.svg"
                                     }
                                     width={60}
                                     height={60}
@@ -147,7 +198,7 @@ export default function Booking() {
                                        >
                                           {
                                              booking
-                                                ?.bookings_guest_company_id_fkey
+                                                ?.bookings_guest_profile_id_fkey
                                                 ?.name
                                           }
                                        </Para>
@@ -173,39 +224,11 @@ export default function Booking() {
                               $weight="regular"
                               color="primary.grey.g800"
                            >
-                              {userId === booking?.host_user_id
-                                 ? bookingStatus === "Pending"
-                                    ? "Waiting for you to accept or decline."
-                                    : bookingStatus === "Accepted"
-                                    ? "You accepted this booking."
-                                    : bookingStatus === "Declined"
-                                    ? "You declined this booking."
-                                    : bookingStatus === "Completed"
-                                    ? "This booking has been completed."
-                                    : bookingStatus === "Canceled"
-                                    ? "This booking has been canceled."
-                                    : // Add more conditions for other bookingStatuses here
-                                      "Unknown bookingStatus"
-                                 : bookingStatus === "Pending"
-                                 ? "Waiting for host to accept or decline."
-                                 : bookingStatus === "Accepted"
-                                 ? `Get ready for ${new Date(booking?.start_date).toLocaleDateString(
-                                      "en-us",
-                                      {
-                                         weekday: "long",
-                                         year: "numeric",
-                                         month: "short",
-                                         day: "numeric",
-                                      }
-                                   )}! The host accepted your booking.`
-                                 : bookingStatus === "Declined"
-                                 ? "The host declined this booking."
-                                 : bookingStatus === "Complete"
-                                 ? "This booking has been completed."
-                                 : bookingStatus === "Canceled"
-                                 ? "This booking has been canceled."
-                                 : // Add more conditions for other bookingStatuses here
-                                   "Unknown bookingStatus"}
+                              {getBookingStatusMessage(
+                                 userId,
+                                 booking,
+                                 bookingStatus
+                              )}
                            </Para>
                         </Info>
                      </BookingInfoSection>
@@ -249,7 +272,7 @@ export default function Booking() {
                         booking?.guest_questions !== null && (
                            <BookingInfoSection>
                               <a
-                                 href={`mailto: ${booking?.bookings_guest_company_id_fkey?.email}`}
+                                 href={`mailto: ${booking?.bookings_guest_profile_id_fkey?.email}`}
                               >
                                  <Para
                                     $isLink={true}

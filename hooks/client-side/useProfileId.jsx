@@ -1,24 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
 
-export const useCompanyId = (supabase) => {
-   const [companyId, setCompanyId] = useState();
+export const useProfileId = (supabase) => {
+   const [profileId, setProfileId] = useState();
    
    useEffect(() => {
-      const fetchCompany = async () => {
+      const fetchProfile = async () => {
          const {
             data: { user },
          } = await supabase.auth.getUser();
          if (user) {
             const { data } = await supabase
-               .from("company_profiles")
+               .from("profiles")
                .select("id")
                .eq("user_id", user?.id);
-            setCompanyId(data[0].id);
+            setProfileId(data[0].id);
          }
       };
-      fetchCompany();
+      fetchProfile();
    }, [supabase]);
 
-   return companyId;
+   return profileId;
 };

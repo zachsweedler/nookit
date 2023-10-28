@@ -1,6 +1,6 @@
 "use client";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import companyLogoReducer from "./slices/companyLogoSlice"
+import profileLogoReducer from "./slices/profileLogoSlice"
 import nookFormReducer from "./slices/nookFormSlice";
 import viewNookReducer from "./slices/viewNookSlice";
 import bookingRequestReducer from "./slices/bookingRequestSlice";
@@ -16,7 +16,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
    nookForm: nookFormReducer,
-   companyLogo: companyLogoReducer,
+   profileLogo: profileLogoReducer,
    viewNook: viewNookReducer,
    bookingRequest: bookingRequestReducer
 });

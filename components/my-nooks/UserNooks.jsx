@@ -7,7 +7,7 @@ import Container from "@/styles/Containers";
 import { useDispatch } from "react-redux";
 import { restartForm, setFormValues } from "@/slices/nookFormSlice";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useCompanyId } from "@/hooks/client-side/useCompanyId";
+import { useProfileId } from "@/hooks/client-side/useProfileId";
 import EmptyState from "../empty-state/EmptyState";
 import { v4 as uuid } from "uuid";
 import Loading from "../loading/Loading";
@@ -16,22 +16,22 @@ export default function UserNooks() {
    const dispatch = useDispatch();
    const [nooks, setNooks] = useState();
    const supabase = createClientComponentClient();
-   const companyId = useCompanyId(supabase);
+   const profileId = useProfileId(supabase);
    const [missingInfo, setMissingInfo] = useState();
    const [hasConnectAccount, setHasConnectAccount] = useState();
    const [connectAccountId, setConnectAccountId] = useState();
-   const [companyData, setCompanyData] = useState();
+   const [profileData, setProfileData] = useState();
    const [loading, setLoading] = useState(true);
    const [missingLoading, setMissingLoading] = useState(true);
 
    useEffect(() => {
-      if (companyId) {
+      if (profileId) {
          const fetchUserNooks = async () => {
             const { data, error } = await supabase
                .from("nooks")
-               .select(`*`)
+               .select(`*, locations(*)`)
                .order("created_at", { ascending: false })
-               .eq("company_id", companyId);
+               .eq("profile_id", profileId);
             if (error) {
                console.error("error fetching nooks", error);
             } else {
@@ -42,7 +42,7 @@ export default function UserNooks() {
             const { data, error } = await supabase
                .from("stripe_connect")
                .select(`connect_account_id`)
-               .eq("company_id", companyId);
+               .eq("profile_id", profileId);
             if (error) {
                console.error("error fetching connect account Id", error);
                setHasConnectAccount(false);
@@ -54,27 +54,27 @@ export default function UserNooks() {
                console.log("connect Id fetched", data);
             }
          };
-         const getCompanyData = async () => {
+         const getProfileData = async () => {
             const { data, error } = await supabase
-               .from("company_profiles")
+               .from("profiles")
                .select("name, email, industry, website")
-               .eq("id", companyId);
+               .eq("id", profileId);
             if (error) {
-               console.log("error getting company data", error);
+               console.log("error getting profile data", error);
             } else {
-               setCompanyData(data[0]);
+               setProfileData(data[0]);
             }
          };
          const fetchData = async () => {
             setLoading(true);
             await fetchUserNooks();
             await fetchConnectAccountId();
-            await getCompanyData();
+            await getProfileData();
             setLoading(false);
          };
          fetchData();
       }
-   }, [supabase, companyId]);
+   }, [supabase, profileId]);
 
    useEffect(() => {
       if (connectAccountId) {
@@ -116,8 +116,8 @@ export default function UserNooks() {
                "Content-Type": "application/json",
             },
             body: JSON.stringify({
-               email: companyData?.email,
-               website: companyData?.website,
+               email: profileData?.email,
+               website: profileData?.website,
             }),
          }
       );
@@ -129,7 +129,7 @@ export default function UserNooks() {
             .from("stripe_connect")
             .insert({
                id: uuid(),
-               company_id: companyId,
+               profile_id: profileId,
                connect_account_id: newAccountData.account.id,
             })
             .select("id");
@@ -217,12 +217,12 @@ export default function UserNooks() {
                               <NookCard
                                  key={index}
                                  id={nook.id}
-                                 images={nook.location_images}
-                                 name={nook.location_name}
-                                 city={nook.location_city}
-                                 state={nook.location_state_code}
+                                 images={nook.locations.images}
+                                 name={nook.locations.name}
+                                 city={nook.locations.city}
+                                 state={nook.locations.state_code}
                                  hostId={nook.host_id}
-                                 hostCompany={companyData?.name || null}
+                                 hostProfile={profileData?.name || null}
                                  onClick={() => dispatch(setFormValues(nook))}
                               />
                            ))}

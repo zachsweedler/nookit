@@ -1,8 +1,8 @@
 'use client'
 import { createSlice } from '@reduxjs/toolkit';
 
-const companyLogoSlice = createSlice({
-  name: 'companyLogo',
+const profileLogoSlice = createSlice({
+  name: 'profileLogo',
   initialState: {
     path: null
   },
@@ -13,6 +13,6 @@ const companyLogoSlice = createSlice({
   }
 });
 
-export const { updateLogo } = companyLogoSlice.actions;
+export const { updateLogo } = profileLogoSlice.actions;
 
-export default companyLogoSlice.reducer;
+export default profileLogoSlice.reducer;

@@ -17,20 +17,20 @@ export default function HostedBy () {
                         <Image
                            alt=""
                            loader={supabaseLoader}
-                           src={nook?.company_profiles?.logo ? `/user-images/${nook.company_profiles.logo}` : "/assets/fallback_images/fallback_company_logo.svg"}
+                           src={nook?.profiles?.logo ? `/user-images/${nook.profiles.logo}` : "/assets/fallback_images/fallback_profile_logo.svg"}
                            fill={true}
                            style={{ objectFit: "cover" }}
                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                      </HostLogoWrapper>
-                     <Link href={`/profiles/${nook.company_id}`}>
+                     <Link href={`/profiles/${nook.profile_id}`}>
                         <Para
                            $isLink={true}
                            size="textmd"
                            $weight="medium"
                            color="black"
                         >
-                           Hosted by {nook?.company_profiles?.name}
+                           Hosted by {nook?.profiles?.name}
                         </Para>
                      </Link>
                   </HostWrapper>

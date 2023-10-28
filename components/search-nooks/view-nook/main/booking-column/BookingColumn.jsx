@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useCompanyId } from "@/hooks/client-side/useCompanyId";
+import { useProfileId } from "@/hooks/client-side/useProfileId";
 import { useUserId } from "@/hooks/client-side/useUserId";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
@@ -38,7 +38,7 @@ export default function BookingColumn() {
    const params = useParams();
    const supabase = createClientComponentClient();
    const userId = useUserId(supabase);
-   const guestCompanyId = useCompanyId(supabase);
+   const guestProfileId = useProfileId(supabase);
    const [isDesktop, setIsDesktop] = useState();
    const theme = useTheme();
 
@@ -241,7 +241,7 @@ export default function BookingColumn() {
          return;
       }
       const hostId = nook.user_id;
-      const hostCompanyId = nook.company_id;
+      const hostProfileId = nook.profile_id;
       if (hostId) {
          const { data, error } = await supabase
             .from("bookings")
@@ -251,8 +251,8 @@ export default function BookingColumn() {
                nook_id: params.slug, // if an attacker trying IDOR, they will be redirected to a new page with null field states.
                guest_user_id: userId,
                host_user_id: hostId,
-               guest_company_id: guestCompanyId,
-               host_company_id: hostCompanyId,
+               guest_profile_id: guestProfileId,
+               host_profile_id: hostProfileId,
                guest_customer_id: guestCustomerId,
                host_customer_id: hostCustomerId,
                host_connect_account_id: hostConnectAccountId,

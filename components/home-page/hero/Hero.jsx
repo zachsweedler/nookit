@@ -20,7 +20,7 @@ export default function Hero() {
       const fetchFeaturedNooks = async () => {
          const {data, error} = await supabase
             .from("nooks")
-            .select(`*, company_profiles(user_id, name, logo)`)
+            .select(`*, locations(*), profiles(user_id, name, logo)`)
             .order('created_at', { ascending: false })
             .eq('status', 'listed');
          if (error) {
@@ -68,16 +68,17 @@ export default function Hero() {
                         homepage={true}
                         key={index}
                         id={nook.id}
-                        images={nook?.location_images}
-                        name={nook.location_name}
-                        city={nook.location_city}
-                        state={nook.location_state_code}
-                        hostId={nook.company_id}
-                        logo={nook.company_profiles.logo}
-                        hostCompany={nook.company_profiles.name}
+                        images={nook?.locations.images}
+                        name={nook.locations.name}
+                        city={nook.locations.city}
+                        state={nook.locations.state_code}
+                        hostId={nook.profile_id}
+                        logo={nook.profiles.logo}
+                        hostProfile={nook.profiles.name}
                      />
                  ))} 
             </Marquee>
+            
          </Wrapper>
       </>
    );

@@ -1,6 +1,6 @@
 "use client";
 import Container from "@/styles/Containers";
-import { H3, H4, H5, H6, Para } from "@/styles/Typography";
+import { H5, Para } from "@/styles/Typography";
 import styled from "styled-components";
 import NookCard from "../search-nooks/NookCard";
 import { useParams } from "next/navigation";
@@ -13,16 +13,16 @@ export default function Profile() {
    const supabase = createClientComponentClient();
    const params = useParams();
    const [nooks, setNooks] = useState([]);
-   const [company, setCompany] = useState([]);
+   const [profile, setProfile] = useState([]);
 
    useEffect(() => {
-      const fetchCompanyNooks = async () => {
+      const fetchProfileNooks = async () => {
          const { data, error } = await supabase
             .from("nooks")
             .select(`*`)
             .order("created_at", { ascending: false })
             .eq("status", "listed")
-            .eq("company_id", params.slug);
+            .eq("profile_id", params.slug);
          if (error) {
             console.log("error getting nooks", error);
          } else {
@@ -30,26 +30,26 @@ export default function Profile() {
             setNooks(data);
          }
       };
-      fetchCompanyNooks();
+      fetchProfileNooks();
    }, [supabase, params.slug]);
 
    useEffect(() => {
-      const fetchCompany = async () => {
+      const fetchProfile = async () => {
          const { data, error } = await supabase
-            .from("company_profiles")
+            .from("profiles")
             .select("created_at, about, user_id, name, logo, industry, website")
             .eq("id", params.slug);
          if (error) {
-            console.log("error getting company", error);
+            console.log("error getting profile", error);
          } else {
             console.log("data", data);
-            setCompany(data[0]);
+            setProfile(data[0]);
          }
       };
-      fetchCompany();
+      fetchProfile();
    }, [supabase, params.slug]);
 
-   const date = new Date(company?.created_at);
+   const date = new Date(profile?.created_at);
    const monthNames = [
       "January",
       "February",
@@ -66,9 +66,9 @@ export default function Profile() {
    ];
    const joinedDate = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
 
-   let companyWebsite = company?.website?.toString();
-   if (companyWebsite && companyWebsite.startsWith("https://")) {
-      companyWebsite = companyWebsite.slice(8);
+   let profileWebsite = profile?.website?.toString();
+   if (profileWebsite && profileWebsite.startsWith("https://")) {
+      profileWebsite = profileWebsite.slice(8);
    }
 
    return (
@@ -80,36 +80,36 @@ export default function Profile() {
                      <Image
                         loader={supabaseLoader}
                         alt="profile-avatar"
-                        src={`user-images/${company.logo}`}
+                        src={`user-images/${profile?.logo}`}
                         fill={true}
                         style={{ objectFit: "cover" }}
                      />
                   </ProfileAvatar>
-                  <H5>{company.name}</H5>
+                  <H5>{profile?.name}</H5>
                   <Para size="textmd" $weight="regular">
                      Joined {joinedDate}
                   </Para>
                   <Para size="textmd" $weight="regular">
-                     {company.industry}
+                     {profile?.industry}
                   </Para>
-                  <a href={`https://${companyWebsite}`} target="_blank">
+                  <a href={`https://${profileWebsite}`} target="_blank">
                      <Para
                         $isLink={true}
                         size="textmd"
                         $weight="regular"
                         color="primary.brand.b600"
                      >
-                        {company.website}
+                        {profile?.website}
                      </Para>
                   </a>
                </Header>
-               {company.about && (
+               {profile?.about && (
                   <Section>
                      <Para size="textlg" $weight="medium">
                         About
                      </Para>
                      <Para size="textmd" $weight="regular">
-                        {company.about}
+                        {profile?.about}
                      </Para>
                   </Section>
                )}
@@ -127,9 +127,9 @@ export default function Profile() {
                               name={nook.location_name}
                               city={nook.location_city}
                               state={nook.location_state_code}
-                              hostId={company.user_id}
-                              logo={company.logo}
-                              hostCompany={company.name}
+                              hostId={profile.user_id}
+                              logo={profile?.logo}
+                              hostProfile={profile?.name}
                            />
                         ))}
                      </NooksGrid>

@@ -14,7 +14,7 @@ export default function NookCard({
    city,
    state,
    hostId,
-   hostCompany,
+   hostProfile,
    logo,
    homepage,
 }) {
@@ -59,7 +59,7 @@ export default function NookCard({
             </HostLogoWrapper>
             <Link href={`/profiles/${hostId}`}>
                <Para $isLink={true} size={homepage ? "textmd" : "textsm"} $weight="medium" color="black">
-                  {hostCompany}
+                  {hostProfile}
                </Para>
             </Link>
          </HostWrapper>

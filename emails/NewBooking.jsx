@@ -28,8 +28,9 @@ import {
    button,
 } from "./emailStyles";
 
+
 export const NewBooking = ({
-   guestLogo = "https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/fallback_images/fallback_company_logo.svg?t=2023-09-24T15%3A01%3A21.081Z",
+   guestLogo = "https://aocthgqmtpklqubodylf.supabase.co/storage/v1/object/public/assets/fallback_images/fallback_profile_logo.svg?t=2023-09-24T15%3A01%3A21.081Z",
    guestName = "Rowing Blazers",
    locationName = "Devoción, Dumbo",
    locationAddress = "100 Front St, Brooklyn, NY, 11201",

@@ -35,10 +35,10 @@ client.defineJob({
       table: "bookings",
       filter: {
          old_record: {
-            status: ["accepted"],
+            status: ["Accepted"],
          },
          record: {
-            status: ["completed"],
+            status: ["Completed"],
          },
       },
    }),
@@ -48,9 +48,9 @@ client.defineJob({
          "fetch-host-data",
          async (supabaseClient) => {
             const { data, error } = await supabaseClient
-               .from("company_profiles")
+               .from("profiles")
                .select("email, name, logo")
-               .eq("id", payload.record.host_company_id);
+               .eq("id", payload.record.host_profile_id);
             if (error) {
                await io.logger.error("error getting host data", error);
             } else {
@@ -64,9 +64,9 @@ client.defineJob({
          "fetch-guest-data",
          async (supabaseClient) => {
             const { data, error } = await supabaseClient
-               .from("company_profiles")
+               .from("profiles")
                .select("email, name, logo")
-               .eq("id", payload.record.guest_company_id);
+               .eq("id", payload.record.guest_profile_id);
             if (error) {
                await io.logger.error("error getting guest data", error);
             } else {
@@ -76,23 +76,24 @@ client.defineJob({
          }
       );
 
+      
       const locationData = await io.supabase.runTask(
          "fetch-location-data",
          async (supabaseClient) => {
             const { data, error } = await supabaseClient
                .from("nooks")
-               .select("location_name, location_address, location_images")
+               .select("locations(name, address, images)")
                .eq("id", payload.record.nook_id);
             if (error) {
                await io.logger.error("error getting location data", error);
             } else {
-               await io.logger.info("location data retrieved", data);
+               await io.logger.info("location data retrieved", data[0].locations);
             }
-            return data[0];
+            return data[0].locations;
          }
       );
 
-      const hostEmail = await io.resend.sendEmail("email-host", {
+     await io.resend.sendEmail("email-host", {
          to: [hostData.email],
          subject: `Your booking with ${guestData.name} is complete!`,
          from: "Nookit <team@nookit.app>",
@@ -104,9 +105,9 @@ client.defineJob({
             hostMailto: `mailto:${hostData.email}`,
             hostLogo: hostData.logo,
             hostName: hostData.name,
-            locationName: locationData.location_name,
+            locationName: locationData.name,
             locationAddress: locationData.locaton_address,
-            locationImage: `user-images/${locationData.location_images?.[0]}`,
+            locationImage: `user-images/${locationData.images?.[0]}`,
             startDate: payload.record.start_date,
             endDate: payload.record.end_date,
             dailyRate: payload.record.daily_rate,
@@ -117,7 +118,7 @@ client.defineJob({
       });
      
 
-      const guestEmail = await io.resend.sendEmail("email-guest", {
+      await io.resend.sendEmail("email-guest", {
          to: [guestData.email],
          subject: `Your booking with ${hostData.name} is complete!`,
          from: "Nookit <team@nookit.app>",
@@ -129,9 +130,9 @@ client.defineJob({
             hostMailto: `mailto:${hostData.email}`,
             hostLogo: hostData.logo,
             hostName: hostData.name,
-            locationName: locationData.location_name,
+            locationName: locationData.name,
             locationAddress: locationData.locaton_address,
-            locationImage: `user-images/${locationData.location_images?.[0]}`,
+            locationImage: `user-images/${locationData.images?.[0]}`,
             startDate: payload.record.start_date,
             endDate: payload.record.end_date,
             dailyRate: payload.record.daily_rate,

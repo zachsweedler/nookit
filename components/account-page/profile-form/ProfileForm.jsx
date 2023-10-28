@@ -10,18 +10,20 @@ import Snackbar from "@/styles/mui/Snackbar";
 import Container from "@/styles/Containers";
 import { Para } from "@/styles/Typography";
 import { Divider } from "@/styles/mui/Divider";
-import { CompanyLogoUploader } from "../../image-uploaders/company-logo/CompanyLogoUploader";
+import { ProfileLogoUploader } from "../../image-uploaders/profile-logo/ProfileLogoUploader";
 import Input from "@/styles/Input";
 import Image from "next/image";
 import PageHeader from "../../page-header/PageHeader";
 import Select from "@/styles/Select";
 import { industries } from "@/utils/industries";
 import Loading from "@/components/loading/Loading";
+import { profileTypes } from "@/utils/profileTypes";
+import Textarea from "@/styles/Textarea";
 
 export default function ProfileForm() {
    const supabase = createClientComponentClient();
    const [userId, setUserId] = useState();
-   const [companyId, setCompanyId] = useState();
+   const [profileId, setProfileId] = useState();
    const [formValues, setFormValues] = useState();
    const [success, setSuccess] = useState();
    const [loading, setLoading] = useState();
@@ -42,23 +44,25 @@ export default function ProfileForm() {
             setUserId(data.user.id);
          }
          if (userId) {
-            const { data: companyData, error: errorCompanyData } =
+            const { data: profileData, error: errorProfileData } =
                await supabase
-                  .from("company_profiles")
-                  .select("first_name, last_name, name, industry, website, id")
+                  .from("profiles")
+                  .select("first_name, last_name, name, about, type, industry, email, website, id")
                   .eq("user_id", userId);
-            if (errorCompanyData) {
-               console.error("error getting user", errorCompanyData);
+            if (errorProfileData) {
+               console.error("error getting user", errorProfileData);
             }
-            if (companyData && data) {
-               setCompanyId(companyData[0]?.id || "");
+            if (profileData && data) {
+               setProfileId(profileData[0]?.id || "");
                setFormValues({
-                  first_name: companyData[0].first_name || "",
-                  last_name: companyData[0].last_name || "",
-                  name: companyData[0]?.name || "",
-                  industry: companyData[0].industry || "",
-                  website: companyData[0]?.website || "",
-                  email: data?.user?.email || "",
+                  first_name: profileData[0].first_name || "",
+                  last_name: profileData[0].last_name || "",
+                  name: profileData[0]?.name || "",
+                  industry: profileData[0].industry || "",
+                  website: profileData[0]?.website || "",
+                  email: profileData[0]?.email || "",
+                  about: profileData[0]?.about || "",
+                  type: profileData[0]?.type || "",
                });
             }
          }
@@ -77,6 +81,8 @@ export default function ProfileForm() {
          first_name: "",
          last_name: "",
          email: "",
+         about: "",
+         type: "",
          industry: "",
          name: "",
          website: "",
@@ -87,16 +93,18 @@ export default function ProfileForm() {
    const onSubmit = async (formState) => {
       setLoading(true);
       setSuccess(null);
-      const { error } = await supabase.from("company_profiles").upsert({
-         id: companyId,
+      const { error } = await supabase.from("profiles").upsert({
+         id: profileId,
          name: formState.name,
          website: formState.website,
          industry: formState.industry,
          first_name: formState.first_name,
          last_name: formState.last_name,
+         about: formState.about,
+         type: formState.type
       });
       if (error) {
-         console.error("error updating company profile", error);
+         console.error("error updating profile", error);
       } else {
          setLoading(false);
          setSuccess("Account settings saved");
@@ -120,7 +128,7 @@ export default function ProfileForm() {
          />
          <Divider />
          <Section>
-            <CompanyLogoUploader />
+            <ProfileLogoUploader />
          </Section>
          <Divider />
          <Para size="displayxs" $weight="medium">
@@ -163,20 +171,33 @@ export default function ProfileForm() {
                   />
                   <Input
                      fieldName="name"
-                     label="Company Name"
+                     label="Brand/Artist Name"
                      register={register}
                      errors={errors}
                   />
                   <Select
                      fieldName="industry"
-                     label="Company Industry"
+                     label="Industry"
                      options={industries}
+                     register={register}
+                     errors={errors}
+                  />
+                  <Select
+                     fieldName="type"
+                     label="Type"
+                     options={profileTypes}
                      register={register}
                      errors={errors}
                   />
                   <Input
                      fieldName="website"
-                     label="Company Website"
+                     label="Website"
+                     register={register}
+                     errors={errors}
+                  />
+                  <Textarea
+                     fieldName="about"
+                     label="About"
                      register={register}
                      errors={errors}
                   />
