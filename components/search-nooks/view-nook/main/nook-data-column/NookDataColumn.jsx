@@ -20,8 +20,6 @@ export default function NookDataColumn () {
             <Divider/>
             <NookImages/>
             <Divider/>
-            <Amenities/>
-            <Divider/>
             <Map/>
         </Wrapper>
     )

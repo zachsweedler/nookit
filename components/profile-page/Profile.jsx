@@ -37,7 +37,7 @@ export default function Profile() {
       const fetchProfile = async () => {
          const { data, error } = await supabase
             .from("profiles")
-            .select("created_at, about, user_id, name, logo, industry, website")
+            .select("id, created_at, about, user_id, name, logo, industry, website")
             .eq("id", params.slug);
          if (error) {
             console.log("error getting profile", error);
@@ -127,7 +127,7 @@ export default function Profile() {
                               name={nook.location_name}
                               city={nook.location_city}
                               state={nook.location_state_code}
-                              hostId={profile.user_id}
+                              hostId={profile.id}
                               logo={profile?.logo}
                               hostProfile={profile?.name}
                            />

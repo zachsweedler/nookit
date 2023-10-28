@@ -10,7 +10,7 @@ export default function Location() {
 
    return (
       <Wrapper>
-         <H6 $weight="semibold">{nook?.location_name}</H6>
+         <H6 $weight="semibold">{nook?.locations?.name}</H6>
          <LocationWrapper>
             <Image
                alt="location-pin"
@@ -19,7 +19,7 @@ export default function Location() {
                height={15}
             />
             <StyledPara size="textsm" $weight="regular" color="black">
-               {nook?.location_full_address}
+               {nook?.locations?.full_address}
             </StyledPara>
          </LocationWrapper>
       </Wrapper>

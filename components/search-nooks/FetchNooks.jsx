@@ -18,7 +18,7 @@ export default function FetchNooks() {
          setLoading(true);
          const { data, error } = await supabase
             .from("nooks")
-            .select(`*, profiles(user_id, name, logo)`)
+            .select(`*, locations(*), profiles(user_id, name, logo)`)
             .order('created_at', { ascending: false })
             .eq('status', 'listed');
          if (error) {
@@ -44,10 +44,10 @@ export default function FetchNooks() {
                   <NookCard
                      key={index}
                      id={nook.id}
-                     images={nook.location_images}
-                     name={nook.location_name}
-                     city={nook.location_city}
-                     state={nook.location_state_code}
+                     images={nook.locations.images}
+                     name={nook.locations.name}
+                     city={nook.locations.city}
+                     state={nook.locations.state_code}
                      hostId={nook.profile_id}
                      logo={nook.profiles.logo}
                      hostProfile={nook.profiles.name}

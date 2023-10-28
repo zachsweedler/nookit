@@ -6,6 +6,7 @@ import { setFormValues } from "@/slices/nookFormSlice";
 import { Section } from "./Styles";
 
 export default function LocationName({id}) {
+   
    const dispatch = useDispatch();
    const {
       formState: { errors },
@@ -14,6 +15,7 @@ export default function LocationName({id}) {
    } = useFormContext();
 
    const locationName = watch("location_name");
+
    useEffect(() => {
       dispatch(setFormValues({ location_name: locationName }));
    }, [locationName, dispatch]);

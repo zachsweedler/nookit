@@ -13,7 +13,7 @@ export default function Amenities() {
             Amenities
          </Para>
          <Grid>
-         {nook?.location_amenities?.map((amenity, index) => (
+         {nook?.locations?.amenities?.map((amenity, index) => (
             <Amenity key={index}>
                <Para size="textmd" $weight="regular">
                   {amenity}

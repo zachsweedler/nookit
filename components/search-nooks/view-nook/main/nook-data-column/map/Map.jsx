@@ -31,7 +31,7 @@ export default function NookMap() {
       <Wrapper>
       <Para size="textlg" $weight="medium">Map</Para>
       <MapWrapper>
-         {nook.location_longitude && nook.location_latitude ? (
+         {nook.locations.longitude && nook.locations.latitude ? (
            <Map
            {...view}
            onMove={(evt) => setView(evt.viewState)}
@@ -41,8 +41,8 @@ export default function NookMap() {
            mapStyle="mapbox://styles/mapbox/streets-v9"
         >
            <Marker
-              longitude={nook.location_longitude}
-              latitude={nook.location_latitude}
+              longitude={nook.locations.longitude}
+              latitude={nook.locations.latitude}
               anchor="bottom"
            >
               <Image

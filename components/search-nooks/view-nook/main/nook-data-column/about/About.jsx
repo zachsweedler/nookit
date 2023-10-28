@@ -12,7 +12,7 @@ export default function About () {
         
         <Wrapper>
             <Para size="textlg" $weight="medium">About</Para>
-            <Para size="textmd" $weight="regular">{nook?.location_about}</Para>
+            <Para size="textmd" $weight="regular">{nook?.profiles?.about}</Para>
         </Wrapper>
     )
 }
