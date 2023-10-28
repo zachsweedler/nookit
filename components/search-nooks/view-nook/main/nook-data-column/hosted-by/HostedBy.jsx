@@ -23,7 +23,7 @@ export default function HostedBy () {
                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                      </HostLogoWrapper>
-                     <Link href={`/profiles/${nook.profile_id}`}>
+                     <Link href={`/profiles/${nook?.profile_id}`}>
                         <Para
                            $isLink={true}
                            size="textmd"

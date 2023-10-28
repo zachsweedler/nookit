@@ -23,10 +23,11 @@ export default function UserNooks() {
    const [profileData, setProfileData] = useState();
    const [loading, setLoading] = useState(true);
    const [missingLoading, setMissingLoading] = useState(true);
-
+   const [locationImages, setLocationImages] = useState([]);
+   
    useEffect(() => {
       if (profileId) {
-         const fetchUserNooks = async () => {
+         async function fetchUserNooks() {
             const { data, error } = await supabase
                .from("nooks")
                .select(`*, locations(*)`)
@@ -34,10 +35,38 @@ export default function UserNooks() {
                .eq("profile_id", profileId);
             if (error) {
                console.error("error fetching nooks", error);
+               return [];
             } else {
                setNooks(data);
+               console.log("nooks", data);
+               return data;
             }
-         };
+         }
+
+         async function listLocationImages(nooks) {
+            const allImages = await Promise.all(
+               nooks.map(async (nook) => {
+                  const { data: images, error } = await supabase.storage
+                     .from("user-images")
+                     .list(`${nook.user_id}/nooks/${nook.id}/space`);
+                  if (error) {
+                     console.log("error listing location images", error);
+                     return [];
+                  } else {
+                     const loadedImages = images.map((image) => image.name);
+                     return loadedImages.map(
+                        (image) =>
+                           `${nook.user_id}/nooks/${nook.id}/space/${image}`
+                     );
+                  }
+               })
+            );
+            setLocationImages((prevLocationImages) => [
+               ...prevLocationImages,
+               ...allImages.flat(),
+            ]);
+         }
+
          const fetchConnectAccountId = async () => {
             const { data, error } = await supabase
                .from("stripe_connect")
@@ -54,6 +83,7 @@ export default function UserNooks() {
                console.log("connect Id fetched", data);
             }
          };
+
          const getProfileData = async () => {
             const { data, error } = await supabase
                .from("profiles")
@@ -65,13 +95,16 @@ export default function UserNooks() {
                setProfileData(data[0]);
             }
          };
+
          const fetchData = async () => {
             setLoading(true);
-            await fetchUserNooks();
+            const fetchedNooks = await fetchUserNooks();
+            await listLocationImages(fetchedNooks);
             await fetchConnectAccountId();
             await getProfileData();
             setLoading(false);
          };
+
          fetchData();
       }
    }, [supabase, profileId]);
@@ -217,7 +250,9 @@ export default function UserNooks() {
                               <NookCard
                                  key={index}
                                  id={nook.id}
-                                 images={nook.locations.images}
+                                 images={locationImages.filter(
+                                    (image) => nook.id === image.split("/")[2]
+                                 )}
                                  name={nook.locations.name}
                                  city={nook.locations.city}
                                  state={nook.locations.state_code}

@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { styled } from "styled-components";
 
 export default function NookImages() {
-   const nook = useSelector((state) => state.viewNook.nook);
+   const nookImages = useSelector((state) => state.viewNook.nook_images);
 
    return (
       
@@ -17,7 +17,7 @@ export default function NookImages() {
                <Image
                   loader={supabaseLoader}
                   alt="nook-image"
-                  src={`/user-images/${nook?.images?.[0]}`}
+                  src={`/user-images/${nookImages?.[0]}`}
                   fill={true}
                   style={{ objectFit: "cover" }}
                />
@@ -26,7 +26,7 @@ export default function NookImages() {
                <Image
                   loader={supabaseLoader}
                   alt="nook-image"
-                  src={`/user-images/${nook?.images?.[1]}`}
+                  src={`/user-images/${nookImages?.[1]}`}
                   fill={true}
                   style={{ objectFit: "cover" }}
                />
@@ -35,7 +35,7 @@ export default function NookImages() {
                <Image
                   loader={supabaseLoader}
                   alt="nook-image"
-                  src={`/user-images/${nook?.images?.[2]}`}
+                  src={`/user-images/${nookImages?.[2]}`}
                   fill={true}
                   style={{ objectFit: "cover" }}
                />

@@ -8,7 +8,8 @@ import ImageGallery from "@/components/image-gallery/ImageGallery";
 import { useEffect, useState } from "react";
 
 export default function LocationImages() {
-   const nook = useSelector((state) => state.viewNook.nook);
+   const locationImages = useSelector((state) => state.viewNook.location_images);
+   const nookImages = useSelector((state) => state.viewNook.nook_images);
 
    const [open, setOpen] = useState(false);
 
@@ -27,7 +28,7 @@ export default function LocationImages() {
             <Image
                loader={supabaseLoader}
                alt="nook-image"
-               src={`/user-images/${nook?.locations?.images?.[0]}`}
+               src={`/user-images/${locationImages?.[0]}`}
                fill={true}
                style={{ objectFit: "cover" }}
             />
@@ -36,7 +37,7 @@ export default function LocationImages() {
             <Image
                loader={supabaseLoader}
                alt="nook-image"
-               src={`/user-images/${nook?.locations?.images?.[1]}`}
+               src={`/user-images/${locationImages?.[1]}`}
                fill={true}
                style={{ objectFit: "cover" }}
             />
@@ -45,7 +46,7 @@ export default function LocationImages() {
             <Image
                loader={supabaseLoader}
                alt="nook-image"
-               src={`/user-images/${nook?.locations?.images?.[2]}`}
+               src={`/user-images/${locationImages?.[2]}`}
                fill={true}
                style={{ objectFit: "cover" }}
             />
@@ -54,7 +55,7 @@ export default function LocationImages() {
             <Image
                loader={supabaseLoader}
                alt="nook-image"
-               src={`/user-images/${nook?.locations?.images?.[3]}`}
+               src={`/user-images/${locationImages?.[3]}`}
                fill={true}
                style={{ objectFit: "cover" }}
             />
@@ -63,14 +64,14 @@ export default function LocationImages() {
             <Image
                loader={supabaseLoader}
                alt="nook-image"
-               src={`/user-images/${nook?.locations?.images?.[4]}`}
+               src={`/user-images/${locationImages?.[4]}`}
                fill={true}
                style={{ objectFit: "cover" }}
             />
          </LocationGridBottomRight>
          <ViewPhotosButton $whitecolor={true} onClick={onButtonClick}>View All Photos</ViewPhotosButton>
       </LocationGrid>
-      <ImageGallery isOpen={open} onRequestClose={closeModal} locationImages={nook?.locations?.images} nookImages={nook?.locations?.images}/>
+      <ImageGallery isOpen={open} onRequestClose={closeModal} locationImages={locationImages} nookImages={nookImages}/>
       </>
    );
 }

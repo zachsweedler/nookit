@@ -10,27 +10,64 @@ import EmptyState from "../empty-state/EmptyState";
 
 export default function FetchNooks() {
    const [nooks, setNooks] = useState([]);
+   const [locationImages, setLocationImages] = useState([]);
    const supabase = createClientComponentClient();
    const [loading, setLoading] = useState();
 
    useEffect(() => {
-      const fetchNooks = async () => {
+      (async () => {
          setLoading(true);
+
+         // Fetch nooks
+         const fetchedNooks = await fetchNooks();
+         if (fetchedNooks?.length > 0) {
+            // Fetch location images
+            await listLocationImages(fetchedNooks);
+         }
+         setLoading(false);
+      })();
+
+      async function fetchNooks() {
          const { data, error } = await supabase
             .from("nooks")
             .select(`*, locations(*), profiles(user_id, name, logo)`)
-            .order('created_at', { ascending: false })
-            .eq('status', 'listed');
+            .order("created_at", { ascending: false })
+            .eq("status", "listed");
          if (error) {
             console.error("error fetching nooks", error);
+            return [];
          } else {
-            setLoading(false);
             setNooks(data);
-            console.log('nooks', data)
+            console.log("nooks", data);
+            return data;
          }
-      };
-      fetchNooks();
-   }, [supabase]);
+      }
+
+      async function listLocationImages(nooks) {
+         const allImages = await Promise.all(
+            nooks.map(async (nook) => {
+               const { data: images, error } = await supabase.storage
+                  .from("user-images")
+                  .list(`${nook.user_id}/nooks/${nook.id}/space`);
+               if (error) {
+                  console.log("error listing location images", error);
+                  return [];
+               } else {
+                  const loadedImages = images.map((image) => image.name);
+                  return loadedImages.map(
+                     (image) =>
+                        `${nook.user_id}/nooks/${nook.id}/space/${image}`
+                  );
+               }
+            })
+         );
+         setLocationImages((prevLocationImages) => [
+            ...prevLocationImages,
+            ...allImages.flat(),
+         ]);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
 
    return (
       <Container size="xl" style={{ marginTop: "90px" }}>
@@ -44,7 +81,7 @@ export default function FetchNooks() {
                   <NookCard
                      key={index}
                      id={nook.id}
-                     images={nook.locations.images}
+                     images={locationImages.filter(image => nook.id === image.split('/')[2])}
                      name={nook.locations.name}
                      city={nook.locations.city}
                      state={nook.locations.state_code}

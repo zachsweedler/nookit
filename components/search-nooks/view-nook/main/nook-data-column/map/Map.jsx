@@ -9,11 +9,11 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 export default function NookMap() {
 
-   const nook = useSelector((state) => state.viewNook.nook);
+   const location = useSelector((state) => state.viewNook.nook?.locations);
 
    const [view, setView] = useState({
-      longitude: nook?.location_latitude,
-      latitude: nook?.location_longitude,
+      longitude: location?.latitude,
+      latitude: location?.longitude,
       zoom: 15,
    });
 
@@ -22,16 +22,16 @@ export default function NookMap() {
    useEffect(() => {
       setView((prevView) => ({
          ...prevView,
-         longitude: nook?.location_longitude || 0,
-         latitude: nook?.location_latitude || 0,
+         longitude: location?.longitude || 0,
+         latitude: location?.latitude || 0,
       }));
-   }, [nook]);
+   }, [location]);
 
    return (
       <Wrapper>
       <Para size="textlg" $weight="medium">Map</Para>
       <MapWrapper>
-         {nook.locations.longitude && nook.locations.latitude ? (
+         {location?.longitude && location?.latitude ? (
            <Map
            {...view}
            onMove={(evt) => setView(evt.viewState)}
@@ -41,8 +41,8 @@ export default function NookMap() {
            mapStyle="mapbox://styles/mapbox/streets-v9"
         >
            <Marker
-              longitude={nook.locations.longitude}
-              latitude={nook.locations.latitude}
+              longitude={location?.longitude}
+              latitude={location?.latitude}
               anchor="bottom"
            >
               <Image

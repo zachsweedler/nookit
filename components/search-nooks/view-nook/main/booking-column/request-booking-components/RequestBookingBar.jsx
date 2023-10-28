@@ -26,7 +26,7 @@ export default function RequestBookingBar({
             <Left>
                <Rate>
                   <Para size="textmd" $weight="medium">
-                     {nook?.price_type === "dailyRate" ? `$${nook.price}` : `${nook.price}%`}
+                     {nook?.price_type === "dailyRate" ? `$${nook?.price}` : `${nook?.price}%`}
                   </Para>
                   <Para size="textsm" $weight="regular">
                      {nook?.price_type === "dailyRate" ? `per day` : `of sales`}

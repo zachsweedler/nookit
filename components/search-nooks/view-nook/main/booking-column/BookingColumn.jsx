@@ -100,12 +100,12 @@ export default function BookingColumn() {
 
    // fetch host stripe connect ID and guest's & host's stripe customer IDs.
    useEffect(() => {
-      if (nook.user_id) {
+      if (nook?.user_id) {
          const fetchHostConnectId = async () => {
             const { data, error } = await supabase
                .from("stripe_connect")
                .select("connect_account_id")
-               .eq("user_id", nook.user_id);
+               .eq("user_id", nook?.user_id);
             if (error) {
                console.log("error getting connect account id", error);
             } else {
@@ -142,7 +142,7 @@ export default function BookingColumn() {
          };
          fetchGuestCoustomerId();
       }
-   }, [nook.user_id, supabase, userId]);
+   }, [nook?.user_id, supabase, userId]);
 
    const validationSchema = yup.object().shape({
       dates: yup.string().required("A start and end date is required"),
@@ -172,7 +172,7 @@ export default function BookingColumn() {
             ? 1
             : dates[1]?.$D - dates[0]?.$D + 1;
 
-      const price = nook.price_type === "dailyRate" ? nook.price : null;
+      const price = nook?.price_type === "dailyRate" ? nook?.price : null;
       const bookingPrice = price ? price * days : newProcessingTotal;
       setBookingPriceTotal(bookingPrice);
       const startDateSelect = `${dates[0]?.$M + 1}/${dates[0]?.$D}/${
@@ -187,7 +187,7 @@ export default function BookingColumn() {
          shouldValidate: true,
       });
       setDayCount(days);
-      if (nook.price_type === "dailyRate") {
+      if (nook?.price_type === "dailyRate") {
          if (days >= 30) {
            newProcessingTotal = bookingPrice * 0.12;
          } else if (days >= 7) {
@@ -223,7 +223,7 @@ export default function BookingColumn() {
       });
       return bookedDatesList;
    };
-   const bookedDates = getBookedDatesList(nook.booked_dates);
+   const bookedDates = getBookedDatesList(nook?.booked_dates);
 
    // Modify the disabledDate function
    const disabledDates = (current) => {
@@ -240,8 +240,8 @@ export default function BookingColumn() {
          setIsOpen(true);
          return;
       }
-      const hostId = nook.user_id;
-      const hostProfileId = nook.profile_id;
+      const hostId = nook?.user_id;
+      const hostProfileId = nook?.profile_id;
       if (hostId) {
          const { data, error } = await supabase
             .from("bookings")
