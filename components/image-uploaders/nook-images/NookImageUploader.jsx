@@ -10,11 +10,13 @@ import { useUserId } from "@/hooks/client-side/useUserId";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { styled } from "styled-components";
 import supabaseLoader from "@/supabase-image-loader";
+import { useLocationUUID } from "@/hooks/client-side/useLocationId";
 
 function NookImageUploader({ fieldName, isNookPhotos, title }) {
    const maxNumber = 15;
    const acceptedTypes = ["jpg", "jpeg", "png", "tif", "gif", "bmp", "webp"];
    const nookId = useNookUUID();
+   const locationId = useLocationUUID();
    const supabase = createClientComponentClient();
    const userId = useUserId(supabase);
    const [imagesArray, setImagesArray] = useState([]);
@@ -30,20 +32,21 @@ function NookImageUploader({ fieldName, isNookPhotos, title }) {
          const { data: images, error: imagesError } = await supabase.storage
             .from("user-images")
             .list(
-               `${userId}/nooks/${nookId}/${isNookPhotos ? "nook" : "space"}`,
+               isNookPhotos
+                  ? `${userId}/locations/${locationId}/nooks/${nookId}`
+                  : `${userId}/locations/${locationId}/location_images`,
                {
-                  sortBy: { column: 'created_at', order: 'asc' },
+                  sortBy: { column: "created_at", order: "asc" },
                }
             );
          if (imagesError) {
             console.log("error listing images", imagesError);
          } else {
             const loadedImages = images.map((image) => image.name);
-            const paths = loadedImages.map(
-               (image) =>
-                  `${userId}/nooks/${nookId}/${
-                     isNookPhotos ? "nook" : "space"
-                  }/${image}`
+            const paths = loadedImages.map((image) =>
+               isNookPhotos
+                  ? `${userId}/locations/${locationId}/nooks/${nookId}/${image}`
+                  : `${userId}/locations/${locationId}/location_images/${image}`
             );
             // Use the functional form of setImagesArray to ensure the correct state update
             setImagesArray((prevImagesArray) => [...prevImagesArray, ...paths]);
@@ -54,37 +57,22 @@ function NookImageUploader({ fieldName, isNookPhotos, title }) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [isNookPhotos, getValues, setValue, fieldName, nookId, userId]);
 
-   useEffect(() => {
-      console.log(`images ${isNookPhotos ? "nook" : "location"} `, imagesArray);
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [imagesArray]);
-
-   const updateNookTable = async (newArrayOfPaths) => {
-      const { data, error } = await supabase
-         .from("nooks")
-         .update({ [fieldName]: newArrayOfPaths })
-         .eq("id", nookId);
-      if (error) {
-         console.log(error);
-      }
-   };
-
    const handleImageUpload = async (file) => {
       const { data, error } = await supabase.storage
          .from("user-images")
          .upload(
-            `${userId}/nooks/${nookId}/${isNookPhotos ? "nook" : "space"}/${
-               file.name
-            }`,
+            isNookPhotos
+               ? `${userId}/locations/${locationId}/nooks/${nookId}/${file.name}`
+               : `${userId}/locations/${locationId}/location_images/${file.name}`,
             file,
             { upsert: true }
          );
       if (error) {
          console.log(error);
       } else {
-         return `${userId}/nooks/${nookId}/${isNookPhotos ? "nook" : "space"}/${
-            file.name
-         }`;
+         return isNookPhotos
+            ? `${userId}/locations/${locationId}/nooks/${nookId}/${file.name}`
+            : `${userId}/locations/${locationId}/location_images/${file.name}`;
       }
    };
 
@@ -93,20 +81,9 @@ function NookImageUploader({ fieldName, isNookPhotos, title }) {
       const uploadedImagePaths = await Promise.all(
          imageFiles.map((file) => handleImageUpload(file))
       );
-
       const updatedImages = [...imagesArray, ...uploadedImagePaths];
       setImagesArray(updatedImages);
       setValue(fieldName, updatedImages);
-
-      // Filter valid uploaded images
-      const validUploadedImages = uploadedImagePaths.filter(
-         (path) => path !== null
-      );
-
-      // Check if there are valid images to update
-      if (validUploadedImages.length > 0) {
-         updateNookTable(validUploadedImages);
-      }
    };
 
    const handleImageDelete = async (imagePath) => {
@@ -120,7 +97,6 @@ function NookImageUploader({ fieldName, isNookPhotos, title }) {
       const filteredImages = imagesArray.filter((image) => image !== imagePath);
       setImagesArray(filteredImages);
       setValue(fieldName, filteredImages);
-      updateNookTable(filteredImages);
    };
 
    return (

@@ -152,6 +152,7 @@ export default function NookForm() {
       }
       const { error } = await supabase.from("nooks").upsert({
          id: formValuesRedux.id,
+         location_id: formValuesRedux.location_id,
          status: "listed",
          profile_id: profileId,
          user_id: userId,

@@ -22,7 +22,7 @@ export default function Profile() {
       async function fetchNooks () {
          const { data: nooks, error } = await supabase
             .from("nooks")
-            .select("id, user_id, created_at, locations(name, city, state_code)")
+            .select("id, location_id, user_id, created_at, locations(name, city, state_code)")
             .order("created_at", { ascending: false })
             .eq("status", "listed")
             .eq("profile_id", params.slug);
@@ -57,14 +57,14 @@ export default function Profile() {
            nooks.map(async (nook) => {
              const { data: images, error } = await supabase.storage
                .from("user-images")
-               .list(`${nook.user_id}/nooks/${nook.id}/space`);
+               .list(`${nook.user_id}/locations/${nook.location_id}/location_images`);
              if (error) {
                console.log("Error listing location images", error);
                return [];
              } else {
                const loadedImages = images.map((image) => image.name);
                return loadedImages.map(
-                 (image) => `${nook.user_id}/nooks/${nook.id}/space/${image}`
+                 (image) => `${nook.user_id}/locations/${nook.location_id}/location_images/${image}`
                );
              }
            })

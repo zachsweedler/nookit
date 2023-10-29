@@ -59,14 +59,14 @@ export default function ViewNook() {
       async function listLocationImages(nook) {
          const { data: images, error } = await supabase.storage
             .from("user-images")
-            .list(`${nook.user_id}/nooks/${nook.id}/space`);
+            .list(`${nook.user_id}/locations/${nook.location_id}/location_images`);
          if (error) {
             console.log("error listing location images", error);
             return [];
          } else {
             const loadedImages = images.map((image) => image.name);
             return loadedImages.map(
-               (image) => `${nook.user_id}/nooks/${nook.id}/space/${image}`
+               (image) => `${nook.user_id}/locations/${nook.location_id}/location_images/${image}`
             );
          }
       }
@@ -74,14 +74,14 @@ export default function ViewNook() {
       async function listNookImages(nook) {
          const { data: images, error } = await supabase.storage
             .from("user-images")
-            .list(`${nook.user_id}/nooks/${nook.id}/nook`);
+            .list(`${nook.user_id}/locations/${nook.location_id}/nooks/${nook.id}`);
          if (error) {
             console.log("error listing nook images", error);
             return [];
          } else {
             const loadedImages = images.map((image) => image.name);
             return loadedImages.map(
-               (image) => `${nook.user_id}/nooks/${nook.id}/nook/${image}`
+               (image) => `${nook.user_id}/locations/${nook.location_id}/nooks/${nook.id}/${image}`
             );
          }
       }

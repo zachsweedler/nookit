@@ -6,6 +6,7 @@ const nookFormSlice = createSlice({
   initialState: {
     formValues: {
       id: null,
+      location_id: null,
       created_at: "",
       status: "unlisted",
       user_id: null,
@@ -37,8 +38,12 @@ const nookFormSlice = createSlice({
     setNookId: (state, action) => {
       state.formValues.id = action.payload;
     },
+    setLocationId: (state, action) => {
+      state.formValues.location_id = action.payload;
+    },
     restartForm: (state) => {
       state.formValues.id = null;
+      state.formValues.location_id = null;
       state.formValues.created_at = "";
       state.formValues.status = "unlisted";
       state.formValues.user_id = null,
@@ -66,6 +71,6 @@ const nookFormSlice = createSlice({
   }
 });
 
-export const { restartForm, setFormValues, setNookId } = nookFormSlice.actions;
+export const { restartForm, setFormValues, setNookId, setLocationId } = nookFormSlice.actions;
 
 export default nookFormSlice.reducer;

@@ -17,7 +17,6 @@ export default function FetchNooks() {
    useEffect(() => {
       (async () => {
          setLoading(true);
-
          // Fetch nooks
          const fetchedNooks = await fetchNooks();
          if (fetchedNooks?.length > 0) {
@@ -48,7 +47,7 @@ export default function FetchNooks() {
             nooks.map(async (nook) => {
                const { data: images, error } = await supabase.storage
                   .from("user-images")
-                  .list(`${nook.user_id}/nooks/${nook.id}/space`);
+                  .list(`${nook.user_id}/locations/${nook.location_id}/location_images`);
                if (error) {
                   console.log("error listing location images", error);
                   return [];
@@ -56,7 +55,7 @@ export default function FetchNooks() {
                   const loadedImages = images.map((image) => image.name);
                   return loadedImages.map(
                      (image) =>
-                        `${nook.user_id}/nooks/${nook.id}/space/${image}`
+                        `${nook.user_id}/locations/${nook.location_id}/location_images/${image}`
                   );
                }
             })
