@@ -14,8 +14,6 @@ export default function ViewNook() {
    const supabase = createClientComponentClient();
    const dispatch = useDispatch();
    const params = useParams();
-   const [locationImages, setLocationImages] = useState([]);
-   const [nookImages, setNookImages] = useState([]);
    const [loading, setLoading] = useState();
 
    useEffect(() => {

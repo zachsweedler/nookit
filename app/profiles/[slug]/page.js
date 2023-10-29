@@ -1,5 +1,6 @@
 import Profile from "@/components/profile-page/Profile";
 
+
 export const metadata = {
     title: "Nookit | View Profile",
  };

@@ -2,52 +2,92 @@
 import Container from "@/styles/Containers";
 import { H5, Para } from "@/styles/Typography";
 import styled from "styled-components";
-import NookCard from "../search-nooks/NookCard";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
 import supabaseLoader from "@/supabase-image-loader";
+import NookCard from "../search-nooks/NookCard";
 
 export default function Profile() {
    const supabase = createClientComponentClient();
    const params = useParams();
-   const [nooks, setNooks] = useState([]);
-   const [profile, setProfile] = useState([]);
+   const [nooks, setNooks] = useState(null);
+   const [profile, setProfile] = useState(null)
+   const [locationImages, setLocationImages] = useState([]);
+   const [loading, setLoading] = useState(true);
 
    useEffect(() => {
-      const fetchProfileNooks = async () => {
-         const { data, error } = await supabase
+
+      async function fetchNooks () {
+         const { data: nooks, error } = await supabase
             .from("nooks")
-            .select(`*`)
+            .select("id, user_id, created_at, locations(name, city, state_code)")
             .order("created_at", { ascending: false })
             .eq("status", "listed")
             .eq("profile_id", params.slug);
          if (error) {
-            console.log("error getting nooks", error);
-         } else {
-            console.log("data", data);
-            setNooks(data);
+            console.log("Error fetching data", error);
+         } else if (nooks?.length > 0) {
+            console.log('nooks', nooks);
+            setNooks(nooks);
+            const images = await listLocationImages(nooks);
+            console.log('images iuouih', images)
          }
+         setLoading(false);
       };
-      fetchProfileNooks();
-   }, [supabase, params.slug]);
 
-   useEffect(() => {
-      const fetchProfile = async () => {
-         const { data, error } = await supabase
+      async function fetchProfile () {
+         const { data: profile, error } = await supabase
             .from("profiles")
-            .select("id, created_at, about, user_id, name, logo, industry, website")
+            .select("*")
+            .order("created_at", { ascending: false })
             .eq("id", params.slug);
          if (error) {
-            console.log("error getting profile", error);
-         } else {
-            console.log("data", data);
-            setProfile(data[0]);
+            console.log("Error fetching data", error);
+         } else if (profile?.length > 0) {
+            console.log('profile', profile);
+            setProfile(profile[0]);
          }
+         setLoading(false);
       };
-      fetchProfile();
-   }, [supabase, params.slug]);
+
+      async function listLocationImages(nooks) {
+         const allImages = await Promise.all(
+           nooks.map(async (nook) => {
+             const { data: images, error } = await supabase.storage
+               .from("user-images")
+               .list(`${nook.user_id}/nooks/${nook.id}/space`);
+             if (error) {
+               console.log("Error listing location images", error);
+               return [];
+             } else {
+               const loadedImages = images.map((image) => image.name);
+               return loadedImages.map(
+                 (image) => `${nook.user_id}/nooks/${nook.id}/space/${image}`
+               );
+             }
+           })
+         );
+         setLocationImages((prevLocationImages) => [
+           ...prevLocationImages,
+           ...allImages.flat(),
+         ]);
+       }
+
+      async function getData () {
+         await fetchNooks();
+         await fetchProfile();
+      }
+
+      getData();
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [params.slug]);
+
+   useEffect(() => {
+      // This effect will run whenever locationImages state changes.
+      console.log("locationImages", locationImages);
+    }, [locationImages]);
 
    const date = new Date(profile?.created_at);
    const monthNames = [
@@ -76,15 +116,15 @@ export default function Profile() {
          <Container size="sm">
             <Content>
                <Header>
-                  <ProfileAvatar>
+                  <DataAvatar>
                      <Image
                         loader={supabaseLoader}
-                        alt="profile-avatar"
+                        alt="data-avatar"
                         src={`user-images/${profile?.logo}`}
                         fill={true}
                         style={{ objectFit: "cover" }}
                      />
-                  </ProfileAvatar>
+                  </DataAvatar>
                   <H5>{profile?.name}</H5>
                   <Para size="textmd" $weight="regular">
                      Joined {joinedDate}
@@ -113,7 +153,7 @@ export default function Profile() {
                      </Para>
                   </Section>
                )}
-               {nooks.length > 0 && (
+               {nooks?.length > 0 && (
                   <Section>
                      <Para size="textlg" $weight="medium">
                         Nooks
@@ -123,13 +163,15 @@ export default function Profile() {
                            <NookCard
                               key={index}
                               id={nook.id}
-                              images={nook?.location_images}
-                              name={nook.location_name}
-                              city={nook.location_city}
-                              state={nook.location_state_code}
-                              hostId={profile.id}
+                              images={locationImages?.filter(
+                                 (image) => nook.id === image.split("/")[2]
+                              )}
+                              name={nook.locations.name}
+                              city={nook.locations.city}
+                              state={nook.locations.state_code}
+                              hostId={nook.id}
                               logo={profile?.logo}
-                              hostProfile={profile?.name}
+                              hostName={profile?.name}
                            />
                         ))}
                      </NooksGrid>
@@ -177,7 +219,7 @@ const NooksGrid = styled.div`
    }
 `;
 
-const ProfileAvatar = styled.div`
+const DataAvatar = styled.div`
    width: 100px;
    height: 100px;
    border-radius: 100%;
