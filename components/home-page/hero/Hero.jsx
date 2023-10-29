@@ -115,7 +115,7 @@ export default function Hero() {
                         state={nook.locations.state_code}
                         hostId={nook.profile_id}
                         logo={nook.profiles.logo}
-                        hostProfile={nook.profiles.name}
+                        hostName={nook.profiles.name}
                      />
                  ))} 
             </Marquee>
