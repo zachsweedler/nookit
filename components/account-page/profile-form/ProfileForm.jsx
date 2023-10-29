@@ -26,17 +26,18 @@ export default function ProfileForm() {
    const [profileId, setProfileId] = useState();
    const [formValues, setFormValues] = useState();
    const [success, setSuccess] = useState();
-   const [loading, setLoading] = useState();
+   const [loading, setLoading] = useState(true);
 
    const validationSchema = yup.object().shape({
       first_name: yup.string().nullable(),
       last_name: yup.string().nullable(),
       name: yup.string().required("This is a required field."),
-      industry: yup.string().required("This is a required field")
+      industry: yup.string().required("This is a required field"),
    });
 
    useEffect(() => {
       const getData = async () => {
+         setLoading(true);
          const { data, error } = await supabase.auth.getUser();
          if (error) {
             console.error("error getting user", error);
@@ -47,7 +48,9 @@ export default function ProfileForm() {
             const { data: profileData, error: errorProfileData } =
                await supabase
                   .from("profiles")
-                  .select("first_name, last_name, name, about, type, industry, email, website, id")
+                  .select(
+                     "first_name, last_name, name, about, type, industry, email, website, id"
+                  )
                   .eq("user_id", userId);
             if (errorProfileData) {
                console.error("error getting user", errorProfileData);
@@ -64,6 +67,7 @@ export default function ProfileForm() {
                   about: profileData[0]?.about || "",
                   type: profileData[0]?.type || "",
                });
+               setLoading(false);
             }
          }
       };
@@ -75,7 +79,7 @@ export default function ProfileForm() {
       handleSubmit,
       register,
    } = useForm({
-      mode: 'onChange',
+      mode: "onChange",
       resolver: yupResolver(validationSchema),
       defaultValues: {
          first_name: "",
@@ -101,7 +105,7 @@ export default function ProfileForm() {
          first_name: formState.first_name,
          last_name: formState.last_name,
          about: formState.about,
-         type: formState.type
+         type: formState.type,
       });
       if (error) {
          console.error("error updating profile", error);
@@ -121,95 +125,101 @@ export default function ProfileForm() {
             rowGap: "50px",
          }}
       >
-         <PageHeader
-            title="Profile"
-            button="Show Profile"
-            buttonLink={`/profiles/${userId}`}
-         />
-         <Divider />
-         <Section>
-            <ProfileLogoUploader />
-         </Section>
-         <Divider />
-         <Para size="displayxs" $weight="medium">
-            Basic Information
-         </Para>
-         <Section>
-            {!formValues ? (
-               <Loading/>
-            ) : (
-               <Form onSubmit={handleSubmit(onSubmit)}>
-                  <TwoColFields>
-                     <Input
-                        fieldName="first_name"
-                        label="First Name"
-                        register={register}
-                        errors={errors}
-                     />
-                     <Input
-                        fieldName="last_name"
-                        label="Last Name"
-                        register={register}
-                        errors={errors}
-                     />
-                  </TwoColFields>
-                  <Input
-                     fieldName="email"
-                     label="Work Email"
-                     register={register}
-                     errors={errors}
-                     disabled={true}
-                     adornment={
-                        <Image
-                           alt="lock-icon"
-                           src="/lock-icon-beige.svg"
-                           width={18}
-                           height={18}
-                           style={{ cursor: "not-allowed" }}
+         {loading ? (
+            <Loading />
+         ) : (
+            <>
+               <PageHeader
+                  title="Profile"
+                  button="Show Profile"
+                  buttonLink={`/profiles/${profileId}`}
+               />
+               <Divider />
+               <Section>
+                  <ProfileLogoUploader />
+               </Section>
+               <Divider />
+               <Para size="displayxs" $weight="medium">
+                  Basic Information
+               </Para>
+               <Section>
+                  {!formValues ? (
+                     <Loading />
+                  ) : (
+                     <Form onSubmit={handleSubmit(onSubmit)}>
+                        <TwoColFields>
+                           <Input
+                              fieldName="first_name"
+                              label="First Name"
+                              register={register}
+                              errors={errors}
+                           />
+                           <Input
+                              fieldName="last_name"
+                              label="Last Name"
+                              register={register}
+                              errors={errors}
+                           />
+                        </TwoColFields>
+                        <Input
+                           fieldName="email"
+                           label="Work Email"
+                           register={register}
+                           errors={errors}
+                           disabled={true}
+                           adornment={
+                              <Image
+                                 alt="lock-icon"
+                                 src="/lock-icon-beige.svg"
+                                 width={18}
+                                 height={18}
+                                 style={{ cursor: "not-allowed" }}
+                              />
+                           }
                         />
-                     }
-                  />
-                  <Input
-                     fieldName="name"
-                     label="Brand/Artist Name"
-                     register={register}
-                     errors={errors}
-                  />
-                  <Select
-                     fieldName="industry"
-                     label="Industry"
-                     options={industries}
-                     register={register}
-                     errors={errors}
-                  />
-                  <Select
-                     fieldName="type"
-                     label="Type"
-                     options={profileTypes}
-                     register={register}
-                     errors={errors}
-                  />
-                  <Input
-                     fieldName="website"
-                     label="Website"
-                     register={register}
-                     errors={errors}
-                  />
-                  <Textarea
-                     fieldName="about"
-                     label="About"
-                     register={register}
-                     errors={errors}
-                  />
-                  {isDirty && (
-                     <Button $brandColor="true">
-                        {loading ? "Saving..." : "Save Changes"}
-                     </Button>
+                        <Input
+                           fieldName="name"
+                           label="Brand/Artist Name"
+                           register={register}
+                           errors={errors}
+                        />
+                        <Select
+                           fieldName="industry"
+                           label="Industry"
+                           options={industries}
+                           register={register}
+                           errors={errors}
+                        />
+                        <Select
+                           fieldName="type"
+                           label="Type"
+                           options={profileTypes}
+                           register={register}
+                           errors={errors}
+                        />
+                        <Input
+                           fieldName="website"
+                           label="Website"
+                           register={register}
+                           errors={errors}
+                        />
+                        <Textarea
+                           fieldName="about"
+                           label="About"
+                           register={register}
+                           errors={errors}
+                        />
+                        {isDirty && (
+                           <Button $brandColor="true">
+                              {loading ? "Saving..." : "Save Changes"}
+                           </Button>
+                        )}
+                        {success && <Snackbar success text={success} />}
+                     </Form>
                   )}
-                  {success && <Snackbar success text={success} />}
-               </Form>
-            )}
-         </Section>
+               </Section>
+            </>
+         )}
       </Container>
    );
 }
